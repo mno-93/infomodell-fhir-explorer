@@ -1,0 +1,74 @@
+{
+ "pakete": {
+  "de.basisprofil.r4#1.5.4": {
+   "url": "https://packages.fhir.org/de.basisprofil.r4/1.5.4",
+   "inhalt_sha256": "eb96a42c8e2eff95a61ead1789f73d046447576ae161ea49c29eb1b698433bae"
+  },
+  "de.basisprofil.r4#1.6.0": {
+   "url": "https://packages.fhir.org/de.basisprofil.r4/1.6.0",
+   "inhalt_sha256": "1cb0a45d36952f76776ea4d0a8cbc4e99ac39667df1444d7b7014ac552ab59da"
+  },
+  "de.gematik.epa#1.3.2": {
+   "url": "https://packages.fhir.org/de.gematik.epa/1.3.2",
+   "inhalt_sha256": "ccb65e0226f7e48d03df828da5f958a220900b82e5c5696afbb08a147b50517f"
+  },
+  "de.gematik.epa.laboratory#1.0.0-ballot.1": {
+   "url": "https://packages.fhir.org/de.gematik.epa.laboratory/1.0.0-ballot.1",
+   "inhalt_sha256": "930a241dec0d8eab0a1a2080d33374e300031014155a72baebe2e504b9203b51"
+  },
+  "de.gematik.epa.medication#1.3.5": {
+   "url": "https://packages.fhir.org/de.gematik.epa.medication/1.3.5",
+   "inhalt_sha256": "155f017f90dd02d19cef2724690d17926bb6a0a7cd77fe6dd838e62f43b2d412"
+  },
+  "de.gematik.ti#1.3.1": {
+   "url": "https://packages.fhir.org/de.gematik.ti/1.3.1",
+   "inhalt_sha256": "a34445994ab23322a75b96166f4ac77ac6342e32bde980a7dcb40ac710f6f7a3"
+  },
+  "de.gematik.ti#1.5.0-ballot.1": {
+   "url": "https://packages.fhir.org/de.gematik.ti/1.5.0-ballot.1",
+   "inhalt_sha256": "5eaff3e9a36baec45de55dee2db6477f7223c234d7e492769003fc07b4d2341b"
+  },
+  "hl7.fhir.eu.base#2.0.0": {
+   "url": "https://packages.fhir.org/hl7.fhir.eu.base/2.0.0",
+   "inhalt_sha256": "6375e8b6ad4e978078ece6c88562ca559005bccc86da32fd4e6799daf3bca3dc"
+  },
+  "hl7.fhir.eu.eps#1.0.0-ballot": {
+   "url": "https://packages.fhir.org/hl7.fhir.eu.eps/1.0.0-ballot",
+   "inhalt_sha256": "9ea43b460769cf96162b2706e6e19a3184c4d23300087b4548ed85cf97d6ac93"
+  },
+  "hl7.fhir.eu.extensions.r4#1.3.0": {
+   "url": "https://packages.fhir.org/hl7.fhir.eu.extensions.r4/1.3.0",
+   "inhalt_sha256": "489dab7b6eb9b983ca2c5d8f5ccd4ac0ec3cdfafea9f638ee2677ad48d0af410"
+  },
+  "hl7.fhir.eu.laboratory#2.0.0": {
+   "url": "https://packages.fhir.org/hl7.fhir.eu.laboratory/2.0.0",
+   "inhalt_sha256": "42dd969daaff4f4b9b90ac1098e202837a9d0d95b446ede372f6e1bc7d5eb7a5"
+  },
+  "hl7.fhir.r4.core#4.0.1": {
+   "url": "https://packages.fhir.org/hl7.fhir.r4.core/4.0.1",
+   "inhalt_sha256": "662dd4af22bc9916df16e105856c65c225838e4403e22f701afd03b52adb4fca"
+  },
+  "hl7.fhir.uv.extensions.r4#5.3.0": {
+   "url": "https://packages.fhir.org/hl7.fhir.uv.extensions.r4/5.3.0",
+   "inhalt_sha256": "081c4fcf8586944a5dea387e3946fb56b6ccdc72bb42bbeb1c9e6ff590724b8c"
+  },
+  "hl7.fhir.uv.ips#2.0.0": {
+   "url": "https://packages.fhir.org/hl7.fhir.uv.ips/2.0.0",
+   "inhalt_sha256": "a0f2c5ad882a1a6269b62f3f723dc170f205ff925fcbcfe8aa848fcb65e5a1f7"
+  },
+  "hl7.fhir.uv.xver-r5.r4#0.1.0": {
+   "url": "https://packages.fhir.org/hl7.fhir.uv.xver-r5.r4/0.1.0",
+   "inhalt_sha256": "c0ed92fbe766c07d960b3d626b94859c8c8e293b68dbffe348ad9a79d362bd35"
+  }
+ },
+ "quellen": {
+  "projekte/laborbefund/quellen/infomodell_js_treeview_labbefund.json": {
+   "url": "https://gemspec.gematik.de/ig/fhir/epa-laboratory/1.0.0-ballot.1/de/infomodell_js_treeview_labbefund.json",
+   "sha256": "44baf30aa71dd050b627b3bd694c3fa6bfb21035edb362f42b868519effa039f"
+  },
+  "projekte/laborbefund/quellen/processing-rules.html": {
+   "url": "https://gemspec.gematik.de/ig/fhir/epa-laboratory/1.0.0-ballot.1/de/processing-rules.html",
+   "sha256": "2784cf859bfec9630959e2492a43f55c9616298c1429b341608df372263460c7"
+  }
+ }
+}

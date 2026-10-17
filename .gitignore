@@ -1,0 +1,6 @@
+ausgabe/
+__pycache__/
+*.pyc
+.vertraulich-muster
+.DS_Store
+.pakete/

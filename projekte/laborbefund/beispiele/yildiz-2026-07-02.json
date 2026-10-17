@@ -1,0 +1,556 @@
+{
+  "resourceType": "Bundle",
+  "id": "bundle-3b1c9a52",
+  "meta": {
+    "profile": [
+      "https://gematik.de/fhir/epa-laboratory/StructureDefinition/bundle-dglp"
+    ]
+  },
+  "identifier": {
+    "system": "urn:ietf:rfc:3986",
+    "value": "urn:uuid:3b1c9a52-5c4e-4f0b-9d47-2e8f61a0c7d3"
+  },
+  "type": "document",
+  "timestamp": "2026-07-02T13:40:00+02:00",
+  "entry": [
+    {
+      "fullUrl": "https://example.org/demo-pvs/fhir/Composition/comp-3b1c9a52",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "comp-3b1c9a52",
+        "meta": {
+          "profile": [
+            "https://gematik.de/fhir/epa-laboratory/StructureDefinition/composition-dglp"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-Composition.version",
+            "valueString": "1"
+          },
+          {
+            "url": "http://hl7.eu/fhir/StructureDefinition/composition-basedOn-order-or-requisition",
+            "valueReference": {
+              "reference": "ServiceRequest/sr-3b1c9a52"
+            }
+          },
+          {
+            "url": "http://hl7.eu/fhir/extensions/StructureDefinition/composition-diagnosticReportReference",
+            "valueReference": {
+              "reference": "DiagnosticReport/dr-3b1c9a52"
+            }
+          },
+          {
+            "url": "http://hl7.eu/fhir/StructureDefinition/information-recipient",
+            "valueReference": {
+              "reference": "Organization/org-einsender-3b1c9a52"
+            }
+          }
+        ],
+        "identifier": {
+          "system": "urn:ietf:rfc:3986",
+          "value": "urn:uuid:3b1c9a52-5c4e-4f0b-9d47-2e8f61a0c7d3"
+        },
+        "status": "final",
+        "type": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/11000274103/version/20260515",
+              "code": "4241000179101",
+              "display": "Laboratory report"
+            },
+            {
+              "system": "http://loinc.org",
+              "version": "2.82",
+              "code": "11502-2",
+              "display": "Laboratory report"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/pat-M555123402",
+          "identifier": {
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "M555123402"
+          }
+        },
+        "date": "2026-07-02T13:40:00+02:00",
+        "author": [
+          {
+            "reference": "Organization/org-3b1c9a52"
+          }
+        ],
+        "title": "Laboratory Report",
+        "attester": [
+          {
+            "mode": "legal",
+            "time": "2026-07-02T13:40:00+02:00",
+            "party": {
+              "reference": "PractitionerRole/role-3b1c9a52"
+            }
+          }
+        ],
+        "section": [
+          {
+            "title": "Klinische Chemie",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "18719-5",
+                  "display": "Chemistry studies (set)"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Schilddrüse</b></p><ul><li>TSH basal: 3,1 mU/l · Referenz 0,4–4,0 mU/l</li></ul></div>"
+            },
+            "entry": [
+              {
+                "reference": "Observation/grp-3b1c9a52-0"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://example.org/demo-pvs/fhir/DiagnosticReport/dr-3b1c9a52",
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "dr-3b1c9a52",
+        "meta": {
+          "profile": [
+            "https://gematik.de/fhir/epa-laboratory/StructureDefinition/diagnostic-report-dglp"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-DiagnosticReport.composition",
+            "valueReference": {
+              "reference": "Composition/comp-3b1c9a52"
+            }
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "https://gematik.de/fhir/terminology/CodeSystem/laboratory-identificator",
+                  "version": "1.1.0",
+                  "code": "AL",
+                  "display": "Auftragsnummer des Labors"
+                }
+              ]
+            },
+            "system": "https://example.org/demo-pvs/fhir/sid/auftragsnummer-labor",
+            "value": "L-2026-07-02-0112"
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "5.0.0",
+                  "code": "RI",
+                  "display": "Resource Identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:3b1c9a52-5c4e-4f0b-9d47-2e8f61a0c7d3"
+          }
+        ],
+        "basedOn": [
+          {
+            "reference": "ServiceRequest/sr-3b1c9a52"
+          }
+        ],
+        "status": "final",
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.82",
+              "code": "11502-2",
+              "display": "Laboratory report"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/pat-M555123402",
+          "identifier": {
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "M555123402"
+          }
+        },
+        "issued": "2026-07-02T13:40:00+02:00",
+        "performer": [
+          {
+            "reference": "Organization/org-3b1c9a52"
+          }
+        ],
+        "specimen": [
+          {
+            "reference": "Specimen/sp-3b1c9a52"
+          }
+        ],
+        "result": [
+          {
+            "extension": [
+              {
+                "url": "https://gematik.de/fhir/ti/StructureDefinition/sorting-number-extension",
+                "valuePositiveInt": 1
+              }
+            ],
+            "reference": "Observation/grp-3b1c9a52-0"
+          }
+        ],
+        "presentedForm": [
+          {
+            "contentType": "application/pdf",
+            "data": "JVBERi0xLjQKMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCA1OTUgODQyXSAvUmVzb3VyY2VzIDw8IC9Gb250IDw8IC9GMSA1IDAgUiA+PiA+PiAvQ29udGVudHMgNCAwIFIgPj4KZW5kb2JqCjQgMCBvYmoKPDwgL0xlbmd0aCAxNjIgPj4Kc3RyZWFtCkJUCi9GMSAxNSBUZgo1NiA3OTAgVGQKKExhYm9yYmVmdW5kIExhYm9yZ2VtZWluc2NoYWZ0IE5vcmR3ZXN0KSBUagovRjEgMTAgVGYKMCAtMjQgVGQKKEF1ZnRyYWcgTC0yMDI2LTA3LTAyLTAxMTIpIFRqCjAgLTE0IFRkCihUU0ggYmFzYWw6IDMsMSBtVS9sKSBUagowIC0xNCBUZApFVAplbmRzdHJlYW0KZW5kb2JqCjUgMCBvYmoKPDwgL1R5cGUgL0ZvbnQgL1N1YnR5cGUgL1R5cGUxIC9CYXNlRm9udCAvSGVsdmV0aWNhIC9FbmNvZGluZyAvV2luQW5zaUVuY29kaW5nID4+CmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAgbiAKMDAwMDAwMDA1OCAwMDAwMCBuIAowMDAwMDAwMTE1IDAwMDAwIG4gCjAwMDAwMDAyNDEgMDAwMDAgbiAKMDAwMDAwMDQ1NCAwMDAwMCBuIAp0cmFpbGVyCjw8IC9TaXplIDYgL1Jvb3QgMSAwIFIgPj4Kc3RhcnR4cmVmCjU1MQolJUVPRgo=",
+            "title": "Laborgesamtbefund",
+            "creation": "2026-07-02T13:40:00+02:00"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://example.org/demo-pvs/fhir/Patient/pat-M555123402",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "pat-M555123402",
+        "identifier": [
+          {
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "M555123402"
+          }
+        ],
+        "name": [
+          {
+            "family": "Yildiz",
+            "given": [
+              "Meral"
+            ]
+          }
+        ],
+        "birthDate": "1969-06-25"
+      }
+    },
+    {
+      "fullUrl": "https://example.org/demo-pvs/fhir/ServiceRequest/sr-3b1c9a52",
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "sr-3b1c9a52",
+        "meta": {
+          "profile": [
+            "https://gematik.de/fhir/epa-laboratory/StructureDefinition/service-request-dglp"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "https://gematik.de/fhir/terminology/CodeSystem/laboratory-identificator",
+                  "version": "1.1.0",
+                  "code": "AE",
+                  "display": "Auftragsnummer des Einsenders"
+                }
+              ]
+            },
+            "system": "https://example.org/demo-pvs/fhir/sid/auftragsnummer-einsender",
+            "value": "SG-2026-0702-03"
+          }
+        ],
+        "status": "completed",
+        "intent": "order",
+        "code": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/11000274103/version/20260515",
+              "code": "721965002",
+              "display": "Laboratory order"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/pat-M555123402",
+          "identifier": {
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "M555123402"
+          }
+        },
+        "requester": {
+          "reference": "Organization/org-einsender-3b1c9a52"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://example.org/demo-pvs/fhir/Organization/org-3b1c9a52",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "org-3b1c9a52",
+        "name": "Laborgemeinschaft Nordwest"
+      }
+    },
+    {
+      "fullUrl": "https://example.org/demo-pvs/fhir/Organization/org-einsender-3b1c9a52",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "org-einsender-3b1c9a52",
+        "name": "Hausarztpraxis am Stadtgarten"
+      }
+    },
+    {
+      "fullUrl": "https://example.org/demo-pvs/fhir/Practitioner/prac-3b1c9a52",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "prac-3b1c9a52",
+        "name": [
+          {
+            "text": "Dr. rer. nat. Kai Petersen"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://example.org/demo-pvs/fhir/PractitionerRole/role-3b1c9a52",
+      "resource": {
+        "resourceType": "PractitionerRole",
+        "id": "role-3b1c9a52",
+        "practitioner": {
+          "reference": "Practitioner/prac-3b1c9a52",
+          "display": "Dr. rer. nat. Kai Petersen"
+        },
+        "organization": {
+          "reference": "Organization/org-3b1c9a52",
+          "display": "Laborgemeinschaft Nordwest"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://example.org/demo-pvs/fhir/Specimen/sp-3b1c9a52",
+      "resource": {
+        "resourceType": "Specimen",
+        "id": "sp-3b1c9a52",
+        "meta": {
+          "profile": [
+            "https://gematik.de/fhir/epa-laboratory/StructureDefinition/specimen-dglp"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "version": "5.0.0",
+                  "code": "SID",
+                  "display": "Specimen ID"
+                }
+              ]
+            },
+            "system": "https://example.org/demo-pvs/fhir/sid/probennummer",
+            "value": "L-2026-07-02-0112-1"
+          }
+        ],
+        "status": "available",
+        "type": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/11000274103/version/20260515",
+              "code": "119364003",
+              "display": "Serum specimen"
+            }
+          ],
+          "text": "Serum"
+        },
+        "subject": {
+          "reference": "Patient/pat-M555123402",
+          "identifier": {
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "M555123402"
+          }
+        },
+        "receivedTime": "2026-07-02T10:15:00+02:00",
+        "collection": {
+          "collectedDateTime": "2026-07-02T08:30:00+02:00"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://example.org/demo-pvs/fhir/Observation/grp-3b1c9a52-0",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "grp-3b1c9a52-0",
+        "meta": {
+          "profile": [
+            "https://gematik.de/fhir/epa-laboratory/StructureDefinition/observation-laboratory-study-group-dglp"
+          ]
+        },
+        "extension": [
+          {
+            "url": "https://gematik.de/fhir/ti/StructureDefinition/test-profile-laboratory-extension",
+            "valueCodeableConcept": {
+              "text": "Schilddrüse"
+            }
+          }
+        ],
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory",
+                "display": "Laboratory"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "https://gematik.de/fhir/terminology/CodeSystem/laboratory-study-group",
+              "code": "laboruntersuchungsgruppe",
+              "display": "Laboruntersuchungsgruppe"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/pat-M555123402",
+          "identifier": {
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "M555123402"
+          }
+        },
+        "_effectiveDateTime": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+              "valueCode": "not-permitted"
+            }
+          ]
+        },
+        "performer": [
+          {
+            "reference": "Organization/org-3b1c9a52"
+          }
+        ],
+        "hasMember": [
+          {
+            "extension": [
+              {
+                "url": "https://gematik.de/fhir/ti/StructureDefinition/sorting-number-extension",
+                "valuePositiveInt": 1
+              }
+            ],
+            "reference": "Observation/obs-3b1c9a52-0-0"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://example.org/demo-pvs/fhir/Observation/obs-3b1c9a52-0-0",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "obs-3b1c9a52-0-0",
+        "meta": {
+          "profile": [
+            "https://gematik.de/fhir/epa-laboratory/StructureDefinition/observation-laboratory-study-dglp"
+          ]
+        },
+        "status": "final",
+        "category": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "code": "laboratory",
+                "display": "Laboratory"
+              }
+            ]
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "version": "2.82",
+              "code": "3016-3",
+              "display": "TSH basal"
+            }
+          ],
+          "text": "TSH basal"
+        },
+        "subject": {
+          "reference": "Patient/pat-M555123402",
+          "identifier": {
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "M555123402"
+          }
+        },
+        "effectiveDateTime": "2026-07-02T08:30:00+02:00",
+        "issued": "2026-07-02T13:40:00+02:00",
+        "performer": [
+          {
+            "reference": "Organization/org-3b1c9a52"
+          }
+        ],
+        "valueQuantity": {
+          "value": 3.1,
+          "unit": "mU/l",
+          "system": "http://unitsofmeasure.org",
+          "code": "m[IU]/L"
+        },
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "code": "N",
+                "display": "Normal"
+              }
+            ]
+          }
+        ],
+        "referenceRange": [
+          {
+            "low": {
+              "value": 0.4,
+              "unit": "mU/l",
+              "system": "http://unitsofmeasure.org",
+              "code": "m[IU]/L"
+            },
+            "high": {
+              "value": 4,
+              "unit": "mU/l",
+              "system": "http://unitsofmeasure.org",
+              "code": "m[IU]/L"
+            },
+            "type": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "code": "normal",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "text": "0,4–4,0 mU/l"
+          }
+        ],
+        "specimen": {
+          "reference": "Specimen/sp-3b1c9a52"
+        }
+      }
+    }
+  ]
+}

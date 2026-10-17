@@ -1,0 +1,111 @@
+# Laborbefund nach dem digital gestützten Laborprozess (dgLP), gematik-Ballot für ePA 3.2
+id = "laborbefund"
+titel = "Laborbefund (dgLP)"
+beschreibung = "Strukturierter Laborbefund der ePA: Informationsmodell mit FHIR-Mappings, Profile, Verarbeitungsregeln, Anwenderansicht, Druckfassung und eingebettetes PDF."
+darstellung = "laborbefund"
+dokumente = ["druck", "pdf"]
+
+# Für die Verknüpfung genügen die Pakete mit StructureDefinitions; Reihenfolge = Vorrang bei gleicher URL.
+pakete = [
+  "de.gematik.epa.laboratory#1.0.0-ballot.1",
+  "de.gematik.ti#1.5.0-ballot.1",
+  "hl7.fhir.eu.laboratory#2.0.0",
+  "hl7.fhir.eu.base#2.0.0",
+  "hl7.fhir.eu.extensions.r4#1.3.0",
+  "hl7.fhir.uv.xver-r5.r4#0.1.0",
+  "hl7.fhir.uv.extensions.r4#5.3.0",
+  "de.basisprofil.r4#1.6.0",
+  "hl7.fhir.r4.core#4.0.1",
+]
+
+[ig]
+name = "ePA Laboratory Report Implementation Guide"
+paket = "de.gematik.epa.laboratory#1.0.0-ballot.1"
+status = "öffentlicher Ballot, 15.09.2026"
+url = "https://gemspec.gematik.de/ig/fhir/epa-laboratory/1.0.0-ballot.1/de/"
+kanonisch = "https://gematik.de/fhir/epa-laboratory/"
+
+# Ressourcen ohne meta.profile (TI-Common-Profile laut Informationsmodell)
+[standardprofile]
+Patient = "https://gematik.de/fhir/ti/StructureDefinition/ti-patient"
+Organization = "https://gematik.de/fhir/ti/StructureDefinition/ti-organization"
+Practitioner = "https://gematik.de/fhir/ti/StructureDefinition/ti-practitioner"
+PractitionerRole = "https://gematik.de/fhir/ti/StructureDefinition/ti-practitioner-role"
+RelatedPerson = "https://gematik.de/fhir/ti/StructureDefinition/ti-related-person"
+
+[informationsmodell]
+art = "gematik-baum"
+quelle = "quellen/infomodell_js_treeview_labbefund.json"
+referenzgruppe = "Referenzierte Profile"
+ergaenzen_aus = "https://gematik.de/fhir/ti/"
+
+[anforderungen]
+art = "gematik-requirements"
+quelle = "quellen/processing-rules.html"
+
+[[quellen]]
+datei = "quellen/infomodell_js_treeview_labbefund.json"
+url = "https://gemspec.gematik.de/ig/fhir/epa-laboratory/1.0.0-ballot.1/de/infomodell_js_treeview_labbefund.json"
+
+[[quellen]]
+datei = "quellen/processing-rules.html"
+url = "https://gemspec.gematik.de/ig/fhir/epa-laboratory/1.0.0-ballot.1/de/processing-rules.html"
+
+[[beispiele]]
+id = "hoffmann-2026-08-12"
+titel = "Nierenfunktion und HbA1c — Hoffmann, 12.08.2026"
+zweck = "Klinisch plausibler Befund: drei Laborbereiche, vier Werte mit Bewertung, ein- und beidseitige Referenzbereiche, eingebettetes PDF."
+herkunft = "Demo-PVS (github.com/mno-93/demo-pvs, Commit d0e9615), erzeugt mit laborbefundBauen; HL7-Validator 7.0.1 ohne Fehler bis auf die im Projekt genannten Ausnahmen. Fiktive Daten."
+datei = "beispiele/hoffmann-2026-08-12.json"
+
+[[beispiele]]
+id = "hoffmann-2026-03-18"
+titel = "Vorbefund — Hoffmann, 18.03.2026"
+zweck = "Vorbefund derselben Patientin aus einem anderen Labor; Grundlage für Verlauf und Kumulativansicht."
+herkunft = "Demo-PVS (github.com/mno-93/demo-pvs, Commit d0e9615), erzeugt mit laborbefundBauen. Fiktive Daten."
+datei = "beispiele/hoffmann-2026-03-18.json"
+
+[[beispiele]]
+id = "yildiz-2026-07-02"
+titel = "Schilddrüse (TSH) — Yildiz, 02.07.2026"
+zweck = "Minimaler Befund: eine Gruppe, ein Wert im Referenzbereich."
+herkunft = "Demo-PVS (github.com/mno-93/demo-pvs, Commit d0e9615), erzeugt mit laborbefundBauen. Fiktive Daten."
+datei = "beispiele/yildiz-2026-07-02.json"
+
+[[beispiele]]
+id = "ig-cdfb127b"
+titel = "IG-Beispiel mit Probe, Gerät und Anhang"
+zweck = "Beispielinstanzen des IG um Composition cdfb127b: belegt viele optionale Profile (Probe, Additiv, Behälter, Gerät, Diagnose, Bildanhang), Inhalte überwiegend Platzhalter."
+herkunft = "Paket de.gematik.epa.laboratory#1.0.0-ballot.1, Ordner example/ (kein Bundle im Paket; Hülle der Verweise ab der Composition)."
+paket = "de.gematik.epa.laboratory#1.0.0-ballot.1"
+einstieg = "Composition/cdfb127b-df3c-493f-bc7e-e8be4a7bdc45"
+
+[[beispiele]]
+id = "ig-13c807c0"
+titel = "IG-Beispiel, zweite Composition"
+zweck = "Zweite Composition des IG mit eigenem Laborgesamtbefund und Auftrag."
+herkunft = "Paket de.gematik.epa.laboratory#1.0.0-ballot.1, Ordner example/ (Hülle der Verweise ab der Composition)."
+paket = "de.gematik.epa.laboratory#1.0.0-ballot.1"
+einstieg = "Composition/13c807c0-53e7-488e-84bb-023376563cf3"
+
+# HL7 FHIR Validator: nur Beispieldateien (die Paketbeispiele prüft der IG-Build)
+[validierung]
+# Paketstand wie im Demo-PVS, aus dem die Beispiele stammen (dort ohne Fehler bis auf die Ausnahmen)
+pakete = [
+  "hl7.fhir.uv.extensions.r4#5.3.0",
+  "de.basisprofil.r4#1.6.0",
+  "hl7.fhir.eu.base#2.0.1",
+  "de.gematik.ti#1.5.0-ballot.2",
+  "de.gematik.epa.laboratory#1.0.0-ballot.1",
+  "de.gematik.terminology#1.1.0-ballot.2",
+]
+# Demo-Erweiterungen der Beispiele (Namensraum example.org) zulassen
+erweiterungen = ["https://example.org/"]
+
+[[validierung.ausnahmen]]
+muster = "Constraint failed: dr-comp-identifier:"
+grund = "Profilkonflikt im Ballot: Bundle-eu-lab verlangt eine DiagnosticReport-Kennung gleich Composition.identifier; composition-dglp verbietet identifier.type, diagnostic-report-dglp verlangt ihn bei geschlossenem Slicing — mit keiner Instanz erfüllbar."
+
+[[validierung.ausnahmen]]
+muster = "Slice 'Composition\\.section:result': a matching slice is required|Unable to find a profile match for Composition/comp-[0-9a-f]{8} among choices"
+grund = "Ohne Terminologieserver nicht auswertbar: composition-dglp ordnet den Abschnitt über eine required-Bindung an lab-studyType-eu-lab (LOINC) zu; der Validator verneint die Zugehörigkeit ohne Server. Dazu Folgefehler am Verweis auf die Composition."

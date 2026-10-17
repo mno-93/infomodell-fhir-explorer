@@ -1,0 +1,926 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Modellexplorer</title>
+<style>
+:root {
+  --bg: #f6f7f9; --flaeche: #ffffff; --flaeche2: #f0f2f5; --linie: #d9dde3; --text: #1c2430; --leise: #5b6676;
+  --akzent: #1f5fae; --akzent-weich: #e5eefa;
+  --hl: #ffd969; --hl-text: #3a2a00; --hl2: #fff3c4; --hl2-rand: #e8b928;
+  --gut: #1d7a46; --warn: #a15c00; --fehler: #b42318;
+  --papier: #ffffff; --papier-text: #1c2430; --schatten: 0 1px 2px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.05);
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12161c; --flaeche: #1a1f27; --flaeche2: #222833; --linie: #313947; --text: #e3e8ef; --leise: #9aa5b4;
+    --akzent: #7fb0f0; --akzent-weich: #1d2b40;
+    --hl: #8a6a00; --hl-text: #fff6d6; --hl2: #3a3112; --hl2-rand: #a88a2a;
+    --gut: #5cc48a; --warn: #e3a64a; --fehler: #f07c70;
+    --schatten: 0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12161c; --flaeche: #1a1f27; --flaeche2: #222833; --linie: #313947; --text: #e3e8ef; --leise: #9aa5b4;
+  --akzent: #7fb0f0; --akzent-weich: #1d2b40;
+  --hl: #8a6a00; --hl-text: #fff6d6; --hl2: #3a3112; --hl2-rand: #a88a2a;
+  --gut: #5cc48a; --warn: #e3a64a; --fehler: #f07c70;
+  --schatten: 0 1px 2px rgba(0,0,0,.4);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+button, select, input { font: inherit; color: inherit; }
+.kopf { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; padding: 10px 16px; background: var(--flaeche); border-bottom: 1px solid var(--linie); }
+.kopf h1 { font-size: 17px; margin: 0; font-weight: 650; }
+.kopf .quelle { color: var(--leise); font-size: 12.5px; }
+.kopf .startlink { color: inherit; text-decoration: none; }
+.kopf .startlink:hover { text-decoration: underline; }
+.beispiel-info { flex-basis: 100%; margin: 0; color: var(--leise); font-size: 12.5px; }
+.abschnitt { margin: 10px 0 4px; font-weight: 650; border-bottom: 1px solid var(--linie); padding-bottom: 2px; }
+.eintrag { padding: 3px 0 3px 8px; border-left: 2px solid var(--linie); margin: 3px 0; font-size: 13px; }
+.eintrag .art { color: var(--leise); font-size: 11.5px; }
+.leer-abschnitt { color: var(--leise); font-style: italic; font-size: 13px; }
+.kopf .rechts { margin-left: auto; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.knopf { border: 1px solid var(--linie); background: var(--flaeche2); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.knopf:hover { border-color: var(--akzent); }
+select { border: 1px solid var(--linie); background: var(--flaeche); border-radius: 6px; padding: 4px 6px; max-width: 100%; }
+.hinweis { color: var(--leise); font-size: 12.5px; }
+
+/* Verknüpfungskette */
+.kette { background: var(--flaeche); border-bottom: 1px solid var(--linie); padding: 8px 16px 10px; }
+.kette-glieder { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.glied { border: 1px solid var(--linie); border-radius: 8px; padding: 6px 10px; min-height: 58px; background: var(--flaeche2); position: relative; overflow: hidden; }
+.glied h3 { margin: 0 0 2px; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--leise); font-weight: 600; }
+.glied .inhalt { font-size: 13px; overflow-wrap: anywhere; max-height: 60px; overflow: auto; }
+.glied.leer .inhalt { color: var(--leise); }
+.glied.luecke { border-color: var(--warn); }
+.glied.luecke h3::after { content: " · Lücke"; color: var(--warn); }
+.kette details { margin-top: 6px; }
+.kette summary { cursor: pointer; color: var(--akzent); font-size: 13px; }
+.detail-raster { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-top: 6px; max-height: 34vh; overflow: auto; }
+.detail-raster section { min-width: 0; }
+.detail-raster h4 { margin: 4px 0; font-size: 12px; color: var(--leise); text-transform: uppercase; letter-spacing: .04em; }
+.detail-raster p { margin: 2px 0 6px; white-space: pre-line; }
+.anf { border-left: 3px solid var(--akzent); padding: 2px 8px; margin: 4px 0 8px; background: var(--flaeche2); border-radius: 0 6px 6px 0; }
+.anf b { font-size: 12.5px; }
+.kw { font-size: 11px; font-weight: 700; padding: 0 5px; border-radius: 4px; background: var(--akzent-weich); color: var(--akzent); margin-right: 4px; }
+code, .mono { font-family: var(--mono); font-size: 12px; }
+
+/* Raster der vier Ansichten */
+.raster { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.15fr) minmax(0,1.1fr) minmax(0,1fr); gap: 10px; padding: 10px 16px 16px; }
+.pane { background: var(--flaeche); border: 1px solid var(--linie); border-radius: 10px; box-shadow: var(--schatten); display: flex; flex-direction: column; min-width: 0; height: calc(100vh - var(--oben, 190px) - 26px); min-height: 360px; }
+.pane > header { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 8px 10px; border-bottom: 1px solid var(--linie); }
+.pane > header h2 { font-size: 14px; margin: 0; font-weight: 650; }
+.pane > header .nr { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--akzent); color: var(--flaeche); font-size: 12px; font-weight: 700; margin-right: 6px; }
+.treffer { margin-left: auto; font-size: 12px; color: var(--leise); display: flex; gap: 6px; align-items: center; }
+.treffer .zahl { background: var(--hl); color: var(--hl-text); border-radius: 10px; padding: 0 7px; font-weight: 600; }
+.treffer .zahl.null { background: var(--flaeche2); color: var(--leise); }
+.pane .koerper { overflow: auto; flex: 1; padding: 8px 10px; position: relative; }
+.reiter { display: flex; gap: 2px; }
+.reiter button { border: 1px solid var(--linie); background: var(--flaeche2); padding: 2px 9px; cursor: pointer; font-size: 12.5px; }
+.reiter button:first-child { border-radius: 6px 0 0 6px; }
+.reiter button:last-child { border-radius: 0 6px 6px 0; }
+.reiter button[aria-selected="true"] { background: var(--akzent); color: var(--flaeche); border-color: var(--akzent); }
+.unterkopf { padding: 6px 10px; border-bottom: 1px solid var(--linie); display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.unterkopf input[type=search] { flex: 1; min-width: 120px; border: 1px solid var(--linie); border-radius: 6px; padding: 3px 8px; background: var(--flaeche); }
+.leerhinweis { color: var(--warn); font-size: 12.5px; padding: 6px 10px; border-bottom: 1px solid var(--linie); display: none; }
+.leerhinweis.an { display: block; }
+
+/* Markierung */
+[data-n], .im-zeile, [data-el] { cursor: pointer; border-radius: 3px; }
+[data-n]:hover, .im-zeile:hover, .el-zeile:hover { outline: 1px dashed var(--akzent); outline-offset: 1px; }
+.hl { background: var(--hl) !important; color: var(--hl-text) !important; }
+.hl2 { background: var(--hl2) !important; box-shadow: inset 0 0 0 1px var(--hl2-rand); }
+
+/* Informationsmodell */
+.im-baum, .im-baum ul { list-style: none; margin: 0; padding: 0; }
+.im-baum ul { padding-left: 14px; border-left: 1px dotted var(--linie); margin-left: 7px; }
+.im-zeile { display: flex; gap: 4px; align-items: baseline; padding: 1px 4px; white-space: nowrap; }
+.im-zeile .pfeil { width: 12px; flex: none; color: var(--leise); font-size: 10px; }
+.im-zeile .name { overflow: hidden; text-overflow: ellipsis; }
+.im-zeile .card { color: var(--leise); font-size: 11.5px; font-family: var(--mono); }
+.im-zeile .punkt { width: 7px; height: 7px; border-radius: 50%; background: var(--gut); flex: none; align-self: center; }
+.im-zeile .punkt.aus { background: transparent; border: 1px solid var(--linie); }
+.im-zeile .warn { color: var(--warn); font-size: 11px; }
+li.zu > ul { display: none; }
+.im-zeile .art { font-size: 10px; flex: none; color: var(--akzent); }
+.im-zeile .art.zyk { color: var(--warn); font-size: 12px; }
+.im-zeile .art.fhir { border: 1px solid var(--linie); border-radius: 3px; padding: 0 3px; color: var(--leise); }
+.im-zeile.syn .name { font-style: italic; color: var(--leise); }
+.knopf.mini { padding: 0 6px; font-size: 12px; line-height: 18px; }
+.fehlerliste td:first-child { white-space: nowrap; }
+li.versteckt { display: none; }
+
+/* Profil */
+table { border-collapse: collapse; width: 100%; }
+.el-tab td { padding: 2px 4px; border-bottom: 1px solid var(--linie); vertical-align: top; font-size: 12.5px; }
+.el-tab td.id { font-family: var(--mono); font-size: 12px; white-space: nowrap; }
+.el-tab td.card { font-family: var(--mono); font-size: 12px; color: var(--leise); white-space: nowrap; }
+.el-tab .ms { color: var(--fehler); font-weight: 700; font-size: 11px; }
+.el-tab .im { font-size: 10px; border: 1px solid var(--gut); color: var(--gut); border-radius: 3px; padding: 0 3px; }
+.el-tab tr.diff td.id { font-weight: 650; }
+.el-tab .kurz { color: var(--leise); }
+.el-tab { table-layout: fixed; }
+.el-tab td { overflow-wrap: anywhere; }
+.el-tab td.id { overflow: hidden; text-overflow: ellipsis; }
+.el-tab td.typ .mono { word-break: break-word; }
+.profilinfo { font-size: 12px; color: var(--leise); margin-bottom: 6px; }
+
+/* Instanz */
+.res { margin-bottom: 8px; border: 1px solid var(--linie); border-radius: 6px; }
+.res > summary { padding: 3px 8px; background: var(--flaeche2); cursor: pointer; font-size: 12.5px; border-radius: 6px; }
+.res > summary .profil { color: var(--leise); }
+.json { font-family: var(--mono); font-size: 12px; padding: 4px 8px; white-space: pre; overflow-x: auto; }
+.json .s { color: var(--gut); } .json .z { color: var(--akzent); } .json .k { color: var(--leise); }
+
+/* Anwenderansicht */
+.pvs { font-size: 13.5px; }
+.pvs .titel { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.pvs .titel h3 { margin: 0; font-size: 16px; }
+.etikett { font-size: 11.5px; padding: 1px 7px; border-radius: 10px; background: var(--akzent-weich); color: var(--akzent); font-weight: 600; }
+.etikett.rot { background: #fde4e1; color: #a2271b; }
+.kv { display: grid; grid-template-columns: max-content minmax(0,1fr); gap: 2px 10px; margin-bottom: 10px; font-size: 13px; }
+.kv dt { color: var(--leise); } .kv dd { margin: 0; overflow-wrap: anywhere; }
+.erg td, .erg th { padding: 4px 6px; border-bottom: 1px solid var(--linie); text-align: left; font-size: 13px; vertical-align: top; }
+.erg th { font-size: 11.5px; color: var(--leise); font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
+.erg tr.bereich td { background: var(--flaeche2); font-weight: 650; }
+.erg tr.gruppe td { font-weight: 600; color: var(--akzent); padding-top: 8px; }
+.erg td.wert { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+.erg .loinc { color: var(--leise); font-family: var(--mono); font-size: 11px; }
+.flag { font-weight: 700; } .flag.H, .flag.HH { color: var(--fehler); } .flag.L, .flag.LL { color: #2563eb; } .flag.N { color: var(--gut); font-weight: 500; }
+.notiz { background: var(--flaeche2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; font-size: 13px; }
+
+/* Dokument */
+.papier { background: var(--papier); color: var(--papier-text); box-shadow: 0 1px 4px rgba(0,0,0,.25); padding: 26px 28px; max-width: 620px; margin: 4px auto 12px; font-family: Georgia, "Times New Roman", serif; font-size: 12.5px; aspect-ratio: auto; }
+.papier h4 { font-family: system-ui, sans-serif; margin: 0; font-size: 15px; }
+.papier .brief { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+.papier .anschrift { font-size: 12px; }
+.papier .klein { font-size: 10.5px; color: #555; }
+.papier table td, .papier table th { border-bottom: 1px solid #ccc; padding: 3px 4px; text-align: left; font-size: 12px; }
+.papier table th { font-family: system-ui, sans-serif; font-size: 10.5px; color: #444; }
+.papier .fuss { margin-top: 18px; border-top: 1px solid #999; padding-top: 6px; font-size: 10.5px; color: #444; }
+.papier .hl, .papier .hl2 { color: #3a2a00 !important; }
+.papier .hl { background: #ffd969 !important; } .papier .hl2 { background: #fff3c4 !important; }
+.pdfzeile { font-family: Helvetica, Arial, sans-serif; font-size: 13px; padding: 2px 0; }
+.pdfzeile.ohne { color: #888; }
+
+dialog { border: 1px solid var(--linie); border-radius: 10px; background: var(--flaeche); color: var(--text); max-width: 920px; width: calc(100% - 32px); max-height: 86vh; padding: 0; }
+dialog .innen { padding: 14px 18px; overflow: auto; max-height: 80vh; }
+dialog h2 { margin: 0 0 8px; font-size: 17px; }
+dialog table td, dialog table th { border-bottom: 1px solid var(--linie); padding: 3px 6px; text-align: left; font-size: 12.5px; vertical-align: top; }
+dialog::backdrop { background: rgba(0,0,0,.35); }
+
+@media (max-width: 1500px) {
+  .raster { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .pane { height: 70vh; }
+}
+@media (max-width: 860px) {
+  .raster { grid-template-columns: minmax(0,1fr); padding: 10px 16px; }
+  .kette-glieder { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .detail-raster { grid-template-columns: minmax(0,1fr); }
+  .pane { height: 75vh; }
+  .kopf .rechts { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+<header class="kopf">
+  <h1><a href="index.html" class="startlink" title="Alle Projekte">Modellexplorer</a> · <span id="projekt-titel"></span></h1>
+  <span class="quelle" id="quelle"></span>
+  <div class="rechts">
+    <label class="hinweis" for="beispielwahl">Beispiel</label>
+    <select id="beispielwahl"></select>
+    <button class="knopf" id="pruefung-auf">Abdeckung &amp; Prüfung</button>
+    <button class="knopf" id="leeren" title="Auswahl aufheben (Esc)">Auswahl aufheben</button>
+  </div>
+  <p class="beispiel-info" id="beispiel-info"></p>
+</header>
+
+<section class="kette" id="kette" aria-live="polite">
+  <div class="kette-glieder">
+    <div class="glied leer" id="g-im"><h3 id="g-im-titel">1 Informationsmodell</h3><div class="inhalt">Element in einer der vier Ansichten anklicken.</div></div>
+    <div class="glied leer" id="g-fhir"><h3>2 FHIR-Profil</h3><div class="inhalt">–</div></div>
+    <div class="glied leer" id="g-inst"><h3>Instanz</h3><div class="inhalt">–</div></div>
+    <div class="glied leer" id="g-sicht"><h3>3 Ansicht · 4 Dokument</h3><div class="inhalt">–</div></div>
+  </div>
+  <details id="details"><summary>Beschreibung, Codes, Herkunft und Anforderungen</summary><div class="detail-raster" id="detail-raster"></div></details>
+</section>
+
+<main class="raster">
+  <section class="pane" id="p-im">
+    <header><h2><span class="nr">1</span><span id="im-titel">Informationsmodell</span></h2><span class="treffer" id="t-im"></span></header>
+    <div class="leerhinweis an" id="im-hinweis" hidden></div>
+    <div class="unterkopf"><div class="reiter" id="varianten" role="tablist" aria-label="Darstellung des Informationsmodells"><button role="tab" data-variante="referenziert" aria-selected="true" title="wie im IG: Profile stehen einmal und werden referenziert">referenziert</button><button role="tab" data-variante="ausmodelliert" aria-selected="false" title="jede Referenz an der Stelle ausmodelliert, an der sie vorkommt">ausmodelliert</button></div><input type="search" id="im-suche" placeholder="Element suchen …" aria-label="Informationsmodell durchsuchen"><button class="knopf" id="im-auf" title="Alle aufklappen">+</button><button class="knopf" id="im-zu" title="Alle zuklappen">–</button></div>
+    <div class="koerper"><ul class="im-baum" id="im-baum"></ul></div>
+  </section>
+
+  <section class="pane" id="p-fhir">
+    <header><h2><span class="nr">2</span>FHIR</h2>
+      <div class="reiter" role="tablist"><button role="tab" data-reiter="profil" aria-selected="true">Profil</button><button role="tab" data-reiter="instanz" aria-selected="false">Instanz</button></div>
+      <span class="treffer" id="t-fhir"></span></header>
+    <div class="unterkopf" id="profilwahl-zeile"><select id="profilwahl" aria-label="Profil wählen"></select><a id="profil-link" class="hinweis" target="_blank" rel="noopener">im IG</a></div>
+    <div class="leerhinweis" id="lh-fhir"></div>
+    <div class="koerper" id="fhir-koerper"></div>
+  </section>
+
+  <section class="pane" id="p-ui">
+    <header><h2><span class="nr">3</span>Anwenderansicht</h2><span class="hinweis" id="ui-untertitel"></span><span class="treffer" id="t-ui"></span></header>
+    <div class="leerhinweis" id="lh-ui"></div>
+    <div class="koerper" id="ui-koerper"></div>
+  </section>
+
+  <section class="pane" id="p-doc">
+    <header><h2><span class="nr">4</span>Dokument</h2>
+      <div class="reiter" role="tablist" id="doc-reiter"></div>
+      <span class="treffer" id="t-doc"></span></header>
+    <div class="leerhinweis" id="lh-doc"></div>
+    <div class="koerper" id="doc-koerper"></div>
+  </section>
+</main>
+
+<dialog id="pruefung"><div class="innen" id="pruefung-innen"></div></dialog>
+
+<script>
+const D = /*DATEN*/null;
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const kurzUrl = u => (u || '').split('/').pop();
+
+// ------------------------------------------------------------------ Elementlogik
+// Kanonische Kennung: Profil-URL + '#' + Elementpfad mit Slices, Typwahl als JSON-Name (valueQuantity).
+function teile(k) { return k.split('.').map(s => { const i = s.indexOf(':'); return i < 0 ? [s, ''] : [s.slice(0, i), s.slice(i + 1)]; }); }
+function deckt(a, b) {               // a umfasst b (gleich oder Vorfahr)
+  const ta = teile(a), tb = teile(b);
+  if (ta.length > tb.length) return false;
+  for (let i = 0; i < ta.length; i++) {
+    const [na, sa] = ta[i], [nb, sb] = tb[i];
+    if (na.endsWith('[x]')) { const s = na.slice(0, -3); if (!(nb.startsWith(s) && /^[A-Z]/.test(nb.slice(s.length)))) return false; }
+    else if (na !== nb) return false;
+    if (sa && sb && sa !== sb) return false;
+  }
+  return true;
+}
+const tiefe = k => k.split('.').length;
+const guete = k => tiefe(k) * 10 + (k.match(/:/g) || []).length;   // tiefer und mit Slice = spezifischer
+const trenne = el => { const i = el.indexOf('#'); return [el.slice(0, i), el.slice(i + 1)]; };
+
+// ------------------------------------------------------------------ Zustand
+let B = null;                 // aktuelles Beispiel
+let RES = {}, URL2KEY = {};   // Ressourcen
+let KNOTEN = [];              // [{nid, sd, k}]
+let auswahl = null;
+const IM = D.im, IMBYID = {}, IMKIDS = {};
+IM.forEach(n => { IMBYID[n.id] = n; (IMKIDS[n.p || '#'] ||= []).push(n.id); });
+const IMMAPS = IM.flatMap(n => n.maps.filter(m => m.sd).map(m => ({ im: n.id, sd: m.sd, k: m.k })));
+
+function beispielLaden(id) {
+  B = D.beispiele.find(b => b.id === id) || D.beispiele[0];
+  $('#beispielwahl').value = B.id;
+  $('#beispiel-info').innerHTML = `<b>Zweck:</b> ${esc(B.zweck)} · <b>Herkunft:</b> ${esc(B.herkunft)}`;
+  try { history.replaceState(null, '', '#' + B.id); } catch (e) { /* lokal ohne Verlauf */ }
+  RES = {}; URL2KEY = {};
+  B.ressourcen.forEach(r => { RES[r.key] = r; URL2KEY[r.fullUrl] = r.key; URL2KEY[r.key] = r.key; });
+  KNOTEN = Object.entries(B.elemente).map(([nid, el]) => { const [sd, k] = trenne(el); return { nid, sd, k }; });
+  imBelegungBerechnen();
+}
+function verweis(ref) {
+  if (!ref) return null;
+  const r = typeof ref === 'string' ? ref : ref.reference;
+  if (!r) return null;
+  if (URL2KEY[r]) return RES[URL2KEY[r]];
+  const m = r.match(/([A-Za-z]+\/[^/]+)$/);
+  return m && URL2KEY[m[1]] ? RES[URL2KEY[m[1]]] : (m ? Object.values(RES).find(x => x.key === m[1]) : null);
+}
+function wert(key, jp) {
+  let w = RES[key]?.res;
+  if (!jp) return w;
+  for (const t of jp.match(/[^.[\]]+|\[\d+\]/g)) { if (w == null) return undefined; w = t[0] === '[' ? w[+t.slice(1, -1)] : w[t]; }
+  return w;
+}
+
+// ------------------------------------------------------------------ Auflösung einer Auswahl
+function imFuerElement(sd, k) {
+  const exakt = IMMAPS.filter(m => m.sd === sd && m.k === k);
+  if (exakt.length) return { ids: new Set(exakt.map(m => m.im)), schwach: false };
+  let beste = [], bt = 0;
+  for (const m of IMMAPS) if (m.sd === sd && deckt(m.k, k)) { const t = guete(m.k); if (t > bt) { bt = t; beste = [m]; } else if (t === bt) beste.push(m); }
+  return { ids: new Set(beste.map(m => m.im)), schwach: true };
+}
+function profilElementFuer(sd, k) {
+  const p = D.profile[sd]; if (!p) return null;
+  let best = null, bt = 0;
+  for (const e of p.elemente) if (deckt(e.k, k) && guete(e.k) >= bt) { if (guete(e.k) > bt || !best || e.k === k) best = e; bt = guete(e.k); }
+  return best;
+}
+function imMapsMitNachfahren(id) {
+  const n = IMBYID[id]; let maps = n.maps.filter(m => m.sd);
+  if (!maps.length) { const st = [...(IMKIDS[id] || [])]; while (st.length && maps.length < 60) { const c = IMBYID[st.shift()]; maps = maps.concat(c.maps.filter(m => m.sd)); st.push(...(IMKIDS[c.id] || [])); } }
+  return maps;
+}
+
+function aufloesen(sel) {
+  const r = { im: new Set(), imSchwach: false, el: [], n1: new Set(), n2: new Set(), sd: null, titel: '' };
+  if (!sel) return r;
+  if (sel.t === 'im') {
+    r.im.add(sel.id);
+    const maps = imMapsMitNachfahren(sel.id);
+    r.el = maps.map(m => ({ sd: m.sd, k: m.k }));
+    r.sd = maps[0]?.sd || null;
+    for (const kn of KNOTEN) if (maps.some(m => m.sd === kn.sd && deckt(m.k, kn.k))) r.n1.add(kn.nid);
+  } else if (sel.t === 'el') {
+    r.el = [{ sd: sel.sd, k: sel.k }]; r.sd = sel.sd;
+    const f = imFuerElement(sel.sd, sel.k); r.im = f.ids; r.imSchwach = f.schwach;
+    for (const kn of KNOTEN) if (kn.sd === sel.sd && deckt(sel.k, kn.k)) r.n1.add(kn.nid);
+  } else if (sel.t === 'node') {
+    const el = B.elemente[sel.nids[0]]; if (!el) return r;
+    const [sd, k] = trenne(el); r.sd = sd;
+    const pe = profilElementFuer(sd, k); r.el = pe ? [{ sd, k: pe.k }] : [];
+    const f = imFuerElement(sd, k); r.im = f.ids; r.imSchwach = f.schwach;
+    for (const nid of sel.nids) r.n1.add(nid);
+    const unter = (nid, p) => p.endsWith('|') ? nid.startsWith(p) : (nid.startsWith(p + '.') || nid.startsWith(p + '['));
+    for (const kn of KNOTEN) {
+      if (sel.nids.some(p => unter(kn.nid, p))) r.n1.add(kn.nid);
+      else if (!r.n1.has(kn.nid) && kn.sd === sd && kn.k === k) r.n2.add(kn.nid);
+    }
+    // Code-Verknüpfung: ein Code der Instanz, der im Informationsmodell als Terminologie steht
+    const w = wert(...sel.nids[0].split('|'));
+    if (typeof w === 'string') IM.forEach(n => { if (n.codes.some(c => c.code === w)) r.im.add(n.id); });
+  }
+  return r;
+}
+
+function anforderungenFuer(r) {
+  const treffer = new Map();
+  const typen = new Set(Object.values(D.profile).map(p => p.typ));
+  // ganzes Profil gewählt: Anforderungen aus dem Abschnitt dieses Profils
+  r.el.filter(({ k }) => !k.includes('.')).forEach(({ sd }) => D.anforderungen.filter(a => a.sd === sd).forEach(a => treffer.set(a.key, a)));
+  for (const a of D.anforderungen) {
+    for (const p of a.pfade) {
+      const kopf = p.split('.')[0];
+      const passt = r.el.some(({ sd, k }) => {
+        const prof = D.profile[sd]; if (!prof) return false;
+        if (typen.has(kopf)) {
+          if (kopf !== prof.typ) return false;
+          if (a.sd && D.profile[a.sd] && D.profile[a.sd].typ === kopf && a.sd !== sd) return false;
+          return deckt(p, k) || (tiefe(k) > 1 && deckt(k, p));
+        }
+        // Datentyp-Pfad wie Quantity.code: Endstück vergleichen
+        const rest = p.split('.').slice(1), seg = k.split('.');
+        for (let i = 0; i < seg.length - rest.length; i++) if (seg[i].split(':')[0].endsWith(kopf) && rest.every((x, j) => seg[i + 1 + j]?.split(':')[0] === x)) return true;
+        return false;
+      });
+      if (passt) { treffer.set(a.key, a); break; }
+    }
+  }
+  return [...treffer.values()];
+}
+
+// ------------------------------------------------------------------ Informationsmodell (zwei Darstellungen)
+// referenziert: wie im IG, jedes Profil steht einmal unter „Referenzierte Profile“.
+// ausmodelliert: jede „(Referenz)“ ist an Ort und Stelle durch das Profil ersetzt (vom Build erzeugt).
+const VARIANTEN = { referenziert: D.im.map(n => ({ u: n.id, p: n.p, s: n.id })), ausmodelliert: D.baum_aus || [] };
+let variante = 'referenziert';
+try { const v = localStorage.getItem('modellexplorer.variante'); if (v in VARIANTEN) variante = v; } catch (e) { /* ohne Speicher */ }
+const PROFILEL = {};
+function profilEl(sd, id) { const key = sd + '#' + id; if (!(key in PROFILEL)) PROFILEL[key] = D.profile[sd]?.elemente.find(e => e.id === id) || null; return PROFILEL[key]; }
+const TCACHE = {};
+function baumIndex(name) {
+  if (TCACHE[name]) return TCACHE[name];
+  const t = { k: {}, kids: {}, wurzeln: [], pos: {}, nachQuelle: {}, nachElement: {} };
+  VARIANTEN[name].forEach((b, i) => {
+    t.k[b.u] = b; t.pos[b.u] = i;
+    if (b.p) (t.kids[b.p] ||= []).push(b.u); else t.wurzeln.push(b.u);
+    if (b.s && !b.z) (t.nachQuelle[b.s] ||= []).push(b.u);
+    if (b.y) { const e = profilEl(b.y[0], b.y[1]); if (e) { b.el = b.y[0] + '#' + e.k; (t.nachElement[b.el] ||= []).push(b.u); } }
+  });
+  return (TCACHE[name] = t);
+}
+let T = null, filter = null, FUNDE = [], fundZeiger = null;
+let IMBELEGT = {}, SYNBELEGT = {};
+function imBelegungBerechnen() {
+  IMBELEGT = {}; SYNBELEGT = {};
+  for (const m of IMMAPS) {
+    let z = 0; for (const kn of KNOTEN) if (kn.sd === m.sd && deckt(m.k, kn.k)) z++;
+    IMBELEGT[m.im] = (IMBELEGT[m.im] || 0) + z;
+  }
+}
+function belegt(b) {
+  if (b.y) {
+    if (!b.el) return 0;
+    if (!(b.el in SYNBELEGT)) { const [sd, k] = trenne(b.el); SYNBELEGT[b.el] = KNOTEN.filter(kn => kn.sd === sd && deckt(k, kn.k)).length; }
+    return SYNBELEGT[b.el];
+  }
+  return IMBELEGT[b.z || b.s] || 0;
+}
+function cardKurz(c) { const m = [...new Set((c || '').match(/\d+\.\.[\d*n]+/g) || [])]; return m.length > 1 ? m.join(' | ') + ' ◇' : (m[0] || ''); }
+function knotenName(b) {
+  if (b.y) { const e = profilEl(b.y[0], b.y[1]); return b.y[1].split('.').slice(1).join('.') + (e?.short ? ' – ' + e.short : ''); }
+  return b.n || IMBYID[b.s].name;
+}
+function zeile(u) {
+  const b = T.k[u], kids = T.kids[u], n = b.s ? IMBYID[b.s] : null;
+  let art = '', titel = '';
+  if (b.y) { art = '<span class="art fhir">FHIR</span>'; titel = `Nicht im Informationsmodell — aus dem FHIR-Profil ${kurzUrl(b.y[0])} ergänzt (Must Support)\n${b.y[1]}`; }
+  else if (b.z) { art = '<span class="art zyk">↻</span>'; titel = `Zyklus: „${IMBYID[b.z].name}“ ist weiter oben bereits ausmodelliert und wird hier nicht wiederholt`; }
+  else if (b.v) { art = '<span class="art">↳</span>'; titel = `An dieser Stelle ausmodelliert — im IG „${IMBYID[b.v].name}“\n` + n.maps.map(m => m.roh).join('\n'); }
+  else if (n) titel = n.maps.map(m => m.roh).join('\n') || 'ohne FHIR-Mapping';
+  const card = b.y ? (profilEl(b.y[0], b.y[1])?.card || '') : (n ? cardKurz(n.card) : '');
+  const leer = n && !b.z && !b.v && !n.maps.length && !kids;
+  const fehler = n && !b.z && n.maps.some(m => m.status === 'fehler' || m.status === 'verboten');
+  return `<li data-li="${u}" class="${kids ? 'zu' : ''}"><div class="im-zeile${b.y ? ' syn' : ''}" data-u="${u}" title="${esc(titel)}">`
+    + `<span class="pfeil">${kids ? '▸' : ''}</span><span class="punkt ${belegt(b) ? '' : 'aus'}" title="${belegt(b) ? 'im Beispiel belegt' : 'im Beispiel nicht belegt'}"></span>${art}`
+    + `<span class="name">${esc(knotenName(b))}</span><span class="card" title="${esc(n ? n.card : '')}">${esc(card)}</span>`
+    + (leer ? '<span class="warn" title="ohne FHIR-Mapping">∅</span>' : '') + (fehler ? '<span class="warn" title="Mapping fehlerhaft — siehe Details">⚠</span>' : '')
+    + `</div>${kids ? '<ul></ul>' : ''}</li>`;
+}
+function kinderRendern(li) {
+  if (li.dataset.r) return;
+  let ks = T.kids[li.dataset.li] || []; if (filter) ks = ks.filter(k => filter.has(k));
+  li.querySelector(':scope > ul').innerHTML = ks.map(zeile).join('');
+  li.dataset.r = '1';
+  if (filter) $$(':scope > ul > li', li).forEach(c => imAufklappen(c, true));
+}
+function imAufklappen(li, auf) {
+  if (!T.kids[li.dataset.li]) return;
+  if (auf) kinderRendern(li);
+  li.classList.toggle('zu', !auf);
+  const p = li.querySelector(':scope > .im-zeile .pfeil'); if (p) p.textContent = auf ? '▾' : '▸';
+}
+function imBaumBauen() {
+  T = baumIndex(variante);
+  $$('[data-variante]').forEach(b => b.setAttribute('aria-selected', b.dataset.variante === variante));
+  const ws = filter ? T.wurzeln.filter(w => filter.has(w)) : T.wurzeln;
+  $('#im-baum').innerHTML = ws.map(zeile).join('');
+  $$('#im-baum > li').forEach(li => imAufklappen(li, true));
+}
+function pfadOeffnen(u) {
+  const kette = []; let x = T.k[u];
+  while (x) { kette.unshift(x.u); x = x.p ? T.k[x.p] : null; }
+  for (const a of kette.slice(0, -1)) { const li = $(`#im-baum li[data-li="${a}"]`); if (!li) return null; imAufklappen(li, true); }
+  return $(`#im-baum .im-zeile[data-u="${u}"]`);
+}
+function imMarkieren() {
+  FUNDE = [];
+  R.im.forEach(id => (T.nachQuelle[id] || []).forEach(u => FUNDE.push(u)));
+  R.el.forEach(({ sd, k }) => (T.nachElement[sd + '#' + k] || []).forEach(u => FUNDE.push(u)));
+  FUNDE = [...new Set(FUNDE)].sort((a, b) => T.pos[a] - T.pos[b]);
+  if (fundZeiger !== null && fundZeiger >= FUNDE.length) fundZeiger = null;
+  let offen;
+  if (fundZeiger !== null) offen = [FUNDE[fundZeiger]];
+  else if (auswahl?.u && FUNDE.includes(auswahl.u)) offen = [auswahl.u];
+  else if (variante === 'referenziert') offen = FUNDE;
+  else { const erste = new Map(); FUNDE.forEach(u => { const b = T.k[u]; const g = b.s || b.el; if (!erste.has(g)) erste.set(g, u); }); offen = [...erste.values()]; }
+  const schwach = R.imSchwach && auswahl?.t !== 'im' && !auswahl?.u;
+  let erstes = null;
+  offen.forEach(u => { const z = pfadOeffnen(u); if (z) { z.classList.add(schwach && !T.k[u].y ? 'hl2' : 'hl'); erstes ||= z; } });
+  FUNDE.forEach(u => { if (!offen.includes(u)) $(`#im-baum .im-zeile[data-u="${u}"]`)?.classList.add('hl2'); });
+  const t = $('#t-im');
+  if (!auswahl) t.innerHTML = '';
+  else t.innerHTML = `<span class="zahl ${FUNDE.length ? '' : 'null'}" title="Fundstellen in dieser Darstellung">${fundZeiger !== null ? fundZeiger + 1 + '/' : ''}${FUNDE.length}</span>`
+    + (FUNDE.length > 1 ? '<button class="knopf mini" data-fund="-1" title="vorige Fundstelle">‹</button><button class="knopf mini" data-fund="1" title="nächste Fundstelle">›</button>' : '');
+  return erstes;
+}
+
+// ------------------------------------------------------------------ FHIR: Profil und Instanz
+let reiter = 'profil', profilAktiv = null;
+function profilWahlBauen() {
+  const benutzt = new Set(B.ressourcen.map(r => r.sd));
+  const liste = Object.values(D.profile).sort((a, b) => (benutzt.has(b.url) - benutzt.has(a.url)) || a.name.localeCompare(b.name));
+  $('#profilwahl').innerHTML = liste.map(p => `<option value="${esc(p.url)}">${benutzt.has(p.url) ? '● ' : '○ '}${esc(p.name)} (${esc(p.typ)})</option>`).join('');
+  if (!profilAktiv || !D.profile[profilAktiv]) profilAktiv = liste[0].url;
+  $('#profilwahl').value = profilAktiv;
+}
+const IMEXAKT = new Set(IMMAPS.map(m => m.sd + '#' + m.k));
+function profilZeichnen() {
+  const p = D.profile[profilAktiv];
+  $('#profilwahl').value = profilAktiv;
+  const link = $('#profil-link'); link.style.display = p.seite ? '' : 'none'; link.href = p.seite || '#';
+  const zeilen = p.elemente.map(e => {
+    const t = tiefe(e.id) - 1, name = e.id.split('.').slice(-1)[0];
+    return `<tr class="el-zeile ${e.diff ? 'diff' : ''}" data-el="${esc(p.url + '#' + e.k)}" title="${esc(e.id + (e.def ? '\n\n' + e.def : ''))}">`
+      + `<td class="id" style="padding-left:${4 + t * 12}px">${esc(name)}</td><td class="card">${esc(e.card)}</td>`
+      + `<td>${e.ms ? '<span class="ms" title="Must Support">S</span> ' : ''}${IMEXAKT.has(p.url + '#' + e.k) ? '<span class="im" title="Ziel eines Mappings im Informationsmodell">IM</span>' : ''}</td>`
+      + `<td class="typ"><span class="mono">${esc(e.typ)}</span>${e.bind ? '<br><span class="kurz">' + esc(e.bind) + '</span>' : ''}${e.fest ? '<br><span class="kurz mono">' + esc(e.fest) + '</span>' : ''}</td>`
+      + `<td class="kurz">${esc(e.short)}</td></tr>`;
+  }).join('');
+  $('#fhir-koerper').innerHTML = `<div class="profilinfo"><b>${esc(p.titel)}</b> · <code>${esc(p.id)}</code> ${esc(p.version)} · Basis <code>${esc(p.basis)}</code> · fett = im Profil geändert</div><table class="el-tab"><colgroup><col style="width:34%"><col style="width:9%"><col style="width:9%"><col style="width:24%"><col></colgroup><tbody>${zeilen}</tbody></table>`;
+}
+function jsonZeichnen(w, key, jp, einzug) {
+  const ein = '  '.repeat(einzug);
+  const nidAttr = `data-n="${esc(key + '|' + jp)}"`;
+  if (Array.isArray(w)) return '[\n' + w.map((x, i) => ein + '  ' + jsonZeichnen(x, key, `${jp}[${i}]`, einzug + 1)).join(',\n') + '\n' + ein + ']';
+  if (w && typeof w === 'object') {
+    return '{\n' + Object.entries(w).map(([k, v]) => {
+      const kp = (jp ? jp + '.' : '') + k, n = `data-n="${esc(key + '|' + kp)}"`;
+      const prim = v === null || typeof v !== 'object';
+      return ein + '  ' + `<span ${n}><span class="k">"${esc(k)}"</span>: ${prim ? primitiv(v) : ''}</span>` + (prim ? '' : jsonZeichnen(v, key, kp, einzug + 1));
+    }).join(',\n') + '\n' + ein + '}';
+  }
+  return `<span ${nidAttr}>${primitiv(w)}</span>`;
+}
+function primitiv(v) {
+  if (typeof v === 'string') { const s = v.length > 160 ? v.slice(0, 157) + '…' : v; return `<span class="s">"${esc(s)}"</span>`; }
+  return `<span class="z">${esc(JSON.stringify(v))}</span>`;
+}
+function instanzZeichnen() {
+  $('#fhir-koerper').innerHTML = B.ressourcen.map(r => {
+    const res = Object.fromEntries(Object.entries(r.res).filter(([k]) => k !== 'text'));
+    return `<details class="res" open data-res="${esc(r.key)}"><summary><span data-n="${esc(r.key + '|')}"><b>${esc(r.res.resourceType)}</b> ${esc(r.res.id)}</span> <span class="profil">· ${esc(kurzUrl(r.sd))}</span></summary><div class="json">${jsonZeichnen(res, r.key, '', 0)}</div></details>`;
+  }).join('');
+}
+function fhirZeichnen() {
+  $$('[data-reiter]').forEach(b => b.setAttribute('aria-selected', b.dataset.reiter === reiter));
+  $('#profilwahl-zeile').style.display = reiter === 'profil' ? '' : 'none';
+  reiter === 'profil' ? profilZeichnen() : instanzZeichnen();
+}
+
+// ------------------------------------------------------------------ Anwenderansicht und Dokument
+const datum = s => { if (!s) return ''; const m = String(s).match(/^(\d{4})-(\d\d)-(\d\d)(?:T(\d\d):(\d\d))?/); return m ? `${m[3]}.${m[2]}.${m[1]}${m[4] ? ' ' + m[4] + ':' + m[5] : ''}` : s; };
+const zahl = v => typeof v === 'number' ? String(v).replace('.', ',') : v;
+function F(r, jp, fmt = x => x, leer = '') {   // Feld mit Elementbezug
+  if (!r) return leer;
+  const w = wert(r.key, jp);
+  if (w === undefined || w === null || w === '') return leer;
+  return `<span data-n="${esc(r.key + '|' + jp)}">${esc(fmt(w))}</span>`;
+}
+function idx(arr, pred) { return (arr || []).findIndex(pred); }
+function codingText(r, jp) {
+  const cc = wert(r.key, jp); if (!cc) return '';
+  if (cc.text) return F(r, jp + '.text');
+  const i = idx(cc.coding, c => c.display); return i >= 0 ? F(r, `${jp}.coding[${i}].display`) : (cc.coding?.length ? F(r, `${jp}.coding[0].code`) : '');
+}
+function personName(r) {
+  if (!r) return '';
+  const res = r.res;
+  if (res.resourceType === 'Organization') return F(r, 'name');
+  if (res.resourceType === 'PractitionerRole') {
+    const o = verweis(res.organization), p = verweis(res.practitioner);
+    const teil = [p ? personName(p) : F(r, 'practitioner.display'), o ? personName(o) : F(r, 'organization.display')].filter(Boolean);
+    return teil.join(', ');
+  }
+  const n = res.name?.[0]; if (!n) return '';
+  if (n.text) return F(r, 'name[0].text');
+  return [n.prefix ? F(r, 'name[0].prefix[0]') : '', n.given ? F(r, 'name[0].given[0]') : '', F(r, 'name[0].family')].filter(Boolean).join(' ');
+}
+function befundTeile() {
+  const comp = B.ressourcen.find(r => r.res.resourceType === 'Composition');
+  const ext = (r, url) => idx(r?.res.extension, e => e.url.includes(url));
+  const drRef = comp && ext(comp, 'diagnosticReport') >= 0 ? comp.res.extension[ext(comp, 'diagnosticReport')].valueReference : null;
+  const dr = verweis(drRef) || B.ressourcen.find(r => r.res.resourceType === 'DiagnosticReport');
+  const pat = verweis(comp?.res.subject) || B.ressourcen.find(r => r.res.resourceType === 'Patient');
+  const empf = comp && ext(comp, 'information-recipient') >= 0 ? verweis(comp.res.extension[ext(comp, 'information-recipient')].valueReference) : null;
+  const sr = verweis(dr?.res.basedOn?.[0]);
+  const sp = verweis(dr?.res.specimen?.[0]);
+  const labor = verweis(dr?.res.performer?.[0]);
+  return { comp, dr, pat, empf, sr, sp, labor, ext };
+}
+const FLAG = { H: '↑ hoch', HH: '↑↑ kritisch hoch', L: '↓ niedrig', LL: '↓↓ kritisch niedrig', N: 'normal', A: 'auffällig', AA: 'kritisch' };
+function messwert(o) {
+  const r = o.res;
+  if (r.valueQuantity) return `${F(o, 'valueQuantity.comparator')}${r.valueQuantity.comparator ? ' ' : ''}${F(o, 'valueQuantity.value', zahl)}`;
+  if (r.valueString) return F(o, 'valueString');
+  if (r.valueCodeableConcept) return codingText(o, 'valueCodeableConcept');
+  if (r.valueRange) return `${F(o, 'valueRange.low.value', zahl)}–${F(o, 'valueRange.high.value', zahl)}`;
+  if (r.valueRatio) return `${F(o, 'valueRatio.numerator.value', zahl)}:${F(o, 'valueRatio.denominator.value', zahl)}`;
+  if (r.valueAttachment) return F(o, 'valueAttachment.title', x => x, 'Anhang');
+  if (r._valueQuantity || r.dataAbsentReason) return codingText(o, 'dataAbsentReason') || '–';
+  return '–';
+}
+function einheit(o) { const r = o.res; return r.valueQuantity ? F(o, 'valueQuantity.unit') : (r.valueRange ? F(o, 'valueRange.low.unit') : ''); }
+function referenz(o) {
+  const rr = o.res.referenceRange?.[0]; if (!rr) return '';
+  if (rr.text && !rr.low && !rr.high) return F(o, 'referenceRange[0].text');
+  const lo = rr.low && rr.low.value !== undefined ? F(o, 'referenceRange[0].low.value', zahl) : '';
+  const hi = rr.high && rr.high.value !== undefined ? F(o, 'referenceRange[0].high.value', zahl) : '';
+  if (lo && hi) return `${lo} – ${hi}`; if (hi) return `&lt; ${hi}`; if (lo) return `&gt; ${lo}`;
+  return F(o, 'referenceRange[0].text');
+}
+function bewertung(o) {
+  const ip = o.res.interpretation?.[0]; if (!ip) return '';
+  const i = idx(ip.coding, c => /ObservationInterpretation/.test(c.system || ''));
+  if (i < 0) return codingText(o, 'interpretation[0]');
+  const c = ip.coding[i].code;
+  return `<span class="flag ${esc(c)}" data-n="${esc(o.key + '|interpretation[0].coding[' + i + '].code')}">${esc(FLAG[c] || c)}</span>`;
+}
+function gruppenTitel(g) {
+  const e = idx(g.res.extension, x => /test-profile/.test(x.url));
+  if (e >= 0) return codingText(g, `extension[${e}].valueCodeableConcept`);
+  return codingText(g, 'code');
+}
+function ergebnisZeilen(mitLoinc) {
+  const { comp, dr } = befundTeile();
+  const zeilen = [];
+  const einzel = (o) => {
+    const loinc = idx(o.res.code?.coding, c => c.system === 'http://loinc.org');
+    zeilen.push(`<tr data-n="${esc(o.key + '|')}"><td>${codingText(o, 'code') || '–'}${mitLoinc && loinc >= 0 ? `<div class="loinc">LOINC ${F(o, `code.coding[${loinc}].code`)}</div>` : ''}</td>`
+      + `<td class="wert">${messwert(o)}</td><td>${einheit(o)}</td><td>${referenz(o)}</td><td>${bewertung(o)}</td></tr>`);
+    (o.res.note || []).forEach((n, i) => zeilen.push(`<tr><td colspan="5" class="hinweis">${F(o, `note[${i}].text`)}</td></tr>`));
+  };
+  const gruppe = (g) => {
+    if (!g) return;
+    if (g.res.hasMember?.length) {
+      zeilen.push(`<tr class="gruppe" data-n="${esc(g.key + '|')}"><td colspan="5">${gruppenTitel(g)}</td></tr>`);
+      g.res.hasMember.forEach(m => { const o = verweis(m); if (o) einzel(o); });
+    } else einzel(g);
+  };
+  if (comp?.res.section?.length) {
+    comp.res.section.forEach((s, si) => {
+      zeilen.push(`<tr class="bereich"><td colspan="5">${F(comp, `section[${si}].title`) || codingText(comp, `section[${si}].code`)}</td></tr>`);
+      (s.entry || []).forEach(e => gruppe(verweis(e)));
+    });
+  } else (dr?.res.result || []).forEach(e => gruppe(verweis(e)));
+  return zeilen.join('');
+}
+const STATUS = { final: 'Endbefund', partial: 'Teilbefund', preliminary: 'vorläufig', amended: 'geändert', corrected: 'korrigiert', registered: 'registriert' };
+function kennung(r, code) { const i = idx(r?.res.identifier, x => x.type?.coding?.some(c => c.code === code)); return i >= 0 ? F(r, `identifier[${i}].value`) : ''; }
+function kvnr(p) { const i = idx(p?.res.identifier, x => /kvid-10/.test(x.system || '')); return i >= 0 ? F(p, `identifier[${i}].value`) : ''; }
+function uiZeichnen() {
+  const { comp, dr, pat, empf, sr, sp, labor } = befundTeile();
+  const st = dr?.res.status;
+  const ext = dr ? idx(dr.res.extension, e => /critical-result/.test(e.url)) : -1;
+  $('#ui-koerper').innerHTML = `<div class="pvs">
+    <div class="titel"><h3>Laborbefund</h3>${st ? `<span class="etikett" data-n="${esc(dr.key + '|status')}">${esc(STATUS[st] || st)}</span>` : ''}
+      ${ext >= 0 && dr.res.extension[ext].valueBoolean ? `<span class="etikett rot" data-n="${esc(dr.key + '|extension[' + ext + ']')}">kritischer Befund</span>` : ''}</div>
+    <dl class="kv">
+      <dt>Patient:in</dt><dd>${personName(pat) || '–'}${pat?.res.birthDate ? ', geb. ' + F(pat, 'birthDate', datum) : ''}</dd>
+      <dt>KVNR</dt><dd>${kvnr(pat) || F(comp, 'subject.identifier.value') || '–'}</dd>
+      <dt>Labor</dt><dd>${personName(labor) || '–'}</dd>
+      <dt>Auftrag</dt><dd>${kennung(dr, 'AL') || '–'}${sr ? ' · Einsender-Nr. ' + (kennung(sr, 'AE') || F(sr, 'identifier[0].value') || '–') : ''}</dd>
+      <dt>Probe</dt><dd>${sp ? (codingText(sp, 'type') || '–') + (sp.res.collection?.collectedDateTime ? ', entnommen ' + F(sp, 'collection.collectedDateTime', datum) : '') : '–'}</dd>
+      <dt>Befunddatum</dt><dd>${F(dr, 'issued', datum) || F(comp, 'date', datum) || '–'}</dd>
+    </dl>
+    <table class="erg"><thead><tr><th>Untersuchung</th><th>Ergebnis</th><th>Einheit</th><th>Referenz</th><th>Bewertung</th></tr></thead><tbody>${ergebnisZeilen(true)}</tbody></table>
+    ${dr?.res.conclusion ? `<div class="notiz"><b>Beurteilung:</b> ${F(dr, 'conclusion')}</div>` : ''}
+  </div>`;
+}
+// ------------------------------------------------------------------ Anwenderansicht für Dokumente (Composition mit Abschnitten)
+const DATUMSFELDER = ['onsetDateTime', 'recordedDate', 'occurrenceDateTime', 'performedDateTime', 'effectiveDateTime', 'authoredOn', 'dateAsserted', 'issued'];
+function eintragZeile(r) {
+  if (!r) return '<div class="eintrag leer-abschnitt">Verweis nicht auflösbar</div>';
+  const x = r.res, teile = [];
+  const feld = ['code', 'vaccineCode', 'medicationCodeableConcept', 'type'].find(f => x[f]);
+  let titel = feld ? codingText(r, feld) : '';
+  if (!titel && x.medicationReference) { const m = verweis(x.medicationReference); titel = m ? codingText(m, 'code') : F(r, 'medicationReference.display'); }
+  if (!titel && x.device) { const d = verweis(x.device); titel = d ? (codingText(d, 'type') || F(d, 'deviceName[0].name')) : ''; }
+  if (x.resourceType === 'Observation') { const w = messwert(r); if (w && w !== '–') teile.push(`${w} ${einheit(r)}`.trim()); const bw = bewertung(r); if (bw) teile.push(bw); }
+  if (x.clinicalStatus) teile.push(codingText(r, 'clinicalStatus'));
+  if (x.verificationStatus) teile.push(codingText(r, 'verificationStatus'));
+  if (x.criticality) teile.push('Kritikalität ' + F(r, 'criticality'));
+  if (x.reaction?.[0]?.manifestation?.[0]) teile.push('Reaktion ' + codingText(r, 'reaction[0].manifestation[0]'));
+  const dosis = x.dosageInstruction?.[0]?.text ? 'dosageInstruction[0].text' : (x.dosage?.[0]?.text ? 'dosage[0].text' : null);
+  if (dosis) teile.push(F(r, dosis));
+  if (x.protocolApplied?.[0]?.doseNumberPositiveInt) teile.push('Dosis ' + F(r, 'protocolApplied[0].doseNumberPositiveInt'));
+  const df = DATUMSFELDER.find(f => x[f]);
+  if (df) teile.push(F(r, df, datum));
+  else if (x.effectivePeriod?.start) teile.push('seit ' + F(r, 'effectivePeriod.start', datum));
+  if (!df && x.status && !x.clinicalStatus) teile.push(F(r, 'status'));
+  return `<div class="eintrag" data-n="${esc(r.key + '|')}"><span class="art">${esc(x.resourceType)}</span> ${titel || '–'}${teile.filter(Boolean).length ? ' · ' + teile.filter(Boolean).join(' · ') : ''}</div>`;
+}
+function dokumentAnsichtZeichnen() {
+  const comp = B.ressourcen.find(r => r.res.resourceType === 'Composition');
+  if (!comp) { $('#ui-koerper').innerHTML = '<p class="hinweis">Keine Composition im Beispiel.</p>'; return; }
+  const pat = verweis(comp.res.subject), autor = verweis(comp.res.author?.[0]);
+  const kopf = `<div class="titel"><h3>${F(comp, 'title') || 'Dokument'}</h3><span class="etikett" data-n="${esc(comp.key + '|status')}">${esc(comp.res.status || '')}</span></div>
+    <dl class="kv"><dt>Patient:in</dt><dd>${personName(pat) || '–'}${pat?.res.birthDate ? ', geb. ' + F(pat, 'birthDate', datum) : ''}</dd>
+    <dt>Erstellt</dt><dd>${F(comp, 'date', datum) || '–'}</dd><dt>Autor</dt><dd>${autor ? (personName(autor) || codingText(autor, 'type') || F(autor, 'deviceName[0].name') || esc(autor.res.resourceType)) : F(comp, 'author[0].display') || '–'}</dd></dl>`;
+  const abschnitte = (comp.res.section || []).map((s, i) => {
+    const kopfzeile = `<div class="abschnitt" data-n="${esc(comp.key + '|section[' + i + ']')}">${F(comp, `section[${i}].title`) || codingText(comp, `section[${i}].code`)}</div>`;
+    const inhalt = s.entry?.length ? s.entry.map(e => eintragZeile(verweis(e))).join('')
+      : `<div class="leer-abschnitt">${s.emptyReason ? 'leer: ' + codingText(comp, `section[${i}].emptyReason`) : 'keine Einträge'}</div>`;
+    return kopfzeile + inhalt;
+  }).join('');
+  $('#ui-koerper').innerHTML = `<div class="pvs">${kopf}${abschnitte}</div>`;
+}
+function druckZeichnen() {
+  const { comp, dr, pat, empf, sr, sp, labor, ext } = befundTeile();
+  const v = comp ? ext(comp, 'Composition.version') : -1;
+  const att = comp?.res.attester?.findIndex(a => a.mode === 'legal') ?? -1;
+  const org = labor?.res.resourceType === 'PractitionerRole' ? verweis(labor.res.organization) : labor;
+  const empfOrg = empf?.res.resourceType === 'PractitionerRole' ? verweis(empf.res.organization) : empf;
+  const adresse = o => o?.res.address?.[0] ? [F(o, 'address[0].line[0]'), [F(o, 'address[0].postalCode'), F(o, 'address[0].city')].filter(Boolean).join(' ')].filter(Boolean).join('<br>') : '';
+  $('#doc-koerper').innerHTML = `<article class="papier">
+    <div class="brief"><div><h4>${org ? F(org, 'name') : (personName(labor) || 'Labor')}</h4><div class="klein">${adresse(org)}</div></div>
+      <div class="klein" style="text-align:right">${F(comp, 'title') || 'Laborbefund'}<br>${F(comp, 'date', datum)}</div></div>
+    <div class="brief"><div class="anschrift"><div class="klein">An</div>${empf ? personName(empf) : '–'}<br>${adresse(empfOrg)}</div>
+      <div class="anschrift" style="text-align:right">Patient:in: ${personName(pat) || '–'}<br>${pat?.res.birthDate ? 'geb. ' + F(pat, 'birthDate', datum) + '<br>' : ''}KVNR ${kvnr(pat) || F(comp, 'subject.identifier.value') || '–'}</div></div>
+    <p class="klein">Auftragsnummer Labor ${kennung(dr, 'AL') || '–'}${sr ? ' · Auftragsnummer Einsender ' + (kennung(sr, 'AE') || F(sr, 'identifier[0].value') || '–') : ''}${sp ? ' · Probe ' + (codingText(sp, 'type') || '') : ''}</p>
+    <table><thead><tr><th>Untersuchung</th><th>Ergebnis</th><th>Einheit</th><th>Referenzbereich</th><th></th></tr></thead><tbody>${ergebnisZeilen(false)}</tbody></table>
+    ${dr?.res.conclusion ? `<p><b>Beurteilung:</b> ${F(dr, 'conclusion')}</p>` : ''}
+    <div class="fuss">${att >= 0 ? `Medizinisch freigegeben am ${F(comp, `attester[${att}].time`, datum)} durch ${personName(verweis(comp.res.attester[att].party)) || '–'} (${F(comp, `attester[${att}].mode`)})<br>` : 'Ohne Freigabevermerk<br>'}
+      Dokument-ID ${F(comp, 'identifier.value') || '–'} · Version ${v >= 0 ? F(comp, `extension[${v}].valueString`) : '–'} · Status ${F(comp, 'status') || '–'}</div>
+  </article>`;
+}
+const DOKUMENTE = { druck: 'Druckfassung', pdf: 'Eingebettetes PDF', erzaehltext: 'Erzähltext' };
+let docReiter = D.meta.dokumente[0];
+function pdfZeichnen() {
+  const p = B.pdf;
+  if (!p) { $('#doc-koerper').innerHTML = '<p class="hinweis">Dieses Beispiel enthält kein auswertbares PDF in <code>presentedForm</code>.</p>'; return; }
+  $('#doc-koerper').innerHTML = `<p class="hinweis">Textebene des PDF aus <code>DiagnosticReport.presentedForm</code> („${esc(p.titel)}“). Das PDF trägt keine Elementbezüge; die Markierung beruht auf Textabgleich mit den Instanzwerten. <a href="#" id="pdf-oeffnen">PDF öffnen</a></p>
+    <article class="papier">${p.zeilen.map((z, i) => `<div class="pdfzeile ${p.bezuege[i].length ? '' : 'ohne'}" ${p.bezuege[i].length ? `data-n="${esc(p.bezuege[i].join(' '))}"` : ''}>${esc(z)}</div>`).join('')}</article>`;
+  $('#pdf-oeffnen').onclick = e => { e.preventDefault(); const b = Uint8Array.from(atob(p.base64), c => c.charCodeAt(0)); window.open(URL.createObjectURL(new Blob([b], { type: 'application/pdf' })), '_blank'); };
+}
+function erzaehltextZeichnen() {
+  if (!B.texte.length) { $('#doc-koerper').innerHTML = '<p class="hinweis">Dieses Beispiel enthält keinen Erzähltext.</p>'; return; }
+  $('#doc-koerper').innerHTML = `<p class="hinweis">Erzähltext der Abschnitte (<code>Composition.section.text</code>) — die menschenlesbare Fassung des Dokuments. Er trägt keine Elementbezüge; die Markierung beruht auf Textabgleich mit den Instanzwerten.</p>
+    <article class="papier">${B.texte.map(t => `<h4 class="abschnitt" data-n="${esc(t.quelle)}">${esc(t.titel)}</h4>` + t.zeilen.map((z, i) => `<div class="pdfzeile ${t.bezuege[i].length ? '' : 'ohne'}" ${t.bezuege[i].length ? `data-n="${esc(t.bezuege[i].join(' '))}"` : ''}>${esc(z)}</div>`).join('')).join('')}</article>`;
+}
+function docZeichnen() {
+  $$('[data-doc]').forEach(b => b.setAttribute('aria-selected', b.dataset.doc === docReiter));
+  ({ druck: druckZeichnen, pdf: pdfZeichnen, erzaehltext: erzaehltextZeichnen })[docReiter]();
+}
+
+// ------------------------------------------------------------------ Markieren
+function vorfahren(nid) {
+  const [key, jp] = nid.split('|'); const out = [nid]; let p = jp;
+  while (p) { const i = Math.max(p.lastIndexOf('.'), p.lastIndexOf('[')); p = i > 0 ? p.slice(0, i) : ''; out.push(key + '|' + p); }
+  return out;
+}
+let R = aufloesen(null);
+function markieren(scrollen = true) {
+  R = aufloesen(auswahl);
+  $$('.hl, .hl2').forEach(e => e.classList.remove('hl', 'hl2'));
+  // 1 Informationsmodell
+  const erstesIm = imMarkieren(), imZahl = FUNDE.length;
+  // 2 FHIR
+  if (R.sd && reiter === 'profil' && R.sd !== profilAktiv && D.profile[R.sd]) { profilAktiv = R.sd; profilZeichnen(); }
+  let fhirZahl = 0, erstesFhir = null;
+  if (reiter === 'profil') {
+    $$('[data-el]').forEach(z => {
+      const [sd, k] = trenne(z.dataset.el);
+      if (R.el.some(e => e.sd === sd && e.k === k)) { z.classList.add('hl'); fhirZahl++; erstesFhir ||= z; }
+      else if (R.el.some(e => e.sd === sd && tiefe(e.k) > 1 && deckt(e.k, k))) z.classList.add('hl2');
+    });
+  }
+  // Instanz, Anwenderansicht, Dokument
+  const zaehle = (wurzel) => {
+    let n = 0, erstes = null;
+    $$('[data-n]', wurzel).forEach(z => {
+      const nids = z.dataset.n.split(' ');
+      if (nids.some(nid => vorfahren(nid).some(v => R.n1.has(v)))) { z.classList.add('hl'); n++; erstes ||= z; }
+      else if (nids.some(nid => R.n2.has(nid))) { z.classList.add('hl2'); erstes ||= z; }
+    });
+    return [n, erstes];
+  };
+  let [instZahl, erstesInst] = reiter === 'instanz' ? zaehle($('#fhir-koerper')) : [0, null];
+  if (reiter === 'instanz') { fhirZahl = instZahl; erstesFhir = erstesInst; }
+  const [uiZahl, erstesUi] = zaehle($('#ui-koerper'));
+  const [docZahl, erstesDoc] = zaehle($('#doc-koerper'));
+  zaehler('#t-fhir', fhirZahl); zaehler('#t-ui', uiZahl); zaehler('#t-doc', docZahl);
+  // Lücken benennen
+  const belegt = [...R.n1].some(n => !n.endsWith('|') || true) && R.n1.size > 0;
+  luecke('#lh-ui', auswahl && belegt && !uiZahl ? 'In der Instanz belegt, in der Anwenderansicht aber nicht dargestellt.' : (auswahl && !R.n1.size && R.el.length ? 'Im gewählten Beispiel nicht belegt.' : ''));
+  luecke('#lh-doc', auswahl && belegt && !docZahl ? 'In der Instanz belegt, im Dokument aber nicht wiedergegeben.' : '');
+  luecke('#lh-fhir', auswahl && reiter === 'profil' && !fhirZahl && auswahl.t !== 'el' ? (R.el.length ? 'Ziel liegt in einem anderen Profil oder innerhalb einer Extension.' : 'Kein FHIR-Mapping im Informationsmodell.') : '');
+  ketteZeichnen(imZahl, fhirZahl, uiZahl, docZahl);
+  if (scrollen) [erstesIm, erstesFhir, erstesUi, erstesDoc].forEach(z => z && sichtbar(z));
+}
+function zaehler(sel, n) { $(sel).innerHTML = auswahl ? `<span class="zahl ${n ? '' : 'null'}">${n}</span>` : ''; }
+function luecke(sel, txt) { const e = $(sel); e.textContent = txt; e.classList.toggle('an', !!txt); }
+function sichtbar(z) {
+  const k = z.closest('.koerper'); if (!k) return;
+  const a = z.getBoundingClientRect(), b = k.getBoundingClientRect();
+  if (a.top < b.top + 8 || a.bottom > b.bottom - 8) k.scrollTop += a.top - b.top - k.clientHeight / 3;
+}
+
+// ------------------------------------------------------------------ Kette und Details
+function glied(id, html, leer, istLuecke) { const g = $(id); g.classList.toggle('leer', !!leer); g.classList.toggle('luecke', !!istLuecke); g.querySelector('.inhalt').innerHTML = html; }
+function ketteZeichnen(imZahl, fhirZahl, uiZahl, docZahl) {
+  if (!auswahl) {
+    glied('#g-im', 'Element in einer der vier Ansichten anklicken.', true); glied('#g-fhir', '–', true); glied('#g-inst', '–', true); glied('#g-sicht', '–', true);
+    $('#detail-raster').innerHTML = ''; return;
+  }
+  const ims = [...R.im].map(id => IMBYID[id]);
+  glied('#g-im', ims.length ? ims.slice(0, 3).map(n => `<b>${esc(n.name)}</b> <span class="mono">${esc(cardKurz(n.card))}</span>`).join('<br>') + (ims.length > 3 ? `<br>… ${ims.length - 3} weitere` : '') + (R.imSchwach && auswahl.t !== 'im' ? '<br><span class="hinweis">nächstes übergeordnetes Element</span>' : '') : (D.meta.im_art === 'gematik-baum' ? 'kein Element im Informationsmodell' : 'kein Element in der abgeleiteten Struktur'), !ims.length, !ims.length);
+  const els = R.el.slice(0, 3).map(({ sd, k }) => { const p = D.profile[sd]; const e = p?.elemente.find(x => x.k === k); return `<b>${esc(p ? p.name : kurzUrl(sd))}</b><br><code>${esc(e ? e.id : k)}</code>${e ? ` <span class="mono">${esc(e.card)}</span>${e.ms ? ' <span class="ms">S</span>' : ''}` : ''}`; });
+  glied('#g-fhir', els.length ? els.join('<br>') + (R.el.length > 3 ? `<br>… ${R.el.length - 3} weitere` : '') : 'kein FHIR-Mapping', !els.length, !els.length);
+  const blaetter = [...R.n1].filter(n => { const w = wert(...n.split('|')); return w !== undefined && (w === null || typeof w !== 'object'); });
+  const probe = blaetter.slice(0, 3).map(n => { const [key, jp] = n.split('|'); return `<code>${esc(key.split('/')[0])}.${esc(jp)}</code> = ${esc(JSON.stringify(wert(key, jp)).slice(0, 60))}`; });
+  glied('#g-inst', R.n1.size ? `${blaetter.length} Werte${R.n2.size ? `, ${R.n2.size} gleichartige in anderen Ressourcen` : ''}<br>${probe.join('<br>')}` : 'im Beispiel nicht belegt', !R.n1.size);
+  glied('#g-sicht', R.n1.size ? `Anwenderansicht: <b>${uiZahl}</b> Stelle(n)<br>Dokument: <b>${docZahl}</b> Stelle(n)` : '–', !R.n1.size, R.n1.size && (!uiZahl || !docZahl));
+  detailsZeichnen(ims);
+}
+function detailsZeichnen(ims) {
+  const imTeil = ims.slice(0, 2).map(n => `<h4>Informationsmodell: ${esc(n.name)}</h4>`
+    + (n.kurz ? `<p><i>${esc(n.kurz)}</i></p>` : '') + (n.besch ? `<p>${esc(n.besch)}</p>` : '')
+    + `<p class="hinweis">${esc(n.typ ? 'Datentyp ' + n.typ + ' · ' : '')}${esc(n.card)}</p>`
+    + (n.codes.length ? '<h4>Terminologie</h4>' + n.codes.map(c => { const nid = KNOTEN.find(k => wert(...k.nid.split('|')) === c.code)?.nid; return `<p><code>${esc(c.code)}</code> ${esc(c.display)} <span class="hinweis">${esc(kurzUrl(c.system))}</span>${nid ? ` · <a href="#" data-sprung="${esc(nid)}">im Beispiel</a>` : ''}</p>`; }).join('') : '')
+    + (n.maps.some(m => m.status !== 'exakt') ? '<h4>Mappingprüfung</h4>' + n.maps.filter(m => m.status !== 'exakt').map(m => `<p><span class="${m.status === 'schreibvariante' ? 'hinweis' : 'warn'}">${esc(m.status)}</span> <code>${esc(m.roh)}</code><br><span class="hinweis">${esc(m.grund)}</span></p>`).join('') : '')
+    + (D.pruefung.some(p => p.status === 'anderes-profil' && p.id === n.id) ? D.pruefung.filter(p => p.status === 'anderes-profil' && p.id === n.id).map(p => `<p><span class="warn">anderes Profil</span> ${esc(p.grund)}</p>`).join('') : '')
+    + (n.herkunft.length ? '<h4>Herkunft (Altdaten)</h4>' + n.herkunft.map(h => `<p><b>${esc(h.quelle)}:</b> ${esc(h.text)}</p>`).join('') : '')).join('');
+  const fhirTeil = R.el.slice(0, 2).map(({ sd, k }) => { const p = D.profile[sd]; const e = p?.elemente.find(x => x.k === k); return e ? `<h4>FHIR: ${esc(p.name)}</h4><p><code>${esc(e.id)}</code> ${esc(e.card)}${e.ms ? ' · Must Support' : ''}</p><p>${esc(e.short)}</p>${e.bind ? `<p class="hinweis">Bindung: ${esc(e.bind)}</p>` : ''}${e.fest ? `<p class="hinweis mono">${esc(e.fest)}</p>` : ''}${e.def ? `<p class="hinweis">${esc(e.def)}</p>` : ''}` : `<h4>FHIR: ${esc(p ? p.name : kurzUrl(sd))}</h4><p><code>${esc(k)}</code> — kein Element im Profil-Snapshot (siehe Mappingprüfung)</p>`; }).join('');
+  const anf = anforderungenFuer(R);
+  const imAnf = ims.flatMap(n => n.anf);
+  const anfTeil = (imAnf.length || anf.length) ? '<h4>Anforderungen</h4>'
+    + imAnf.map(a => `<div class="anf"><span class="kw">${esc(a.kw)}</span><b>${esc(a.titel)}</b> <span class="hinweis">· aus dem Informationsmodell · ${esc(a.akteur)}</span><p>${esc(a.text)}</p></div>`).join('')
+    + anf.map(a => `<div class="anf"><span class="kw">${esc(a.conf)}</span><b>${esc(a.key)}</b> ${esc(a.titel)} <span class="hinweis">· Verarbeitungsregeln, ${esc(a.abschnitt)}</span><p>${esc(a.text)}</p></div>`).join('')
+    : '<h4>Anforderungen</h4><p class="hinweis">Keine Anforderung mit Bezug auf dieses Element gefunden.</p>';
+  $('#detail-raster').innerHTML = `<section>${imTeil || '<p class="hinweis">Kein Element im Informationsmodell.</p>'}</section><section>${fhirTeil || '<p class="hinweis">Kein Profilelement.</p>'}</section><section>${anfTeil}</section>`;
+}
+
+// ------------------------------------------------------------------ Prüfbericht
+const TECHNISCH = /\.(url|reference|system|version)$|\.text\.(div|status)$/;   // technische Angaben ohne eigenes fachliches Gegenstück
+function pruefungZeigen() {
+  const s = D.statistik, ab = B.abdeckung;
+  const ohneIm = new Map();
+  for (const kn of KNOTEN) {
+    const w = wert(...kn.nid.split('|')); if (w !== null && typeof w === 'object') continue;
+    if (TECHNISCH.test(kn.k)) continue;
+    if (!IMMAPS.some(m => m.sd === kn.sd && m.k.includes('.') && deckt(m.k, kn.k))) { const k = kurzUrl(kn.sd) + ' · ' + kn.k; ohneIm.set(k, (ohneIm.get(k) || 0) + 1); }
+  }
+  const imOhne = IM.filter(n => !n.maps.length && !(IMKIDS[n.id] || []).length && !n.name.endsWith('(Referenz)'));
+  const st = s.mapping_status, ba = s.baum_aus;
+  const liste = (stati) => D.pruefung.filter(p => stati.includes(p.status)).map(p => `<tr><td>${esc(p.im)}<br><span class="hinweis">${esc(p.pfad.split(' / ').slice(-3, -1).join(' / '))}</span></td><td><code>${esc(p.mapping)}</code><br>${esc(p.grund).replace(/`([^`]+)`/g, '<code>$1</code>')}</td></tr>`).join('');
+  const gematik = D.meta.im_art === 'gematik-baum', ig = D.meta.ig;
+  const zeile = (a, b) => `<tr><td>${a}</td><td>${b}</td></tr>`;
+  $('#pruefung-innen').innerHTML = `<h2>Abdeckung und ${gematik ? 'Mappingprüfung' : 'Strukturprüfung'}</h2>
+    <p class="hinweis">Maschinell aus den veröffentlichten Artefakten abgeleitet. Bewertungen sind Hinweise, keine Feststellungen.</p>
+    <p class="hinweis">Quellen: ${esc(ig.name)} (<code>${esc(ig.paket)}</code>, ${esc(ig.status)})${ig.url ? `, <a href="${esc(ig.url)}" target="_blank" rel="noopener">IG</a>` : ''} · Beispiel: ${esc(B.herkunft)}</p>
+    ${D.meta.im_hinweis ? `<p class="hinweis">${esc(D.meta.im_hinweis)}</p>` : ''}
+    <table><tbody>
+      ${gematik ? zeile('Elemente im Informationsmodell', `${s.im_knoten}, davon ${s.im_mit_mapping} mit FHIR-Mapping`)
+        + zeile('FHIR-Mappings', `${s.mappings}: ${st.exakt} exakt · ${st.schreibvariante} in Schreibvariante · <b>${st.fehler} ohne Ziel · ${st.verboten} auf ein 0..0-Element</b> · ${s.anderes_profil} in ein anderes Profil als das übergeordnete Element`)
+        : zeile('Abgeleitete Struktur', `${s.im_knoten} Elemente aus den Profilen`)}
+      ${ba ? zeile('Ausmodellierte Darstellung', `${ba.knoten} Knoten · ${ba.ausmodelliert} Referenzen an Ort und Stelle aufgelöst · ${ba.zyklen} Zyklen erkannt · ${ba.aus_profil} Knoten aus FHIR-Profilen ergänzt (Must Support)`) : ''}
+      ${s.anforderungen || s.im_anforderungen ? zeile('Anforderungen', `${s.anforderungen} in den Verarbeitungsregeln, davon ${s.anforderungen_mit_pfad} mit erkennbarem Elementpfad; ${s.im_anforderungen} direkt im Informationsmodell`) : ''}
+      ${zeile(esc(B.titel), `${B.ressourcen.length} Ressourcen · ${ab.werte} fachliche Einzelwerte, davon ${ab.gedeckt} durch ein spezifisches Element ${gematik ? 'des Informationsmodells' : 'der abgeleiteten Struktur'} gedeckt · ${B.struktur.length} Strukturbefunde`)}
+    </tbody></table>
+    ${B.struktur.length ? '<h3>Strukturbefunde im Beispiel</h3><p class="hinweis">Belegtes Element, das sich im Profil nicht auflösen lässt.</p><table class="fehlerliste"><tbody>' + B.struktur.map(x => zeile(`<code>${esc(x.element)}</code>`, esc(x.grund))).join('') + '</tbody></table>' : ''}
+    ${gematik ? `<h3>Fehlerhafte Mappings</h3><p class="hinweis">Pfad führt auf kein Element oder auf ein im Profil verbotenes.</p>
+    <table class="fehlerliste"><tbody>${liste(['fehler', 'verboten', 'unbekannt'])}</tbody></table>
+    <h3>Mapping in ein anderes Profil</h3><p class="hinweis">Kann gewollt sein (Device/DeviceDefinition); zu prüfen.</p>
+    <table class="fehlerliste"><tbody>${liste(['anderes-profil'])}</tbody></table>
+    <details><summary>Schreibvarianten (${st.schreibvariante}) — eindeutig, aber nicht als Elementkennung geschrieben</summary>
+    <table class="fehlerliste"><tbody>${liste(['schreibvariante'])}</tbody></table></details>` : ''}
+    <h3>Werte im Beispiel ohne spezifisches Element ${gematik ? 'im Informationsmodell' : 'in der abgeleiteten Struktur'}</h3><p class="hinweis">Ohne technische Angaben (url, reference, system, version, Erzähltext).</p>
+    <table><tbody>${[...ohneIm].sort().map(([k, n]) => `<tr><td><code>${esc(k)}</code></td><td>${n}×</td></tr>`).join('')}</tbody></table>
+    ${gematik ? `<h3>Blätter im Informationsmodell ohne FHIR-Mapping (${imOhne.length})</h3><p>${imOhne.map(n => esc(n.name)).join(' · ')}</p>` : ''}
+    <p><button class="knopf" onclick="this.closest('dialog').close()">Schließen</button></p>`;
+  $('#pruefung').showModal();
+}
+
+// ------------------------------------------------------------------ Ereignisse
+function waehlen(sel) { auswahl = sel; fundZeiger = null; markieren(); }
+document.addEventListener('click', e => {
+  const sprung = e.target.closest('[data-sprung]');
+  if (sprung) { e.preventDefault(); return waehlen({ t: 'node', nids: [sprung.dataset.sprung] }); }
+  const fund = e.target.closest('[data-fund]');
+  if (fund) { const n = FUNDE.length; fundZeiger = ((fundZeiger ?? (+fund.dataset.fund > 0 ? -1 : 0)) + +fund.dataset.fund + n) % n; return markieren(); }
+  const pfeil = e.target.closest('.pfeil');
+  if (pfeil && pfeil.textContent) { const li = pfeil.closest('li'); imAufklappen(li, li.classList.contains('zu')); return; }
+  const zl = e.target.closest('.im-zeile[data-u]');
+  if (zl) {
+    const b = T.k[zl.dataset.u];
+    if (b.y) { if (!b.el) return; const [sd, k] = trenne(b.el); return waehlen({ t: 'el', sd, k, u: b.u }); }
+    return waehlen({ t: 'im', id: b.z || b.s, u: b.u });
+  }
+  const el = e.target.closest('[data-el]'); if (el) { const [sd, k] = trenne(el.dataset.el); return waehlen({ t: 'el', sd, k }); }
+  const n = e.target.closest('[data-n]');
+  if (n) { e.preventDefault(); return waehlen({ t: 'node', nids: n.dataset.n.split(' ') }); }
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#pruefung').open) waehlen(null); });
+$('#leeren').onclick = () => waehlen(null);
+$('#pruefung-auf').onclick = pruefungZeigen;
+$('#profilwahl').onchange = e => { profilAktiv = e.target.value; profilZeichnen(); markieren(false); };
+$$('[data-reiter]').forEach(b => b.onclick = () => { reiter = b.dataset.reiter; fhirZeichnen(); markieren(); });
+$('#doc-reiter').innerHTML = D.meta.dokumente.map(d => `<button role="tab" data-doc="${d}" aria-selected="false">${DOKUMENTE[d]}</button>`).join('');
+$$('[data-doc]').forEach(b => b.onclick = () => { docReiter = b.dataset.doc; docZeichnen(); markieren(); });
+$('#beispielwahl').onchange = e => { beispielLaden(e.target.value); alles(); waehlen(null); };
+$('#im-auf').onclick = () => { let zu; while ((zu = $$('#im-baum li.zu')).length && $$('#im-baum li').length < 5000) zu.forEach(li => imAufklappen(li, true)); };
+$('#im-zu').onclick = () => $$('#im-baum li').forEach(li => imAufklappen(li, false));
+$$('[data-variante]').forEach(b => b.onclick = () => {
+  variante = b.dataset.variante; try { localStorage.setItem('modellexplorer.variante', variante); } catch (e) { /* ohne Speicher */ }
+  filter = null; $('#im-suche').value = ''; fundZeiger = null; imBaumBauen(); markieren();
+});
+$('#im-suche').oninput = e => {
+  const q = e.target.value.trim().toLowerCase();
+  filter = null;
+  if (q) {
+    T = baumIndex(variante); filter = new Set(); let treffer = 0;
+    for (const b of VARIANTEN[variante]) {
+      if (treffer >= 150) break;
+      if (knotenName(b).toLowerCase().includes(q) || (b.s && IMBYID[b.s].maps.some(m => (m.roh || '').toLowerCase().includes(q)))) {
+        treffer++; let x = b; while (x && !filter.has(x.u)) { filter.add(x.u); x = x.p ? T.k[x.p] : null; }
+      }
+    }
+  }
+  imBaumBauen(); markieren(false);
+};
+function obenMessen() { document.documentElement.style.setProperty('--oben', ($('.kopf').offsetHeight + $('#kette').offsetHeight) + 'px'); }
+new ResizeObserver(obenMessen).observe($('#kette'));
+window.addEventListener('resize', obenMessen);
+
+function alles() { imBaumBauen(); profilWahlBauen(); fhirZeichnen(); (D.meta.darstellung === 'laborbefund' ? uiZeichnen : dokumentAnsichtZeichnen)(); docZeichnen(); }
+$('#projekt-titel').textContent = D.meta.titel;
+$('#quelle').textContent = `${D.meta.ig.name} · ${D.meta.ig.paket} (${D.meta.ig.status})`;
+$('#im-titel').textContent = D.meta.im_titel; $('#g-im-titel').textContent = '1 ' + D.meta.im_titel;
+if (D.meta.im_hinweis) { $('#im-hinweis').hidden = false; $('#im-hinweis').textContent = D.meta.im_hinweis; }
+if (!D.baum_aus) { $('#varianten').hidden = true; variante = 'referenziert'; }
+$('#ui-untertitel').textContent = D.meta.darstellung === 'laborbefund' ? 'Primärsystem, Befundeingang' : 'Primärsystem, Dokument geöffnet';
+$('#beispielwahl').innerHTML = D.beispiele.map(b => `<option value="${esc(b.id)}" title="${esc(b.zweck)}">${esc(b.titel)}</option>`).join('');
+beispielLaden(decodeURIComponent(location.hash.slice(1))); alles(); markieren(false); obenMessen();
+</script>
+</body>
+</html>
