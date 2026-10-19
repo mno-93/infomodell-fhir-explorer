@@ -19,6 +19,11 @@ pakete = [
   "hl7.fhir.r4.core#4.0.1",
 ]
 
+# Nur für die Auflösung von Wertelisten der Bindungen
+terminologiepakete = [
+  "hl7.terminology.r4#7.1.0",
+]
+
 [ig]
 name = "HL7 Europe Patient Summary"
 paket = "hl7.fhir.eu.eps#1.0.0-ballot"

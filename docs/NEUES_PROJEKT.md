@@ -35,6 +35,7 @@ Vorlage: `projekte/patient-summary/projekt.toml` (ohne Informationsmodell) oder 
 | `darstellung` | `laborbefund` oder `dokument` |
 | `dokumente` | Auswahl aus `druck`, `pdf`, `erzaehltext` |
 | `pakete` | alle Pakete mit StructureDefinitions, die Modell und Beispiele brauchen, mit fester Version; Reihenfolge = Vorrang; `hl7.fhir.r4.core#4.0.1` zuletzt |
+| `terminologiepakete` | optional: Pakete nur zur Auflösung von Wertelisten (z. B. `de.gematik.terminology`, `hl7.terminology.r4`), feste Version |
 | `[ig]` | `name`, `paket`, `status`, `url`, `kanonisch` (für Links auf Profilseiten) |
 | `[standardprofile]` | Profil je Ressourcentyp für Ressourcen ohne `meta.profile` |
 | `[informationsmodell]` | `art` und die Angaben des Adapters (siehe `docs/AUFBAU.md`) |

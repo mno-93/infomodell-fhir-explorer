@@ -95,6 +95,27 @@
 | Medizinischer Freigabezeitpunkt <br>*Referenzierte Profile / Medizinische Freigabe* | `ProvenancedgLP.occurred[x]:occurredDateTime` | Typ-Slice `occurred[x]:occurredDateTime` nicht definiert; gemeint ist die Typwahl `occurred[x]` |
 | Hersteller <br>*Referenzierte Profile / Probenbehälter* | `DeviceDefinitionSpecimenContainerdgLP.manufacturer[x]:manufacturerString` | Typ-Slice `manufacturer[x]:manufacturerString` nicht definiert; gemeint ist die Typwahl `manufacturer[x]` |
 
+## Wertelisten
+
+45 Wertelisten im Modell, davon 39 im Paketbestand oder über eine Profilbindung aufgelöst, 39 mit Link auf die Originalseite.
+
+Nicht auflösbar (weder im Paketbestand noch in einer Profilbindung):
+
+- `KBV_VS_MIO_LAB_Comparator_RefRangeHigh`
+- `KBV_VS_MIO_LAB_Comparator_RefRangeLow`
+- `KBV_VS_MIO_LAB_Composition_Attester_Mode`
+- `KBV_VS_MIO_LAB_Provenance_Activity_Type`
+- `MehrfachkodierungsKennzeichen`
+- `ObservationStatusdgLPVS`
+
+### Werteliste im Modell ≠ Bindung im Profil (3)
+
+| Element im Modell | Mapping | Werteliste im Modell | Bindung im Profil |
+|---|---|---|---|
+| Freigabetyp | `CompositiondgLP.attester:legalAuthenticator.mode` | `KBV_VS_MIO_LAB_Composition_Attester_Mode` | `http://hl7.org/fhir/ValueSet/composition-attestation-mode` (required) |
+| Status Laboruntersuchung | `ObservationLaboratoryStudydgLP.status` | `ObservationStatusdgLPVS` | `https://gematik.de/fhir/terminology/ValueSet/observation-status` (required) |
+| Freigabetyp | `ProvenancedgLP.activity` | `KBV_VS_MIO_LAB_Provenance_Activity_Type` | `http://hl7.org/fhir/ValueSet/provenance-activity-type` (extensible) |
+
 ## Ausmodellierte Darstellung
 
 3079 Knoten · 103 Referenzen an der Verwendungsstelle aufgelöst · 20 Zyklen erkannt · 1552 Knoten aus FHIR-Profilen ergänzt

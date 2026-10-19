@@ -45,6 +45,7 @@ Weitere Befehle:
 - **Verknüpfungsleiste** oben: Kette der Auswahl über alle Ansichten; fehlt ein Glied, wird es als Lücke markiert. Darunter Beschreibung, Codes, Herkunft und Anforderungen.
 - **Zwei Markierungsstufen:** kräftig = genau dieser Wert, hell = dasselbe Element an anderer Stelle.
 - **Informationsmodell referenziert oder ausmodelliert:** wie im IG oder mit jeder Referenz an ihrer Verwendungsstelle; Zyklen werden erkannt, Fundstellen mit ‹ › durchlaufen.
+- **Terminologie:** Codes und Wertelisten des Modells als Tabelle mit Kopfzeilen; Wertelisten und Profilbindungen verlinkt auf ihre Originalseite, belegte Codes oben.
 - **Abdeckung & Prüfung:** Mappingprüfung, Werte ohne Modellelement, Strukturbefunde des gewählten Beispiels.
 
 ## Reproduzierbar und konsistent

@@ -12,17 +12,49 @@ import re
 
 from .aufloeser import Aufloeser
 from .grundlagen import json_laden, kanon, text
+from .terminologie import staerke_trennen
 
 
 # ---------------------------------------------------------------- gematik-baum
 
-def _tabelle_codes(s):
-    codes = []
-    for zeile in re.findall(r'<tr>(.*?)</tr>', s or '', re.S):
-        zellen = [text(z) for z in re.findall(r'<td[^>]*>(.*?)</td>', zeile, re.S)]
-        if len(zellen) >= 3:
-            codes.append({'code': zellen[0], 'display': zellen[1], 'system': zellen[2]})
-    return codes
+def _tabelle(s):
+    """HTML-Tabelle nach ihren Kopfzeilen auslesen: [{Kopf: Zelle}]. Ohne Kopfzeile: Code, Display, CodeSystem."""
+    zeilen = re.findall(r'<tr>(.*?)</tr>', s or '', re.S)
+    if not zeilen:
+        return []
+    kopf = [text(h) for h in re.findall(r'<th[^>]*>(.*?)</th>', zeilen[0], re.S)]
+    if not kopf:
+        kopf = ['Code', 'Display', 'CodeSystem']
+    else:
+        zeilen = zeilen[1:]
+    aus = []
+    for z in zeilen:
+        zellen = [text(c) for c in re.findall(r'<td[^>]*>(.*?)</td>', z, re.S)]
+        if zellen:
+            aus.append(dict(zip(kopf, zellen)))
+    return aus
+
+
+def terminologie(term_assocs, codes, wl):
+    """Terminologie eines Modellelements: eigene Codes, Codes der Listeneinträge, gebundene Wertelisten.
+    Liefert (zeilen, wertelisten, codes_flach)."""
+    wertelisten, index = [], {}
+    zeilen = []
+    for quelle, tabelle in (('konzept', _tabelle(term_assocs)), ('liste', _tabelle(codes))):
+        for r in tabelle:
+            vs = None
+            if r.get('ValueSet'):
+                name, staerke = staerke_trennen(r['ValueSet'])
+                if (name, staerke) not in index:
+                    aufgeloest = wl.zum_namen(name) if wl else None
+                    index[(name, staerke)] = len(wertelisten)
+                    wertelisten.append(dict(aufgeloest or {}, name=name, staerke=staerke, aufgeloest=bool(aufgeloest)))
+                vs = index[(name, staerke)]
+            zeilen.append({'quelle': quelle, 'konzept': r.get('Konzept', ''), 'code': r.get('Code', ''),
+                           'display': r.get('Display', ''), 'system': r.get('CodeSystem', ''),
+                           'filter': r.get('Filter', ''), 'designations': r.get('Designations', ''), 'vs': vs})
+    flach = [{'code': z['code'], 'display': z['display'], 'system': z['system']} for z in zeilen if z['code']]
+    return zeilen, wertelisten, flach
 
 
 def _weitere_angaben(s):
@@ -44,7 +76,7 @@ def _weitere_angaben(s):
     return kurz, herkunft, anforderungen
 
 
-def gematik_baum(konfig, sds):
+def gematik_baum(konfig, sds, wl=None):
     aufl = Aufloeser(sds)
     nach_name = {}
     for d in sds.values():
@@ -66,11 +98,12 @@ def gematik_baum(konfig, sds):
             maps.append({'roh': ziel, 'sd': sd['url'], 'k': kanon(sd['type'] + ('.' + rest if rest else '')),
                          'status': status, 'grund': grund})
         kurz, herkunft, anforderungen = _weitere_angaben(d.get('otherProperties'))
+        zeilen, wertelisten, flach = terminologie(d.get('termAssocs'), d.get('codes'), wl)
         knoten.append({
             'id': n['id'], 'p': None if n['parent'] == '#' else n['parent'], 'name': html.unescape(n['text']),
             'typ': d.get('datatype', ''), 'card': text(d.get('cardinality')), 'besch': text(d.get('description'))[:1500],
             'rat': text(d.get('rationale'))[:800], 'op': text(d.get('operationalisations'))[:800],
-            'codes': _tabelle_codes(d.get('termAssocs')) + _tabelle_codes(d.get('codes')),
+            'codes': flach, 'terminologie': zeilen, 'wertelisten': wertelisten,
             'maps': maps, 'kurz': kurz, 'herkunft': herkunft, 'anf': anforderungen,
         })
     return knoten
@@ -203,7 +236,7 @@ def aus_profilen(konfig, sds):
         maps = [{'roh': f'{sd["name"]}{eid[len(sd["type"]):] if eid else ""}', 'sd': sd['url'],
                  'k': kanon(eid or sd['type']), 'status': 'exakt', 'grund': ''}] if sd else []
         knoten.append({'id': i, 'p': p, 'name': name, 'typ': '', 'card': card, 'besch': besch, 'rat': '', 'op': '',
-                       'codes': [], 'maps': maps, 'kurz': '', 'herkunft': [], 'anf': []})
+                       'codes': [], 'terminologie': [], 'wertelisten': [], 'maps': maps, 'kurz': '', 'herkunft': [], 'anf': []})
         return i
 
     def profil(url, p, stapel, name=None, card=''):
@@ -240,9 +273,9 @@ def aus_profilen(konfig, sds):
     return knoten
 
 
-def laden(konfig, sds):
+def laden(konfig, sds, wl=None):
     art = konfig['informationsmodell']['art']
     if art == 'gematik-baum':
-        knoten = gematik_baum(konfig, sds)
+        knoten = gematik_baum(konfig, sds, wl)
         return knoten, ausmodellieren(knoten, sds, konfig)
     return aus_profilen(konfig, sds), None

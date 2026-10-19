@@ -37,6 +37,23 @@ Der Prüfbericht zählt je Beispiel, wie viele Ressourcen über 2. oder 3. zugeo
 
 Ein weiterer Adapter — etwa für ein logisches Modell (`StructureDefinition` mit `kind = logical` und `mapping`) — liefert dasselbe Knotenformat (`werkzeuge/mx/infomodell.py`) und braucht keine Änderung an Oberfläche oder Berichten.
 
+## Terminologie
+
+Das Informationsmodell nennt je Element Codes und Wertelisten (Tabellen „termAssocs“ und „codes“ im IG-Export). Sie werden **nach ihren Kopfzeilen** gelesen (Konzept, Code, Display, Designations, Filter, CodeSystem, ValueSet) und im Explorer als Tabelle gezeigt; im Beispiel belegte Codes stehen oben und springen auf den Wert.
+
+Wertelisten werden über Name, Kennung oder Titel in den Paketen des Projekts und in `terminologiepakete` gesucht (`werkzeuge/mx/terminologie.py`). Links nur nach geprüften Mustern:
+
+| Paket | Originalseite |
+|---|---|
+| `hl7.fhir.r4.core` | `https://hl7.org/fhir/R4/valueset-<id>.html` |
+| `hl7.terminology.r4#<v>` | `https://terminology.hl7.org/<v>/ValueSet-<id>.html` |
+| `hl7.fhir.eu.<ig>#<v>` | `https://hl7.eu/fhir/<ig>/<v>/ValueSet-<id>.html` |
+| `de.gematik.terminology#<v>` | `https://gemspec.gematik.de/ig/fhir/terminology/<v>/ValueSet-<id>.html` |
+
+Liegt eine Werteliste nicht im Paketbestand, aber bindet ein Profil sie, wird ihre kanonische URL verlinkt — nur für Herausgeber, deren kanonische URLs auflösen (fhir.kbv.de, hl7.org, terminology.hl7.org). Sonst: „nicht im Paketbestand“, kein Link. Profilbindungen (`binding.valueSet`) werden genauso verlinkt.
+
+**Abgleich:** Nennt das Modell für ein exakt gemapptes Element genau eine Werteliste, wird sie mit der Bindung des Profilelements verglichen; Abweichungen stehen im Prüfbericht und am Element.
+
 ## Darstellungen
 
 | `darstellung` | Anwenderansicht |

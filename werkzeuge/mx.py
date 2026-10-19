@@ -20,7 +20,7 @@ from mx.konfig import alle_projekte, projekt_laden  # noqa: E402
 
 def holen(args):
     sperre = pakete.sperre_laden()
-    specs = sorted({p for pid in alle_projekte() for p in projekt_laden(pid)['pakete']})
+    specs = sorted({p for pid in alle_projekte() for k in [projekt_laden(pid)] for p in k['pakete'] + k.get('terminologiepakete', [])})
     for spec in specs:
         pakete.paket_sicherstellen(spec, sperre, aktualisieren=args.aktualisieren)
     for pid in alle_projekte():

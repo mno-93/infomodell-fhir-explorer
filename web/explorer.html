@@ -111,6 +111,13 @@ li.zu > ul { display: none; }
 .im-zeile.syn .name { font-style: italic; color: var(--leise); }
 .knopf.mini { padding: 0 6px; font-size: 12px; line-height: 18px; }
 .fehlerliste td:first-child { white-space: nowrap; }
+.detail-raster section.voll { grid-column: 1 / -1; }
+.term-wrap { max-height: 240px; overflow: auto; border: 1px solid var(--linie); border-radius: 6px; margin: 4px 0 8px; }
+.term-tab { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.term-tab th { position: sticky; top: 0; background: var(--flaeche2); text-align: left; font-weight: 600; color: var(--leise); padding: 3px 8px; border-bottom: 1px solid var(--linie); }
+.term-tab td { padding: 2px 8px; border-bottom: 1px solid var(--linie); vertical-align: top; }
+.term-tab tr.belegt td { background: var(--hl2); }
+.werteliste { margin: 2px 0; }
 li.versteckt { display: none; }
 
 /* Profil */
@@ -806,18 +813,53 @@ function detailsZeichnen(ims) {
   const imTeil = ims.slice(0, 2).map(n => `<h4>Informationsmodell: ${esc(n.name)}</h4>`
     + (n.kurz ? `<p><i>${esc(n.kurz)}</i></p>` : '') + (n.besch ? `<p>${esc(n.besch)}</p>` : '')
     + `<p class="hinweis">${esc(n.typ ? 'Datentyp ' + n.typ + ' · ' : '')}${esc(n.card)}</p>`
-    + (n.codes.length ? '<h4>Terminologie</h4>' + n.codes.map(c => { const nid = KNOTEN.find(k => wert(...k.nid.split('|')) === c.code)?.nid; return `<p><code>${esc(c.code)}</code> ${esc(c.display)} <span class="hinweis">${esc(kurzUrl(c.system))}</span>${nid ? ` · <a href="#" data-sprung="${esc(nid)}">im Beispiel</a>` : ''}</p>`; }).join('') : '')
     + (n.maps.some(m => m.status !== 'exakt') ? '<h4>Mappingprüfung</h4>' + n.maps.filter(m => m.status !== 'exakt').map(m => `<p><span class="${m.status === 'schreibvariante' ? 'hinweis' : 'warn'}">${esc(m.status)}</span> <code>${esc(m.roh)}</code><br><span class="hinweis">${esc(m.grund)}</span></p>`).join('') : '')
     + (D.pruefung.some(p => p.status === 'anderes-profil' && p.id === n.id) ? D.pruefung.filter(p => p.status === 'anderes-profil' && p.id === n.id).map(p => `<p><span class="warn">anderes Profil</span> ${esc(p.grund)}</p>`).join('') : '')
+    + ((D.statistik.bindungsabgleich || []).filter(x => x.id === n.id).map(x => `<p><span class="warn">Werteliste ≠ Bindung</span> Modell <code>${esc(x.modell)}</code>, Profil <code>${esc(kurzUrl(x.profil))}</code> (${esc(x.staerke_profil)})</p>`).join(''))
     + (n.herkunft.length ? '<h4>Herkunft (Altdaten)</h4>' + n.herkunft.map(h => `<p><b>${esc(h.quelle)}:</b> ${esc(h.text)}</p>`).join('') : '')).join('');
-  const fhirTeil = R.el.slice(0, 2).map(({ sd, k }) => { const p = D.profile[sd]; const e = p?.elemente.find(x => x.k === k); return e ? `<h4>FHIR: ${esc(p.name)}</h4><p><code>${esc(e.id)}</code> ${esc(e.card)}${e.ms ? ' · Must Support' : ''}</p><p>${esc(e.short)}</p>${e.bind ? `<p class="hinweis">Bindung: ${esc(e.bind)}</p>` : ''}${e.fest ? `<p class="hinweis mono">${esc(e.fest)}</p>` : ''}${e.def ? `<p class="hinweis">${esc(e.def)}</p>` : ''}` : `<h4>FHIR: ${esc(p ? p.name : kurzUrl(sd))}</h4><p><code>${esc(k)}</code> — kein Element im Profil-Snapshot (siehe Mappingprüfung)</p>`; }).join('');
+  const fhirTeil = R.el.slice(0, 2).map(({ sd, k }) => { const p = D.profile[sd]; const e = p?.elemente.find(x => x.k === k); return e ? `<h4>FHIR: ${esc(p.name)}</h4><p><code>${esc(e.id)}</code> ${esc(e.card)}${e.ms ? ' · Must Support' : ''}</p><p>${esc(e.short)}</p>${e.bindung ? `<p class="werteliste">Bindung: ${wertelisteHtml(e.bindung)}</p>` : (e.bind ? `<p class="hinweis">Bindung: ${esc(e.bind)}</p>` : '')}${e.fest ? `<p class="hinweis mono">${esc(e.fest)}</p>` : ''}${e.def ? `<p class="hinweis">${esc(e.def)}</p>` : ''}` : `<h4>FHIR: ${esc(p ? p.name : kurzUrl(sd))}</h4><p><code>${esc(k)}</code> — kein Element im Profil-Snapshot (siehe Mappingprüfung)</p>`; }).join('');
   const anf = anforderungenFuer(R);
   const imAnf = ims.flatMap(n => n.anf);
   const anfTeil = (imAnf.length || anf.length) ? '<h4>Anforderungen</h4>'
     + imAnf.map(a => `<div class="anf"><span class="kw">${esc(a.kw)}</span><b>${esc(a.titel)}</b> <span class="hinweis">· aus dem Informationsmodell · ${esc(a.akteur)}</span><p>${esc(a.text)}</p></div>`).join('')
     + anf.map(a => `<div class="anf"><span class="kw">${esc(a.conf)}</span><b>${esc(a.key)}</b> ${esc(a.titel)} <span class="hinweis">· Verarbeitungsregeln, ${esc(a.abschnitt)}</span><p>${esc(a.text)}</p></div>`).join('')
     : '<h4>Anforderungen</h4><p class="hinweis">Keine Anforderung mit Bezug auf dieses Element gefunden.</p>';
-  $('#detail-raster').innerHTML = `<section>${imTeil || '<p class="hinweis">Kein Element im Informationsmodell.</p>'}</section><section>${fhirTeil || '<p class="hinweis">Kein Profilelement.</p>'}</section><section>${anfTeil}</section>`;
+  const gesehen = new Set();   // gleiche Terminologie an mehreren Modellelementen nur einmal zeigen
+  const termTeil = ims.slice(0, 3).filter(n => { const k = JSON.stringify([n.terminologie, n.wertelisten]); if (gesehen.has(k)) return false; gesehen.add(k); return true; })
+    .map(terminologieHtml).join('');
+  $('#detail-raster').innerHTML = `<section>${imTeil || '<p class="hinweis">Kein Element im Informationsmodell.</p>'}</section><section>${fhirTeil || '<p class="hinweis">Kein Profilelement.</p>'}</section><section>${anfTeil}</section>`
+    + (termTeil ? `<section class="voll">${termTeil}</section>` : '');
+}
+const CODESYSTEME = { 'http://snomed.info/sct': 'SNOMED CT', 'http://loinc.org': 'LOINC', 'http://unitsofmeasure.org': 'UCUM' };
+function wertelisteHtml(w) {
+  if (!w) return '';
+  const name = esc(w.name || w.titel || kurzUrl(w.url));
+  const titel = w.titel && w.titel !== w.name ? ` <span class="hinweis">— ${esc(w.titel)}</span>` : '';
+  const ziel = w.seite ? `<a href="${esc(w.seite)}" target="_blank" rel="noopener" title="${esc(w.url || '')}">${name}</a>` : name;
+  const herkunft = w.paket ? `<span class="hinweis">· ${esc(w.paket)}</span>`
+    : (w.seite ? '<span class="hinweis">· kanonische URL</span>' : '<span class="warn">· nicht im Paketbestand</span>');
+  return `${ziel}${titel} ${w.staerke ? `<span class="kw">${esc(w.staerke)}</span>` : ''} ${herkunft}`;
+}
+function terminologieHtml(n) {
+  const zeilen = n.terminologie || [], wl = n.wertelisten || [];
+  if (!zeilen.length && !wl.length) return '';
+  const spalten = [['konzept', 'Konzept'], ['code', 'Code'], ['display', 'Anzeige'], ['designations', 'Bezeichnungen'],
+    ['filter', 'Filter'], ['system', 'Codesystem']].filter(([f]) => zeilen.some(z => z[f]));
+  const mitVs = wl.length > 1;
+  const belegt = new Map();
+  for (const kn of KNOTEN) { const w = wert(...kn.nid.split('|')); if (typeof w === 'string' && !belegt.has(w)) belegt.set(w, kn.nid); }
+  const zelle = (z, f) => {
+    if (f === 'code') return z.code ? `<code>${esc(z.code)}</code>${belegt.has(z.code) ? ` <a href="#" data-sprung="${esc(belegt.get(z.code))}">im Beispiel</a>` : ''}` : '';
+    if (f === 'system') return `<span title="${esc(z.system)}">${esc(CODESYSTEME[z.system] || kurzUrl(z.system))}</span>`;
+    return esc(z[f]);
+  };
+  const kopf = `<tr>${spalten.map(([, t]) => `<th>${t}</th>`).join('')}${mitVs ? '<th>Werteliste</th>' : ''}</tr>`;
+  const sortiert = [...zeilen].sort((a, b) => (belegt.has(b.code) ? 1 : 0) - (belegt.has(a.code) ? 1 : 0));   // im Beispiel belegte Codes zuerst
+  const rumpf = sortiert.map(z => `<tr class="${z.code && belegt.has(z.code) ? 'belegt' : ''}">${spalten.map(([f]) => `<td>${zelle(z, f)}</td>`).join('')}${mitVs ? `<td>${z.vs !== null && z.vs !== undefined ? esc(wl[z.vs].name) : ''}</td>` : ''}</tr>`).join('');
+  return `<h4>Terminologie: ${esc(n.name)}</h4>`
+    + wl.map(w => `<p class="werteliste">Werteliste: ${wertelisteHtml(w)}</p>`).join('')
+    + (zeilen.length ? `<div class="term-wrap"><table class="term-tab"><thead>${kopf}</thead><tbody>${rumpf}</tbody></table></div>`
+      + `<p class="hinweis">${zeilen.length} Einträge${zeilen.some(z => z.code && belegt.has(z.code)) ? ' · hinterlegt und oben: im Beispiel belegt' : ''}</p>` : '');
 }
 
 // ------------------------------------------------------------------ Prüfbericht
@@ -844,10 +886,12 @@ function pruefungZeigen() {
         + zeile('FHIR-Mappings', `${s.mappings}: ${st.exakt} exakt · ${st.schreibvariante} in Schreibvariante · <b>${st.fehler} ohne Ziel · ${st.verboten} auf ein 0..0-Element</b> · ${s.anderes_profil} in ein anderes Profil als das übergeordnete Element`)
         : zeile('Abgeleitete Struktur', `${s.im_knoten} Elemente aus den Profilen`)}
       ${ba ? zeile('Ausmodellierte Darstellung', `${ba.knoten} Knoten · ${ba.ausmodelliert} Referenzen an Ort und Stelle aufgelöst · ${ba.zyklen} Zyklen erkannt · ${ba.aus_profil} Knoten aus FHIR-Profilen ergänzt (Must Support)`) : ''}
+      ${s.wertelisten && s.wertelisten.gesamt ? zeile('Wertelisten im Modell', `${s.wertelisten.gesamt}, davon ${s.wertelisten.aufgeloest} im Paketbestand oder über eine Profilbindung aufgelöst, ${s.wertelisten.mit_link} mit Link auf die Originalseite${s.wertelisten.ohne.length ? ' · nicht auflösbar: ' + s.wertelisten.ohne.map(esc).join(', ') : ''}`) : ''}
       ${s.anforderungen || s.im_anforderungen ? zeile('Anforderungen', `${s.anforderungen} in den Verarbeitungsregeln, davon ${s.anforderungen_mit_pfad} mit erkennbarem Elementpfad; ${s.im_anforderungen} direkt im Informationsmodell`) : ''}
       ${zeile(esc(B.titel), `${B.ressourcen.length} Ressourcen · ${ab.werte} fachliche Einzelwerte, davon ${ab.gedeckt} durch ein spezifisches Element ${gematik ? 'des Informationsmodells' : 'der abgeleiteten Struktur'} gedeckt · ${B.struktur.length} Strukturbefunde`)}
     </tbody></table>
     ${B.struktur.length ? '<h3>Strukturbefunde im Beispiel</h3><p class="hinweis">Belegtes Element, das sich im Profil nicht auflösen lässt.</p><table class="fehlerliste"><tbody>' + B.struktur.map(x => zeile(`<code>${esc(x.element)}</code>`, esc(x.grund))).join('') + '</tbody></table>' : ''}
+    ${(s.bindungsabgleich || []).length ? `<h3>Werteliste im Modell ≠ Bindung im Profil (${s.bindungsabgleich.length})</h3><p class="hinweis">Nur exakte Mappings auf gebundene Elemente; die Werteliste kann eine bewusste Einschränkung sein.</p><table class="fehlerliste"><tbody>${s.bindungsabgleich.map(x => zeile(esc(x.im) + `<br><code>${esc(x.mapping)}</code>`, `Modell: <code>${esc(x.modell)}</code><br>Profil: <code>${esc(x.profil)}</code> (${esc(x.staerke_profil)})`)).join('')}</tbody></table>` : ''}
     ${gematik ? `<h3>Fehlerhafte Mappings</h3><p class="hinweis">Pfad führt auf kein Element oder auf ein im Profil verbotenes.</p>
     <table class="fehlerliste"><tbody>${liste(['fehler', 'verboten', 'unbekannt'])}</tbody></table>
     <h3>Mapping in ein anderes Profil</h3><p class="hinweis">Kann gewollt sein (Device/DeviceDefinition); zu prüfen.</p>

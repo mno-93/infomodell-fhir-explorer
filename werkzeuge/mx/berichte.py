@@ -41,6 +41,18 @@ def bericht(d):
             z += [f'| {p["im"]} <br>*{" / ".join(p["pfad"].split(" / ")[-3:-1])}* | `{p["mapping"]}` | {_code(p["grund"])} |'
                   for p in eintraege]
             z.append('')
+        w = s.get('wertelisten') or {}
+        if w.get('gesamt'):
+            z += ['## Wertelisten', '', f'{w["gesamt"]} Wertelisten im Modell, davon {w["aufgeloest"]} im Paketbestand oder über eine '
+                  f'Profilbindung aufgelöst, {w["mit_link"]} mit Link auf die Originalseite.', '']
+            if w['ohne']:
+                z += ['Nicht auflösbar (weder im Paketbestand noch in einer Profilbindung):', ''] + [f'- `{n}`' for n in w['ohne']] + ['']
+        abw = s.get('bindungsabgleich') or []
+        if abw:
+            z += [f'### Werteliste im Modell ≠ Bindung im Profil ({len(abw)})', '',
+                  '| Element im Modell | Mapping | Werteliste im Modell | Bindung im Profil |', '|---|---|---|---|']
+            z += [f'| {x["im"]} | `{x["mapping"]}` | `{x["modell"]}` | `{x["profil"]}` ({x["staerke_profil"]}) |' for x in abw]
+            z.append('')
         if s['baum_aus']:
             b = s['baum_aus']
             z += ['## Ausmodellierte Darstellung', '',

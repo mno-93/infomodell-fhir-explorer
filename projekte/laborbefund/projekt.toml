@@ -18,6 +18,12 @@ pakete = [
   "hl7.fhir.r4.core#4.0.1",
 ]
 
+# Nur für die Auflösung von Wertelisten (Name → Paket, Link auf die Originalseite)
+terminologiepakete = [
+  "de.gematik.terminology#1.1.0-ballot.2",
+  "hl7.terminology.r4#7.3.0",
+]
+
 [ig]
 name = "ePA Laboratory Report Implementation Guide"
 paket = "de.gematik.epa.laboratory#1.0.0-ballot.1"

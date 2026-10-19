@@ -6,7 +6,7 @@ from .grundlagen import kanon, wert_kurz
 BOILERPLATE = re.compile(r'\.(id|meta|implicitRules|language|text|contained|modifierExtension)(\.|$)')
 
 
-def element_aufbereiten(e, diff_ids):
+def element_aufbereiten(e, diff_ids, wl=None):
     typen = []
     for t in e.get('type', []):
         p = [x.split('/')[-1].split('|')[0] for x in t.get('profile', []) + t.get('targetProfile', [])]
@@ -20,11 +20,12 @@ def element_aufbereiten(e, diff_ids):
         'id': e['id'], 'k': kanon(e['id']), 'short': e.get('short', ''), 'def': (e.get('definition') or '')[:600],
         'card': f"{e.get('min', 0)}..{e.get('max', '*')}", 'ms': bool(e.get('mustSupport')), 'typ': ', '.join(typen),
         'bind': (b['strength'] + ' ' + b['valueSet'].split('/')[-1].split('|')[0]) if b and b.get('valueSet') else '',
+        'bindung': dict(wl.zur_url(b['valueSet']) or {}, staerke=b['strength']) if wl and b and b.get('valueSet') else None,
         'fest': fest, 'diff': e['id'] in diff_ids,
     }
 
 
-def profil_aufbereiten(sd, gemappt, ig_seite=None, zusaetzlich=()):
+def profil_aufbereiten(sd, gemappt, ig_seite=None, zusaetzlich=(), wl=None):
     """gemappt: kanonische Kennungen, die das Informationsmodell nennt; zusaetzlich: Element-ids, die immer bleiben."""
     diff_ids = {e['id'] for e in sd.get('differential', {}).get('element', [])}
     elemente = []
@@ -38,7 +39,7 @@ def profil_aufbereiten(sd, gemappt, ig_seite=None, zusaetzlich=()):
             continue
         if not relevant and eid.count('.') > 2:
             continue
-        elemente.append(element_aufbereiten(e, diff_ids))
+        elemente.append(element_aufbereiten(e, diff_ids, wl))
     return {
         'url': sd['url'], 'id': sd['id'], 'name': sd['name'], 'titel': sd.get('title', sd['name']),
         'typ': sd['type'], 'basis': sd.get('baseDefinition', '').split('/')[-1], 'version': sd.get('version', ''),

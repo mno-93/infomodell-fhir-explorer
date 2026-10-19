@@ -20,6 +20,10 @@
    "url": "https://packages.fhir.org/de.gematik.epa.medication/1.3.5",
    "inhalt_sha256": "155f017f90dd02d19cef2724690d17926bb6a0a7cd77fe6dd838e62f43b2d412"
   },
+  "de.gematik.terminology#1.1.0-ballot.2": {
+   "url": "https://packages.fhir.org/de.gematik.terminology/1.1.0-ballot.2",
+   "inhalt_sha256": "9568c0d5c08f09ae58873e6e714ecd210308ab8bdf1f36eec1f39f4ab69a8d7e"
+  },
   "de.gematik.ti#1.3.1": {
    "url": "https://packages.fhir.org/de.gematik.ti/1.3.1",
    "inhalt_sha256": "a34445994ab23322a75b96166f4ac77ac6342e32bde980a7dcb40ac710f6f7a3"
@@ -59,6 +63,14 @@
   "hl7.fhir.uv.xver-r5.r4#0.1.0": {
    "url": "https://packages.fhir.org/hl7.fhir.uv.xver-r5.r4/0.1.0",
    "inhalt_sha256": "c0ed92fbe766c07d960b3d626b94859c8c8e293b68dbffe348ad9a79d362bd35"
+  },
+  "hl7.terminology.r4#7.1.0": {
+   "url": "https://packages.fhir.org/hl7.terminology.r4/7.1.0",
+   "inhalt_sha256": "121d4d892ca25e1ec9212b6c05f12daf80b0ce7ef58c60076b4852194ac033f8"
+  },
+  "hl7.terminology.r4#7.3.0": {
+   "url": "https://packages.fhir.org/hl7.terminology.r4/7.3.0",
+   "inhalt_sha256": "0a1822957f798ae7a4fa060d4dc4a1604d81832f774ba8d9f249282349cdeec9"
   }
  },
  "quellen": {

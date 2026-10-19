@@ -8,6 +8,7 @@ from .grundlagen import AUSGABE, WURZEL
 from .konfig import projekt_laden
 from .pakete import definitionen
 from .profile import profil_aufbereiten
+from .terminologie import Wertelisten
 
 IM_TITEL = {'gematik-baum': 'Informationsmodell', 'aus-profilen': 'Struktur aus den Profilen'}
 
@@ -15,7 +16,8 @@ IM_TITEL = {'gematik-baum': 'Informationsmodell', 'aus-profilen': 'Struktur aus 
 def projekt_bauen(pid):
     k = projekt_laden(pid)
     sds = definitionen(k['pakete'])
-    knoten, baum_aus = infomodell.laden(k, sds)
+    wl = Wertelisten(k['pakete'] + k.get('terminologiepakete', []), sds)
+    knoten, baum_aus = infomodell.laden(k, sds, wl)
     pruefung = infomodell.mappings_pruefen(knoten)
     anf = anforderungen.laden(k, sds)
 
@@ -63,7 +65,7 @@ def projekt_bauen(pid):
             continue
         seite = (ig['url'] + 'StructureDefinition-' + sds[u]['id'] + '.html') \
             if ig.get('kanonisch') and u.startswith(ig['kanonisch']) else None
-        profile[u] = profil_aufbereiten(sds[u], gemappt.get(u, set()), seite, zusaetzlich.get(u, set()))
+        profile[u] = profil_aufbereiten(sds[u], gemappt.get(u, set()), seite, zusaetzlich.get(u, set()), wl)
 
     status = ('exakt', 'schreibvariante', 'ueber-definition', 'verboten', 'fehler', 'unbekannt')
     statistik = {
@@ -73,6 +75,8 @@ def projekt_bauen(pid):
         'anderes_profil': sum(1 for p in pruefung if p['status'] == 'anderes-profil'),
         'anforderungen': len(anf), 'anforderungen_mit_pfad': sum(1 for a in anf if a['pfade']),
         'im_anforderungen': sum(len(n['anf']) for n in knoten),
+        'wertelisten': _wertelisten_statistik(knoten),
+        'bindungsabgleich': _bindungsabgleich(knoten, sds),
         'baum_aus': {'knoten': len(baum_aus), 'zyklen': sum(1 for b in baum_aus if 'z' in b),
                      'aus_profil': sum(1 for b in baum_aus if 'y' in b),
                      'ausmodelliert': sum(1 for b in baum_aus if 'v' in b)} if baum_aus else None,
@@ -85,6 +89,38 @@ def projekt_bauen(pid):
     }
     return {'meta': meta, 'statistik': statistik, 'pruefung': pruefung, 'im': knoten, 'baum_aus': baum_aus,
             'profile': profile, 'anforderungen': anf, 'beispiele': liste}
+
+
+def _wertelisten_statistik(knoten):
+    alle = {}
+    for n in knoten:
+        for w in n['wertelisten']:
+            alle.setdefault(w['name'], w)
+    return {'gesamt': len(alle), 'aufgeloest': sum(1 for w in alle.values() if w['aufgeloest']),
+            'mit_link': sum(1 for w in alle.values() if w.get('seite')),
+            'ohne': sorted(n for n, w in alle.items() if not w['aufgeloest'])}
+
+
+def _bindungsabgleich(knoten, sds):
+    """Werteliste im Modell gegen die Bindung des gemappten Profilelements (nur exakte Mappings)."""
+    from .grundlagen import kanon
+    aus = []
+    for n in knoten:
+        if len(n['wertelisten']) != 1:
+            continue
+        w = n['wertelisten'][0]
+        for m in n['maps']:
+            if m['status'] != 'exakt' or not m['sd'] or '.' not in m['k']:
+                continue
+            el = next((e for e in sds[m['sd']]['snapshot']['element'] if kanon(e['id']) == m['k']), None)
+            vs = ((el or {}).get('binding') or {}).get('valueSet', '').split('|')[0]
+            if not vs:
+                continue
+            gleich = (w.get('url') == vs) if w.get('url') else (vs.rsplit('/', 1)[-1] == w['name'])
+            if not gleich:
+                aus.append({'id': n['id'], 'im': n['name'], 'mapping': m['roh'], 'modell': w['name'],
+                            'modell_url': w.get('url', ''), 'profil': vs, 'staerke_profil': el['binding'].get('strength', '')})
+    return aus
 
 
 def seite_schreiben(daten):
