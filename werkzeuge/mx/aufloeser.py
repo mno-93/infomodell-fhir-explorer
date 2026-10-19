@@ -3,7 +3,11 @@ Slices, Typwahl, Extension-Definitionen und Datentypen werden aufgelöst.
 
 Ergebnis je Pfad: (status, grund)
   exakt            Pfad ist eine Elementkennung des Profil-Snapshots
-  schreibvariante  gemeint ist eindeutig ein Element, die Schreibweise weicht von der Elementkennung ab
+  schreibvariante  gemeint ist eindeutig ein Element, die Schreibweise mischt aber zwei Notationen
+                   (`value[x].valueQuantity` statt `value[x]:valueQuantity`) — vereinheitlichen
+  gleichwertig     gültige andere Schreibweise derselben Stelle, keine Korrektur nötig: JSON-Name der
+                   Typwahl (`valueCodeableConcept` statt `value[x]`) oder Typ-Slice, den das Profil nicht
+                   eigens ausweist (`manufacturer[x]:manufacturerString` — präziser als `manufacturer[x]`)
   ueber-definition gültig, aber erst über die Extension-Definition oder den Datentyp auflösbar
   verboten         Element existiert, ist im Profil aber auf 0..0 gesetzt
   fehler           Pfad führt auf kein Element
@@ -39,7 +43,7 @@ class Aufloeser:
             if s.endswith('[x]') and i + 1 < len(segs) and segs[i + 1].startswith(s[:-3]) \
                     and segs[i + 1][len(s) - 3:][:1].isupper():
                 norm.append(s + ':' + segs[i + 1])
-                varianten.append(f'`{s}.{segs[i + 1]}` statt `{s}:{segs[i + 1]}`')
+                varianten.append(('mischung', f'`{s}.{segs[i + 1]}` statt `{s}:{segs[i + 1]}`'))
                 i += 2
                 continue
             norm.append(s)
@@ -48,9 +52,11 @@ class Aufloeser:
         if ergebnis:
             return ergebnis
         if ueber:
-            return 'ueber-definition', 'aufgelöst über ' + ', '.join(ueber) + ('; ' + '; '.join(varianten) if varianten else '')
+            return 'ueber-definition', 'aufgelöst über ' + ', '.join(ueber) + ('; ' + '; '.join(t for _a, t in varianten) if varianten else '')
+        if any(a == 'mischung' for a, _t in varianten):
+            return 'schreibvariante', '; '.join(t for _a, t in varianten)
         if varianten:
-            return 'schreibvariante', '; '.join(varianten)
+            return 'gleichwertig', '; '.join(t for _a, t in varianten)
         return 'exakt', ''
 
     def _gehe(self, sd, cur, norm, varianten, ueber):
@@ -78,9 +84,9 @@ class Aufloeser:
                     return 'fehler', f'Typ `{typname}` an `{basis}` nicht zugelassen ({", ".join(erlaubt)})'
                 kurz = basis.split('.')[-1]
                 if name.endswith('[x]'):
-                    varianten.append(f'Typ-Slice `{seg}` nicht definiert; gemeint ist die Typwahl `{kurz}`')
+                    varianten.append(('typslice', f'Typ-Slice `{seg}` im Profil nicht eigens ausgewiesen (Element `{kurz}`) — Typangabe bleibt gültig'))
                 else:
-                    varianten.append(f'`{name}` statt `{kurz}`')
+                    varianten.append(('json', f'JSON-Name `{name}` für die Typwahl `{kurz}` — gleichwertig'))
                 if basis + ':' + gewaehlt in ids:
                     cur = basis + ':' + gewaehlt
                     continue

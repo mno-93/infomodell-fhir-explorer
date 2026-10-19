@@ -26,14 +26,17 @@ def bericht(d):
               f'| Elemente im Informationsmodell | {s["im_knoten"]} |',
               f'| davon mit FHIR-Mapping | {s["im_mit_mapping"]} |',
               f'| FHIR-Mappings | {s["mappings"]} |',
-              f'| exakt | {st["exakt"]} |', f'| Schreibvariante | {st["schreibvariante"]} |',
+              f'| exakt | {st["exakt"]} |',
+              f'| gleichwertige Schreibweise (JSON-Name der Typwahl, Typ-Slice) — keine Korrektur nötig | {st["gleichwertig"]} |',
+              f'| Schreibvariante (gemischte Notation) — vereinheitlichen | {st["schreibvariante"]} |',
               f'| über Extension-Definition oder Datentyp aufgelöst | {st["ueber-definition"]} |',
               f'| **ohne Ziel** | **{st["fehler"]}** |', f'| **auf ein 0..0-Element** | **{st["verboten"]}** |',
               f'| Definition nicht im Paketbestand | {st["unbekannt"]} |',
               f'| in ein anderes Profil als das übergeordnete Element | {s["anderes_profil"]} |', '']
         for titel, stati in (('Fehlerhafte Mappings', ('fehler', 'verboten', 'unbekannt')),
                              ('Mappings in ein anderes Profil', ('anderes-profil',)),
-                             ('Schreibvarianten', ('schreibvariante',))):
+                             ('Schreibvarianten (gemischte Notation)', ('schreibvariante',)),
+                             ('Gleichwertige Schreibweisen (keine Korrektur nötig)', ('gleichwertig',))):
             eintraege = [p for p in d['pruefung'] if p['status'] in stati]
             if not eintraege:
                 continue
@@ -47,12 +50,22 @@ def bericht(d):
                   f'Profilbindung aufgelöst, {w["mit_link"]} mit Link auf die Originalseite.', '']
             if w['ohne']:
                 z += ['Nicht auflösbar (weder im Paketbestand noch in einer Profilbindung):', ''] + [f'- `{n}`' for n in w['ohne']] + ['']
-        abw = s.get('bindungsabgleich') or []
-        if abw:
-            z += [f'### Werteliste im Modell ≠ Bindung im Profil ({len(abw)})', '',
-                  '| Element im Modell | Mapping | Werteliste im Modell | Bindung im Profil |', '|---|---|---|---|']
-            z += [f'| {x["im"]} | `{x["mapping"]}` | `{x["modell"]}` | `{x["profil"]}` ({x["staerke_profil"]}) |' for x in abw]
-            z.append('')
+        ba = s.get('bindungsabgleich') or {}
+        if ba.get('zaehlung'):
+            zl = ba['zaehlung']
+            z += ['### Werteliste im Modell gegen Bindung im Profil', '',
+                  'Je Mapping eines Elements mit Werteliste: Bindung am Element, am zugehörigen CodeableConcept, am Wert einer '
+                  'gemappten Extension oder an einem Slice darunter.', '',
+                  '| Ergebnis | Anzahl |', '|---|---:|'] + [f'| {k} | {v} |' for k, v in zl.items()] + ['']
+            for titel, liste, spalte in (('Gleich, aber am Slice — Mapping präzisieren', ba.get('slice', []), 'vorschlag'),
+                                         ('Abweichend', ba.get('abweichend', []), 'profil'),
+                                         ('Ungeklärt — Werteliste des Modells nicht im Paketbestand', ba.get('ungeklaert', []), 'profil')):
+                if liste:
+                    z += [f'**{titel} ({len(liste)})**', '', '| Element im Modell | Mapping | Werteliste im Modell | ' +
+                          ('Vorschlag' if spalte == 'vorschlag' else 'Bindung im Profil') + ' |', '|---|---|---|---|']
+                    z += [f'| {x["im"]} | `{x["mapping"]}` | `{x["modell"]}` | `{x[spalte]}`' +
+                          (f' ({x["staerke_profil"]}, {x["wo"]})' if spalte == 'profil' else '') + ' |' for x in liste]
+                    z.append('')
         if s['baum_aus']:
             b = s['baum_aus']
             z += ['## Ausmodellierte Darstellung', '',

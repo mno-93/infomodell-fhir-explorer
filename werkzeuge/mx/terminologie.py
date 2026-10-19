@@ -10,7 +10,7 @@ und der Herausgeber kanonische URLs auflöst (fhir.kbv.de, hl7.org, terminology.
 """
 import re
 
-from .grundlagen import json_laden
+from .grundlagen import json_laden, kanon
 from .pakete import ordner
 
 KANONISCH_AUFLOESBAR = ('https://fhir.kbv.de/', 'http://hl7.org/fhir/', 'http://terminology.hl7.org/')
@@ -82,3 +82,60 @@ def staerke_trennen(text):
     """'LabStudyTypesEuVs (required)' → ('LabStudyTypesEuVs', 'required')."""
     m = re.match(r'^(.*?)\s*\((required|extensible|preferred|example)\)\s*$', text or '')
     return (m.group(1), m.group(2)) if m else ((text or '').strip(), '')
+
+
+class Bindungsabgleich:
+    """Werteliste im Modell gegen die Bindung im Profil.
+
+    Gesucht wird (1) ein Slice direkt unter dem gemappten Element, dessen Bindung eine Werteliste des Modells ist
+    (dann ist das Mapping zu ungenau), (2) die Bindung am gemappten Element, (3) am zugehörigen CodeableConcept
+    (Mapping auf `….coding` oder `….coding.code`), (4) am Wert einer gemappten Extension. Nicht über
+    Extension-Grenzen hinweg. Ergebnis: gleich · gleich, aber am Slice · abweichend (beide Wertelisten bekannt,
+    verschieden) · ungeklärt (Werteliste des Modells nicht im Paketbestand) · ohne Bindung.
+    """
+
+    def __init__(self, sds):
+        self.sds = sds
+        self._index = {}
+
+    def _elemente(self, sd_url):
+        if sd_url not in self._index:
+            ids = {e['id']: e for e in self.sds[sd_url]['snapshot']['element']}
+            els = {}
+            for i, e in ids.items():
+                els[kanon(i)] = e
+                teile = i.split('.')
+                for j, t in enumerate(teile):  # Typwahl mit genau einem Typ auch unter dem JSON-Namen
+                    if t.endswith('[x]'):
+                        typen = (ids.get('.'.join(teile[:j + 1])) or {}).get('type', [])
+                        if len(typen) == 1:
+                            c = typen[0]['code']
+                            els.setdefault(kanon('.'.join(teile[:j] + [t[:-3] + c[0].upper() + c[1:]] + teile[j + 1:])), e)
+            self._index[sd_url] = els
+        return self._index[sd_url]
+
+    def pruefe(self, sd_url, k, wertelisten):
+        els = self._elemente(sd_url)
+        urls = {w.get('url') for w in wertelisten if w.get('aufgeloest')}
+
+        def vs_von(e):
+            return ((e or {}).get('binding') or {}).get('valueSet', '').split('|')[0]
+        for x, e in els.items():
+            if x.startswith(k + ':') and '.' not in x[len(k) + 1:] and vs_von(e) in urls:
+                return 'gleich, aber am Slice', {'slice': x.rsplit(':', 1)[1], 'profil': vs_von(e),
+                                                 'staerke_profil': e['binding'].get('strength', ''), 'wo': 'am Slice'}
+        kandidaten = [(k, 'am Element')]
+        if re.search(r'\.coding(:[^.]+)?(\.code)?$', k):
+            kandidaten.append((re.sub(r'\.coding(:[^.]+)?(\.code)?$', '', k), 'am CodeableConcept'))
+        if re.search(r'\.extension:[^.]+$', k):
+            kandidaten.append((k + '.value[x]', 'am Wert der Extension'))
+        for x, wo in kandidaten:
+            vs = vs_von(els.get(x))
+            if vs:
+                info = {'profil': vs, 'staerke_profil': els[x]['binding'].get('strength', ''), 'wo': wo}
+                if vs in urls:
+                    return 'gleich', info
+                if all(w.get('aufgeloest') for w in wertelisten):
+                    return 'abweichend', info
+                return 'ungeklärt', info
+        return 'ohne Bindung', {}

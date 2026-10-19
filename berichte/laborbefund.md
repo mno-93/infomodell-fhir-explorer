@@ -16,7 +16,8 @@
 | davon mit FHIR-Mapping | 393 |
 | FHIR-Mappings | 450 |
 | exakt | 396 |
-| Schreibvariante | 44 |
+| gleichwertige Schreibweise (JSON-Name der Typwahl, Typ-Slice) — keine Korrektur nötig | 21 |
+| Schreibvariante (gemischte Notation) — vereinheitlichen | 23 |
 | über Extension-Definition oder Datentyp aufgelöst | 0 |
 | **ohne Ziel** | **8** |
 | **auf ein 0..0-Element** | **2** |
@@ -46,29 +47,10 @@
 | Hersteller <br>*Referenzierte Profile / Laboranalysegerät* | `DeviceDefinitionLaboratoryAnalyzerdgLP.manufacturer[x]:manufacturerString` | liegt unter „Laboranalysegerät“ (device-laboratory-analyzer-dglp), zeigt aber in `device-definition-laboratory-analyzer-dglp` |
 | Referenz Laborauftrag-Information <br>*Referenzierte Profile / Laborgesamtbefund* | `ServiceRequestdgLP.basedOn` | liegt unter „Laborgesamtbefund“ (diagnostic-report-dglp), zeigt aber in `service-request-dglp` |
 
-### Schreibvarianten (44)
+### Schreibvarianten (gemischte Notation) (23)
 
 | Element im Modell | Mapping | Befund |
 |---|---|---|
-| Hersteller <br>*Referenzierte Profile / Außerkörperliche Quelle* | `DeviceDefinitionSpecimenSubjectdgLP.manufacturer[x]:manufacturerString` | Typ-Slice `manufacturer[x]:manufacturerString` nicht definiert; gemeint ist die Typwahl `manufacturer[x]` |
-| SNOMED CT®-Code <br>*Körperstruktur / Körperstelle Code/Bezeichnung* | `BodyStructuredgLP.extension:includedStructure.extension:structure.valueCodeableConcept.coding` | `valueCodeableConcept` statt `value[x]` |
-| Bezeichnung <br>*Körperstruktur / Körperstelle Code/Bezeichnung* | `BodyStructuredgLP.extension:includedStructure.extension:structure.valueCodeableConcept.text` | `valueCodeableConcept` statt `value[x]` |
-| SNOMED  CT®-Code <br>*Körperstruktur / Lateralität Code/Bezeichnung* | `BodyStructuredgLP.extension:includedStructure.extension:laterality.valueCodeableConcept.coding` | `valueCodeableConcept` statt `value[x]` |
-| Bezeichnung <br>*Körperstruktur / Lateralität Code/Bezeichnung* | `BodyStructuredgLP.extension:includedStructure.extension:laterality.valueCodeableConcept.text` | `valueCodeableConcept` statt `value[x]` |
-| SNOMED CT®-Code <br>*Körperstruktur / Lokalisation Code/Bezeichnung* | `BodyStructuredgLP.extension:includedStructure.extension:qualifier.valueCodeableConcept.coding` | `valueCodeableConcept` statt `value[x]` |
-| Bezeichnung <br>*Körperstruktur / Lokalisation Code/Bezeichnung* | `BodyStructuredgLP.extension:includedStructure.extension:qualifier.valueCodeableConcept.text` | `valueCodeableConcept` statt `value[x]` |
-| Uhrzeigerposition Code/Bezeichnung <br>*Referenzierte Profile / Körperstruktur* | `BodyStructuredgLP.extension:includedStructure.extension:bodyLandmarkOrientation.extension:clockFacePosition.valueCodeableConcept` | `valueCodeableConcept` statt `value[x]` |
-| SNOMED CT®-Code <br>*Körperstruktur / Uhrzeigerposition Code/Bezeichnung* | `BodyStructuredgLP.extension:includedStructure.extension:bodyLandmarkOrientation.extension:clockFacePosition.valueCodeableConcept.coding` | `valueCodeableConcept` statt `value[x]` |
-| Bezeichnung <br>*Körperstruktur / Uhrzeigerposition Code/Bezeichnung* | `BodyStructuredgLP.extension:includedStructure.extension:bodyLandmarkOrientation.extension:clockFacePosition.valueCodeableConcept.text` | `valueCodeableConcept` statt `value[x]` |
-| Hersteller <br>*Referenzierte Profile / Laboranalysegerät* | `DeviceDefinitionLaboratoryAnalyzerdgLP.manufacturer[x]:manufacturerString` | Typ-Slice `manufacturer[x]:manufacturerString` nicht definiert; gemeint ist die Typwahl `manufacturer[x]` |
-| Code-Auswahl <br>*Fachliches Gruppierungsmerkmal Auswahl / Test-Profil Code/Bezeichnung* | `ObservationLaboratoryStudyGroupdgLP.extension:testProfile.valueCodeableConcept.coding` | `valueCodeableConcept` statt `value[x]` |
-| Code Test-Profil <br>*Test-Profil Code/Bezeichnung / Code-Auswahl* | `ObservationLaboratoryStudyGroupdgLP.extension:testProfile.valueCodeableConcept.coding` | `valueCodeableConcept` statt `value[x]` |
-| Code aus anderem Codesystem <br>*Test-Profil Code/Bezeichnung / Code-Auswahl* | `ObservationLaboratoryStudyGroupdgLP.extension:testProfile.valueCodeableConcept.coding` | `valueCodeableConcept` statt `value[x]` |
-| Bezeichnung <br>*Fachliches Gruppierungsmerkmal Auswahl / Test-Profil Code/Bezeichnung* | `ObservationLaboratoryStudyGroupdgLP.extension:testProfile.valueCodeableConcept.text` | `valueCodeableConcept` statt `value[x]` |
-| Code-Auswahl <br>*Fachliches Gruppierungsmerkmal Auswahl / Test-Profil Code/Bezeichnung* | `ObservationLaboratoryStudydgLP.extension:testProfile.valueCodeableConcept.coding` | `valueCodeableConcept` statt `value[x]` |
-| Code Test-Profil <br>*Test-Profil Code/Bezeichnung / Code-Auswahl* | `ObservationLaboratoryStudydgLP.extension:testProfile.valueCodeableConcept.coding` | `valueCodeableConcept` statt `value[x]` |
-| Code aus anderem Codesystem <br>*Test-Profil Code/Bezeichnung / Code-Auswahl* | `ObservationLaboratoryStudydgLP.extension:testProfile.valueCodeableConcept.coding` | `valueCodeableConcept` statt `value[x]` |
-| Bezeichnung <br>*Fachliches Gruppierungsmerkmal Auswahl / Test-Profil Code/Bezeichnung* | `ObservationLaboratoryStudydgLP.extension:testProfile.valueCodeableConcept.text` | `valueCodeableConcept` statt `value[x]` |
 | Klinischer Bezugszeitpunkt <br>*Referenzierte Profile / Laboruntersuchung* | `ObservationLaboratoryStudydgLP.effective[x].effectiveDateTime` | `effective[x].effectiveDateTime` statt `effective[x]:effectiveDateTime` |
 | Ergebniswert Quantität <br>*Messergebnis / Messergebnis quantitativ* | `ObservationLaboratoryStudydgLP.value[x].valueQuantity` | `value[x].valueQuantity` statt `value[x]:valueQuantity` |
 | Wert <br>*Messergebnis quantitativ / Ergebniswert Quantität* | `ObservationLaboratoryStudydgLP.value[x].valueQuantity.value` | `value[x].valueQuantity` statt `value[x]:valueQuantity` |
@@ -92,8 +74,32 @@
 | Einheit <br>*Ergebnisbereich / Untergrenze* | `ObservationLaboratoryStudydgLP.value[x].valueRange.low.system` | `value[x].valueRange` statt `value[x]:valueRange` |
 | Einheit <br>*Ergebnisbereich / Untergrenze* | `ObservationLaboratoryStudydgLP.value[x].valueRange.low.code` | `value[x].valueRange` statt `value[x]:valueRange` |
 | Einheit <br>*Ergebnisbereich / Untergrenze* | `ObservationLaboratoryStudydgLP.value[x].valueRange.low.unit` | `value[x].valueRange` statt `value[x]:valueRange` |
-| Medizinischer Freigabezeitpunkt <br>*Referenzierte Profile / Medizinische Freigabe* | `ProvenancedgLP.occurred[x]:occurredDateTime` | Typ-Slice `occurred[x]:occurredDateTime` nicht definiert; gemeint ist die Typwahl `occurred[x]` |
-| Hersteller <br>*Referenzierte Profile / Probenbehälter* | `DeviceDefinitionSpecimenContainerdgLP.manufacturer[x]:manufacturerString` | Typ-Slice `manufacturer[x]:manufacturerString` nicht definiert; gemeint ist die Typwahl `manufacturer[x]` |
+
+### Gleichwertige Schreibweisen (keine Korrektur nötig) (21)
+
+| Element im Modell | Mapping | Befund |
+|---|---|---|
+| Hersteller <br>*Referenzierte Profile / Außerkörperliche Quelle* | `DeviceDefinitionSpecimenSubjectdgLP.manufacturer[x]:manufacturerString` | Typ-Slice `manufacturer[x]:manufacturerString` im Profil nicht eigens ausgewiesen (Element `manufacturer[x]`) — Typangabe bleibt gültig |
+| SNOMED CT®-Code <br>*Körperstruktur / Körperstelle Code/Bezeichnung* | `BodyStructuredgLP.extension:includedStructure.extension:structure.valueCodeableConcept.coding` | JSON-Name `valueCodeableConcept` für die Typwahl `value[x]` — gleichwertig |
+| Bezeichnung <br>*Körperstruktur / Körperstelle Code/Bezeichnung* | `BodyStructuredgLP.extension:includedStructure.extension:structure.valueCodeableConcept.text` | JSON-Name `valueCodeableConcept` für die Typwahl `value[x]` — gleichwertig |
+| SNOMED  CT®-Code <br>*Körperstruktur / Lateralität Code/Bezeichnung* | `BodyStructuredgLP.extension:includedStructure.extension:laterality.valueCodeableConcept.coding` | JSON-Name `valueCodeableConcept` für die Typwahl `value[x]` — gleichwertig |
+| Bezeichnung <br>*Körperstruktur / Lateralität Code/Bezeichnung* | `BodyStructuredgLP.extension:includedStructure.extension:laterality.valueCodeableConcept.text` | JSON-Name `valueCodeableConcept` für die Typwahl `value[x]` — gleichwertig |
+| SNOMED CT®-Code <br>*Körperstruktur / Lokalisation Code/Bezeichnung* | `BodyStructuredgLP.extension:includedStructure.extension:qualifier.valueCodeableConcept.coding` | JSON-Name `valueCodeableConcept` für die Typwahl `value[x]` — gleichwertig |
+| Bezeichnung <br>*Körperstruktur / Lokalisation Code/Bezeichnung* | `BodyStructuredgLP.extension:includedStructure.extension:qualifier.valueCodeableConcept.text` | JSON-Name `valueCodeableConcept` für die Typwahl `value[x]` — gleichwertig |
+| Uhrzeigerposition Code/Bezeichnung <br>*Referenzierte Profile / Körperstruktur* | `BodyStructuredgLP.extension:includedStructure.extension:bodyLandmarkOrientation.extension:clockFacePosition.valueCodeableConcept` | JSON-Name `valueCodeableConcept` für die Typwahl `value[x]` — gleichwertig |
+| SNOMED CT®-Code <br>*Körperstruktur / Uhrzeigerposition Code/Bezeichnung* | `BodyStructuredgLP.extension:includedStructure.extension:bodyLandmarkOrientation.extension:clockFacePosition.valueCodeableConcept.coding` | JSON-Name `valueCodeableConcept` für die Typwahl `value[x]` — gleichwertig |
+| Bezeichnung <br>*Körperstruktur / Uhrzeigerposition Code/Bezeichnung* | `BodyStructuredgLP.extension:includedStructure.extension:bodyLandmarkOrientation.extension:clockFacePosition.valueCodeableConcept.text` | JSON-Name `valueCodeableConcept` für die Typwahl `value[x]` — gleichwertig |
+| Hersteller <br>*Referenzierte Profile / Laboranalysegerät* | `DeviceDefinitionLaboratoryAnalyzerdgLP.manufacturer[x]:manufacturerString` | Typ-Slice `manufacturer[x]:manufacturerString` im Profil nicht eigens ausgewiesen (Element `manufacturer[x]`) — Typangabe bleibt gültig |
+| Code-Auswahl <br>*Fachliches Gruppierungsmerkmal Auswahl / Test-Profil Code/Bezeichnung* | `ObservationLaboratoryStudyGroupdgLP.extension:testProfile.valueCodeableConcept.coding` | JSON-Name `valueCodeableConcept` für die Typwahl `value[x]` — gleichwertig |
+| Code Test-Profil <br>*Test-Profil Code/Bezeichnung / Code-Auswahl* | `ObservationLaboratoryStudyGroupdgLP.extension:testProfile.valueCodeableConcept.coding` | JSON-Name `valueCodeableConcept` für die Typwahl `value[x]` — gleichwertig |
+| Code aus anderem Codesystem <br>*Test-Profil Code/Bezeichnung / Code-Auswahl* | `ObservationLaboratoryStudyGroupdgLP.extension:testProfile.valueCodeableConcept.coding` | JSON-Name `valueCodeableConcept` für die Typwahl `value[x]` — gleichwertig |
+| Bezeichnung <br>*Fachliches Gruppierungsmerkmal Auswahl / Test-Profil Code/Bezeichnung* | `ObservationLaboratoryStudyGroupdgLP.extension:testProfile.valueCodeableConcept.text` | JSON-Name `valueCodeableConcept` für die Typwahl `value[x]` — gleichwertig |
+| Code-Auswahl <br>*Fachliches Gruppierungsmerkmal Auswahl / Test-Profil Code/Bezeichnung* | `ObservationLaboratoryStudydgLP.extension:testProfile.valueCodeableConcept.coding` | JSON-Name `valueCodeableConcept` für die Typwahl `value[x]` — gleichwertig |
+| Code Test-Profil <br>*Test-Profil Code/Bezeichnung / Code-Auswahl* | `ObservationLaboratoryStudydgLP.extension:testProfile.valueCodeableConcept.coding` | JSON-Name `valueCodeableConcept` für die Typwahl `value[x]` — gleichwertig |
+| Code aus anderem Codesystem <br>*Test-Profil Code/Bezeichnung / Code-Auswahl* | `ObservationLaboratoryStudydgLP.extension:testProfile.valueCodeableConcept.coding` | JSON-Name `valueCodeableConcept` für die Typwahl `value[x]` — gleichwertig |
+| Bezeichnung <br>*Fachliches Gruppierungsmerkmal Auswahl / Test-Profil Code/Bezeichnung* | `ObservationLaboratoryStudydgLP.extension:testProfile.valueCodeableConcept.text` | JSON-Name `valueCodeableConcept` für die Typwahl `value[x]` — gleichwertig |
+| Medizinischer Freigabezeitpunkt <br>*Referenzierte Profile / Medizinische Freigabe* | `ProvenancedgLP.occurred[x]:occurredDateTime` | Typ-Slice `occurred[x]:occurredDateTime` im Profil nicht eigens ausgewiesen (Element `occurred[x]`) — Typangabe bleibt gültig |
+| Hersteller <br>*Referenzierte Profile / Probenbehälter* | `DeviceDefinitionSpecimenContainerdgLP.manufacturer[x]:manufacturerString` | Typ-Slice `manufacturer[x]:manufacturerString` im Profil nicht eigens ausgewiesen (Element `manufacturer[x]`) — Typangabe bleibt gültig |
 
 ## Wertelisten
 
@@ -108,13 +114,31 @@ Nicht auflösbar (weder im Paketbestand noch in einer Profilbindung):
 - `MehrfachkodierungsKennzeichen`
 - `ObservationStatusdgLPVS`
 
-### Werteliste im Modell ≠ Bindung im Profil (3)
+### Werteliste im Modell gegen Bindung im Profil
+
+Je Mapping eines Elements mit Werteliste: Bindung am Element, am zugehörigen CodeableConcept, am Wert einer gemappten Extension oder an einem Slice darunter.
+
+| Ergebnis | Anzahl |
+|---|---:|
+| gleich | 45 |
+| gleich, aber am Slice | 1 |
+| ohne Bindung | 4 |
+| ungeklärt | 4 |
+
+**Gleich, aber am Slice — Mapping präzisieren (1)**
+
+| Element im Modell | Mapping | Werteliste im Modell | Vorschlag |
+|---|---|---|---|
+| SNOMED CT®-Code | `ObservationImageAttachmentdgLP.code.coding` | `DiagramTypeVS` | `ObservationImageAttachmentdgLP.code.coding:snomed` |
+
+**Ungeklärt — Werteliste des Modells nicht im Paketbestand (4)**
 
 | Element im Modell | Mapping | Werteliste im Modell | Bindung im Profil |
 |---|---|---|---|
-| Freigabetyp | `CompositiondgLP.attester:legalAuthenticator.mode` | `KBV_VS_MIO_LAB_Composition_Attester_Mode` | `http://hl7.org/fhir/ValueSet/composition-attestation-mode` (required) |
-| Status Laboruntersuchung | `ObservationLaboratoryStudydgLP.status` | `ObservationStatusdgLPVS` | `https://gematik.de/fhir/terminology/ValueSet/observation-status` (required) |
-| Freigabetyp | `ProvenancedgLP.activity` | `KBV_VS_MIO_LAB_Provenance_Activity_Type` | `http://hl7.org/fhir/ValueSet/provenance-activity-type` (extensible) |
+| Freigabetyp | `CompositiondgLP.attester:legalAuthenticator.mode` | `KBV_VS_MIO_LAB_Composition_Attester_Mode` | `http://hl7.org/fhir/ValueSet/composition-attestation-mode` (required, am Element) |
+| Codierungskennzeichen | `ConditionDiagnosisdgLP.code.coding:ICD-10-GM.extension:Mehrfachcodierungs-Kennzeichen` | `MehrfachkodierungsKennzeichen` | `http://fhir.de/ValueSet/icd-10-gm-mehrfachcodierungs-kennzeichen` (required, am Wert der Extension) |
+| Status Laboruntersuchung | `ObservationLaboratoryStudydgLP.status` | `ObservationStatusdgLPVS` | `https://gematik.de/fhir/terminology/ValueSet/observation-status` (required, am Element) |
+| Freigabetyp | `ProvenancedgLP.activity` | `KBV_VS_MIO_LAB_Provenance_Activity_Type` | `http://hl7.org/fhir/ValueSet/provenance-activity-type` (extensible, am Element) |
 
 ## Ausmodellierte Darstellung
 

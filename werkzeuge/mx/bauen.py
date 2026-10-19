@@ -8,7 +8,7 @@ from .grundlagen import AUSGABE, WURZEL
 from .konfig import projekt_laden
 from .pakete import definitionen
 from .profile import profil_aufbereiten
-from .terminologie import Wertelisten
+from .terminologie import Bindungsabgleich, Wertelisten
 
 IM_TITEL = {'gematik-baum': 'Informationsmodell', 'aus-profilen': 'Struktur aus den Profilen'}
 
@@ -67,7 +67,7 @@ def projekt_bauen(pid):
             if ig.get('kanonisch') and u.startswith(ig['kanonisch']) else None
         profile[u] = profil_aufbereiten(sds[u], gemappt.get(u, set()), seite, zusaetzlich.get(u, set()), wl)
 
-    status = ('exakt', 'schreibvariante', 'ueber-definition', 'verboten', 'fehler', 'unbekannt')
+    status = ('exakt', 'gleichwertig', 'schreibvariante', 'ueber-definition', 'verboten', 'fehler', 'unbekannt')
     statistik = {
         'im_knoten': len(knoten), 'im_mit_mapping': sum(1 for n in knoten if n['maps']),
         'mappings': sum(len(n['maps']) for n in knoten),
@@ -102,25 +102,24 @@ def _wertelisten_statistik(knoten):
 
 
 def _bindungsabgleich(knoten, sds):
-    """Werteliste im Modell gegen die Bindung des gemappten Profilelements (nur exakte Mappings)."""
-    from .grundlagen import kanon
-    aus = []
+    """Werteliste im Modell gegen die Bindung im Profil — Regeln in `terminologie.Bindungsabgleich`."""
+    from collections import Counter
+    ba = Bindungsabgleich(sds)
+    zaehlung, listen = Counter(), {'abweichend': [], 'ungeklärt': [], 'gleich, aber am Slice': []}
     for n in knoten:
-        if len(n['wertelisten']) != 1:
+        if not n['wertelisten']:
             continue
-        w = n['wertelisten'][0]
         for m in n['maps']:
-            if m['status'] != 'exakt' or not m['sd'] or '.' not in m['k']:
+            if not m['sd'] or '.' not in m['k'] or m['status'] in ('fehler', 'verboten', 'unbekannt'):
                 continue
-            el = next((e for e in sds[m['sd']]['snapshot']['element'] if kanon(e['id']) == m['k']), None)
-            vs = ((el or {}).get('binding') or {}).get('valueSet', '').split('|')[0]
-            if not vs:
-                continue
-            gleich = (w.get('url') == vs) if w.get('url') else (vs.rsplit('/', 1)[-1] == w['name'])
-            if not gleich:
-                aus.append({'id': n['id'], 'im': n['name'], 'mapping': m['roh'], 'modell': w['name'],
-                            'modell_url': w.get('url', ''), 'profil': vs, 'staerke_profil': el['binding'].get('strength', '')})
-    return aus
+            art, info = ba.pruefe(m['sd'], m['k'], n['wertelisten'])
+            zaehlung[art] += 1
+            if art in listen:
+                listen[art].append(dict(info, id=n['id'], im=n['name'], mapping=m['roh'],
+                                        modell=', '.join(w['name'] for w in n['wertelisten']),
+                                        vorschlag=(m['roh'] + ':' + info['slice']) if info.get('slice') else ''))
+    return {'zaehlung': dict(sorted(zaehlung.items())), 'abweichend': listen['abweichend'],
+            'ungeklaert': listen['ungeklärt'], 'slice': listen['gleich, aber am Slice']}
 
 
 def seite_schreiben(daten):

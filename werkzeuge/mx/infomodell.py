@@ -2,7 +2,7 @@
 
 Knoten: {id, p, name, typ, card, besch, rat, op, codes[], maps[{roh, sd, k, status, grund}], kurz, herkunft[], anf[]}
 
-gematik-baum   JSON hinter der Baumansicht „Informationsmodell“ eines gematik-IG (ART-DECOR-Export) mit
+gematik-baum   JSON hinter der Baumansicht „Informationsmodell“ eines veröffentlichten gematik-IG mit
                FHIR-Mappings je Element; dazu die ausmodellierte Sicht.
 aus-profilen   kein veröffentlichtes Informationsmodell mit Mappings: Struktur aus den Profilen ableiten
                (Composition → Abschnitte → Einträge → Must-Support-Elemente).

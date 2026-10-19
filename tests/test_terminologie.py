@@ -41,7 +41,11 @@ class TerminologieTest(unittest.TestCase):
         self.assertIsNone(w.get('seite'))
 
     def test_bindungsabgleich(self):
-        self.assertIn('Freigabetyp', {x['im'] for x in self.d['statistik']['bindungsabgleich']})
+        ba = self.d['statistik']['bindungsabgleich']
+        self.assertEqual(ba['abweichend'], [])
+        self.assertIn('Freigabetyp', {x['im'] for x in ba['ungeklaert']})  # KBV-Werteliste nicht im Paketbestand
+        self.assertEqual([x['vorschlag'] for x in ba['slice']], ['ObservationImageAttachmentdgLP.code.coding:snomed'])
+        self.assertGreater(ba['zaehlung']['gleich'], 40)
 
 
 if __name__ == '__main__':

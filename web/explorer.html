@@ -200,7 +200,7 @@ dialog::backdrop { background: rgba(0,0,0,.35); }
     <label class="hinweis" for="beispielwahl">Beispiel</label>
     <select id="beispielwahl"></select>
     <button class="knopf" id="pruefung-auf">Abdeckung &amp; Prüfung</button>
-    <button class="knopf" id="leeren" title="Auswahl aufheben (Esc)">Auswahl aufheben</button>
+    <button class="knopf" id="leeren" title="Auswahl aufheben (Esc; Esc schließt zuerst offene Fenster)">Auswahl aufheben</button>
   </div>
   <p class="beispiel-info" id="beispiel-info"></p>
 </header>
@@ -813,9 +813,11 @@ function detailsZeichnen(ims) {
   const imTeil = ims.slice(0, 2).map(n => `<h4>Informationsmodell: ${esc(n.name)}</h4>`
     + (n.kurz ? `<p><i>${esc(n.kurz)}</i></p>` : '') + (n.besch ? `<p>${esc(n.besch)}</p>` : '')
     + `<p class="hinweis">${esc(n.typ ? 'Datentyp ' + n.typ + ' · ' : '')}${esc(n.card)}</p>`
-    + (n.maps.some(m => m.status !== 'exakt') ? '<h4>Mappingprüfung</h4>' + n.maps.filter(m => m.status !== 'exakt').map(m => `<p><span class="${m.status === 'schreibvariante' ? 'hinweis' : 'warn'}">${esc(m.status)}</span> <code>${esc(m.roh)}</code><br><span class="hinweis">${esc(m.grund)}</span></p>`).join('') : '')
+    + (n.maps.some(m => m.status !== 'exakt') ? '<h4>Mappingprüfung</h4>' + n.maps.filter(m => m.status !== 'exakt').map(m => `<p><span class="${['schreibvariante', 'gleichwertig'].includes(m.status) ? 'hinweis' : 'warn'}">${esc(m.status)}</span> <code>${esc(m.roh)}</code><br><span class="hinweis">${esc(m.grund)}</span></p>`).join('') : '')
     + (D.pruefung.some(p => p.status === 'anderes-profil' && p.id === n.id) ? D.pruefung.filter(p => p.status === 'anderes-profil' && p.id === n.id).map(p => `<p><span class="warn">anderes Profil</span> ${esc(p.grund)}</p>`).join('') : '')
-    + ((D.statistik.bindungsabgleich || []).filter(x => x.id === n.id).map(x => `<p><span class="warn">Werteliste ≠ Bindung</span> Modell <code>${esc(x.modell)}</code>, Profil <code>${esc(kurzUrl(x.profil))}</code> (${esc(x.staerke_profil)})</p>`).join(''))
+    + (() => { const ba = D.statistik.bindungsabgleich || {}; return [...(ba.slice || []).filter(x => x.id === n.id).map(x => `<p><span class="warn">Mapping präzisieren</span> Werteliste am Slice gebunden → <code>${esc(x.vorschlag)}</code></p>`),
+        ...(ba.abweichend || []).filter(x => x.id === n.id).map(x => `<p><span class="warn">Werteliste ≠ Bindung</span> Profil <code>${esc(kurzUrl(x.profil))}</code> (${esc(x.staerke_profil)}, ${esc(x.wo)})</p>`),
+        ...(ba.ungeklaert || []).filter(x => x.id === n.id).map(x => `<p><span class="hinweis">Abgleich ungeklärt</span> Werteliste nicht im Paketbestand; Profil bindet <code>${esc(kurzUrl(x.profil))}</code> (${esc(x.staerke_profil)})</p>`)].join(''); })()
     + (n.herkunft.length ? '<h4>Herkunft (Altdaten)</h4>' + n.herkunft.map(h => `<p><b>${esc(h.quelle)}:</b> ${esc(h.text)}</p>`).join('') : '')).join('');
   const fhirTeil = R.el.slice(0, 2).map(({ sd, k }) => { const p = D.profile[sd]; const e = p?.elemente.find(x => x.k === k); return e ? `<h4>FHIR: ${esc(p.name)}</h4><p><code>${esc(e.id)}</code> ${esc(e.card)}${e.ms ? ' · Must Support' : ''}</p><p>${esc(e.short)}</p>${e.bindung ? `<p class="werteliste">Bindung: ${wertelisteHtml(e.bindung)}</p>` : (e.bind ? `<p class="hinweis">Bindung: ${esc(e.bind)}</p>` : '')}${e.fest ? `<p class="hinweis mono">${esc(e.fest)}</p>` : ''}${e.def ? `<p class="hinweis">${esc(e.def)}</p>` : ''}` : `<h4>FHIR: ${esc(p ? p.name : kurzUrl(sd))}</h4><p><code>${esc(k)}</code> — kein Element im Profil-Snapshot (siehe Mappingprüfung)</p>`; }).join('');
   const anf = anforderungenFuer(R);
@@ -883,7 +885,7 @@ function pruefungZeigen() {
     ${D.meta.im_hinweis ? `<p class="hinweis">${esc(D.meta.im_hinweis)}</p>` : ''}
     <table><tbody>
       ${gematik ? zeile('Elemente im Informationsmodell', `${s.im_knoten}, davon ${s.im_mit_mapping} mit FHIR-Mapping`)
-        + zeile('FHIR-Mappings', `${s.mappings}: ${st.exakt} exakt · ${st.schreibvariante} in Schreibvariante · <b>${st.fehler} ohne Ziel · ${st.verboten} auf ein 0..0-Element</b> · ${s.anderes_profil} in ein anderes Profil als das übergeordnete Element`)
+        + zeile('FHIR-Mappings', `${s.mappings}: ${st.exakt} exakt · ${st.gleichwertig || 0} gleichwertig geschrieben · ${st.schreibvariante} in gemischter Notation · <b>${st.fehler} ohne Ziel · ${st.verboten} auf ein 0..0-Element</b> · ${s.anderes_profil} in ein anderes Profil als das übergeordnete Element`)
         : zeile('Abgeleitete Struktur', `${s.im_knoten} Elemente aus den Profilen`)}
       ${ba ? zeile('Ausmodellierte Darstellung', `${ba.knoten} Knoten · ${ba.ausmodelliert} Referenzen an Ort und Stelle aufgelöst · ${ba.zyklen} Zyklen erkannt · ${ba.aus_profil} Knoten aus FHIR-Profilen ergänzt (Must Support)`) : ''}
       ${s.wertelisten && s.wertelisten.gesamt ? zeile('Wertelisten im Modell', `${s.wertelisten.gesamt}, davon ${s.wertelisten.aufgeloest} im Paketbestand oder über eine Profilbindung aufgelöst, ${s.wertelisten.mit_link} mit Link auf die Originalseite${s.wertelisten.ohne.length ? ' · nicht auflösbar: ' + s.wertelisten.ohne.map(esc).join(', ') : ''}`) : ''}
@@ -891,13 +893,19 @@ function pruefungZeigen() {
       ${zeile(esc(B.titel), `${B.ressourcen.length} Ressourcen · ${ab.werte} fachliche Einzelwerte, davon ${ab.gedeckt} durch ein spezifisches Element ${gematik ? 'des Informationsmodells' : 'der abgeleiteten Struktur'} gedeckt · ${B.struktur.length} Strukturbefunde`)}
     </tbody></table>
     ${B.struktur.length ? '<h3>Strukturbefunde im Beispiel</h3><p class="hinweis">Belegtes Element, das sich im Profil nicht auflösen lässt.</p><table class="fehlerliste"><tbody>' + B.struktur.map(x => zeile(`<code>${esc(x.element)}</code>`, esc(x.grund))).join('') + '</tbody></table>' : ''}
-    ${(s.bindungsabgleich || []).length ? `<h3>Werteliste im Modell ≠ Bindung im Profil (${s.bindungsabgleich.length})</h3><p class="hinweis">Nur exakte Mappings auf gebundene Elemente; die Werteliste kann eine bewusste Einschränkung sein.</p><table class="fehlerliste"><tbody>${s.bindungsabgleich.map(x => zeile(esc(x.im) + `<br><code>${esc(x.mapping)}</code>`, `Modell: <code>${esc(x.modell)}</code><br>Profil: <code>${esc(x.profil)}</code> (${esc(x.staerke_profil)})`)).join('')}</tbody></table>` : ''}
+    ${s.bindungsabgleich && Object.keys(s.bindungsabgleich.zaehlung || {}).length ? `<h3>Werteliste im Modell gegen Bindung im Profil</h3>
+    <p class="hinweis">Je Mapping: Bindung am Element, am CodeableConcept, am Wert einer Extension oder an einem Slice darunter. ${Object.entries(s.bindungsabgleich.zaehlung).map(([k, v]) => `${esc(k)}: <b>${v}</b>`).join(' · ')}</p>
+    <table class="fehlerliste"><tbody>${[...s.bindungsabgleich.slice.map(x => zeile(esc(x.im) + `<br><code>${esc(x.mapping)}</code>`, `<span class="warn">Mapping präzisieren</span> → <code>${esc(x.vorschlag)}</code> (Werteliste <code>${esc(x.modell)}</code> ist dort gebunden)`)),
+      ...s.bindungsabgleich.abweichend.map(x => zeile(esc(x.im) + `<br><code>${esc(x.mapping)}</code>`, `<span class="warn">abweichend</span> Modell <code>${esc(x.modell)}</code>, Profil <code>${esc(x.profil)}</code> (${esc(x.staerke_profil)}, ${esc(x.wo)})`)),
+      ...s.bindungsabgleich.ungeklaert.map(x => zeile(esc(x.im) + `<br><code>${esc(x.mapping)}</code>`, `ungeklärt: Modell <code>${esc(x.modell)}</code> nicht im Paketbestand, Profil <code>${esc(x.profil)}</code> (${esc(x.staerke_profil)}, ${esc(x.wo)})`))].join('')}</tbody></table>` : ''}
     ${gematik ? `<h3>Fehlerhafte Mappings</h3><p class="hinweis">Pfad führt auf kein Element oder auf ein im Profil verbotenes.</p>
     <table class="fehlerliste"><tbody>${liste(['fehler', 'verboten', 'unbekannt'])}</tbody></table>
     <h3>Mapping in ein anderes Profil</h3><p class="hinweis">Kann gewollt sein (Device/DeviceDefinition); zu prüfen.</p>
     <table class="fehlerliste"><tbody>${liste(['anderes-profil'])}</tbody></table>
-    <details><summary>Schreibvarianten (${st.schreibvariante}) — eindeutig, aber nicht als Elementkennung geschrieben</summary>
-    <table class="fehlerliste"><tbody>${liste(['schreibvariante'])}</tbody></table></details>` : ''}
+    <details><summary>Schreibvarianten (${st.schreibvariante}) — gemischte Notation, vereinheitlichen</summary>
+    <table class="fehlerliste"><tbody>${liste(['schreibvariante'])}</tbody></table></details>
+    <details><summary>Gleichwertige Schreibweisen (${st.gleichwertig || 0}) — JSON-Name der Typwahl oder Typ-Slice, keine Korrektur nötig</summary>
+    <table class="fehlerliste"><tbody>${liste(['gleichwertig'])}</tbody></table></details>` : ''}
     <h3>Werte im Beispiel ohne spezifisches Element ${gematik ? 'im Informationsmodell' : 'in der abgeleiteten Struktur'}</h3><p class="hinweis">Ohne technische Angaben (url, reference, system, version, Erzähltext).</p>
     <table><tbody>${[...ohneIm].sort().map(([k, n]) => `<tr><td><code>${esc(k)}</code></td><td>${n}×</td></tr>`).join('')}</tbody></table>
     ${gematik ? `<h3>Blätter im Informationsmodell ohne FHIR-Mapping (${imOhne.length})</h3><p>${imOhne.map(n => esc(n.name)).join(' · ')}</p>` : ''}
@@ -924,7 +932,14 @@ document.addEventListener('click', e => {
   const n = e.target.closest('[data-n]');
   if (n) { e.preventDefault(); return waehlen({ t: 'node', nids: n.dataset.n.split(' ') }); }
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#pruefung').open) waehlen(null); });
+// Escape schließt von innen nach außen: Prüfdialog, dann die aufgeklappten Details, dann die Auswahl
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  const dialog = $('#pruefung');
+  if (dialog.open) { e.preventDefault(); dialog.close(); return; }
+  if ($('#details').open) { $('#details').open = false; obenMessen(); return; }
+  waehlen(null);
+});
 $('#leeren').onclick = () => waehlen(null);
 $('#pruefung-auf').onclick = pruefungZeigen;
 $('#profilwahl').onchange = e => { profilAktiv = e.target.value; profilZeichnen(); markieren(false); };

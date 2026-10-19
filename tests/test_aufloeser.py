@@ -24,6 +24,12 @@ class AufloeserTest(unittest.TestCase):
     def test_typwahl_mit_punkt_ist_schreibvariante(self):
         self.assertEqual(self.pruefe('observation-laboratory-study-dglp', 'value[x].valueQuantity.value'), 'schreibvariante')
 
+    def test_json_name_der_typwahl_ist_gleichwertig(self):
+        self.assertEqual(self.pruefe('body-structure-dglp', 'extension:includedStructure.extension:structure.valueCodeableConcept.coding'), 'gleichwertig')
+
+    def test_typslice_ohne_eigenes_element_ist_gleichwertig(self):
+        self.assertEqual(self.pruefe('device-definition-laboratory-analyzer-dglp', 'manufacturer[x]:manufacturerString'), 'gleichwertig')
+
     def test_verbotenes_element(self):
         self.assertEqual(self.pruefe('service-request-dglp', 'basedOn'), 'verboten')
 
