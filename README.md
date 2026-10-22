@@ -48,6 +48,21 @@ Weitere Befehle:
 - **Terminologie:** Codes und Wertelisten des Modells als Tabelle mit Kopfzeilen; Wertelisten und Profilbindungen verlinkt auf ihre Originalseite, belegte Codes oben.
 - **Abdeckung & Prüfung:** Mappingprüfung, Werte ohne Modellelement, Strukturbefunde des gewählten Beispiels.
 
+## Direkt verlinken
+
+Jede Ansicht hat eine eigene Adresse: Auswahl, Beispiel, Baumdarstellung und Reiter stehen im Fragment der URL und ändern sich mit jedem Klick. **Link kopieren** im Kopf legt die aktuelle Adresse in die Zwischenablage — zum Verschicken oder für Notizen.
+
+| Teil | Bedeutung | Beispiel |
+|---|---|---|
+| `b` | Beispiel | `b=hoffmann-2026-08-12` |
+| `im` | Element im Informationsmodell (Kennung aus dem IG, in den Details als „Kennung“ angezeigt) | `im=1627` |
+| `k` | genau diese Fundstelle im ausmodellierten Baum (optional) | `k=a751d7dab` |
+| `el` | Profilelement: Profil-id `/` Element-id | `el=observation-laboratory-study-dglp/Observation.value%5Bx%5D:valueQuantity.value` |
+| `n` | Wert im Beispiel: Ressource `\|` JSON-Pfad (mehrfach möglich) | `n=Observation/obs-f81d4fae-0-0\|valueQuantity.value` |
+| `v`, `f`, `d`, `info` | ausmodellierte Sicht, FHIR-Reiter Instanz, Dokumentansicht, Details aufgeklappt | `v=ausmodelliert&f=instanz&d=pdf&info=1` |
+
+Beispiel: `laborbefund.html#b=hoffmann-2026-08-12&im=1627&info=1` öffnet den Befund, markiert „Wert“ in allen Ansichten und klappt die Details auf. Kennungen im Modell stammen aus dem IG; Fundstellen und die Elemente der aus Profilen abgeleiteten Struktur tragen Kennungen, die aus ihrem Pfad berechnet sind und bei einem Neubau gleich bleiben. Ein Verweis, der nicht mehr passt, wird im Kopf gemeldet. Die Kurzform `#<Beispiel>` gilt weiter.
+
 ## Reproduzierbar und konsistent
 
 - **Sperrdatei** [`sperrdatei.json`](sperrdatei.json): je FHIR-Paket Herkunft und Inhalts-Hash über alle JSON-Dateien — ein frischer Download und ein vorhandener Cache sind gleich prüfbar. Die Pakete liegen in einem eigenen Cache `.pakete/`, nicht im gemeinsamen `~/.fhir/packages`, den andere Werkzeuge mit abweichenden Fassungen befüllen. Quellen von IG-Seiten liegen im Repository, ihre SHA-256 in der Sperrdatei.

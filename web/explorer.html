@@ -118,6 +118,7 @@ li.zu > ul { display: none; }
 .term-tab td { padding: 2px 8px; border-bottom: 1px solid var(--linie); vertical-align: top; }
 .term-tab tr.belegt td { background: var(--hl2); }
 .werteliste { margin: 2px 0; }
+.link-feld { font: 12px var(--mono); border: 1px solid var(--linie); border-radius: 4px; padding: 1px 4px; background: var(--flaeche); color: var(--text); }
 li.versteckt { display: none; }
 
 /* Profil */
@@ -200,7 +201,9 @@ dialog::backdrop { background: rgba(0,0,0,.35); }
     <label class="hinweis" for="beispielwahl">Beispiel</label>
     <select id="beispielwahl"></select>
     <button class="knopf" id="pruefung-auf">Abdeckung &amp; Prüfung</button>
+    <button class="knopf" id="link-kopieren" title="Link auf genau diese Ansicht und Auswahl kopieren">Link kopieren</button>
     <button class="knopf" id="leeren" title="Auswahl aufheben (Esc; Esc schließt zuerst offene Fenster)">Auswahl aufheben</button>
+    <span class="hinweis" id="link-status" role="status" aria-live="polite"></span>
   </div>
   <p class="beispiel-info" id="beispiel-info"></p>
 </header>
@@ -287,7 +290,6 @@ function beispielLaden(id) {
   B = D.beispiele.find(b => b.id === id) || D.beispiele[0];
   $('#beispielwahl').value = B.id;
   $('#beispiel-info').innerHTML = `<b>Zweck:</b> ${esc(B.zweck)} · <b>Herkunft:</b> ${esc(B.herkunft)}`;
-  try { history.replaceState(null, '', '#' + B.id); } catch (e) { /* lokal ohne Verlauf */ }
   RES = {}; URL2KEY = {};
   B.ressourcen.forEach(r => { RES[r.key] = r; URL2KEY[r.fullUrl] = r.key; URL2KEY[r.key] = r.key; });
   KNOTEN = Object.entries(B.elemente).map(([nid, el]) => { const [sd, k] = trenne(el); return { nid, sd, k }; });
@@ -810,7 +812,7 @@ function ketteZeichnen(imZahl, fhirZahl, uiZahl, docZahl) {
   detailsZeichnen(ims);
 }
 function detailsZeichnen(ims) {
-  const imTeil = ims.slice(0, 2).map(n => `<h4>Informationsmodell: ${esc(n.name)}</h4>`
+  const imTeil = ims.slice(0, 2).map(n => `<h4>Informationsmodell: ${esc(n.name)} <span class="hinweis">· Kennung ${esc(n.id)}</span></h4>`
     + (n.kurz ? `<p><i>${esc(n.kurz)}</i></p>` : '') + (n.besch ? `<p>${esc(n.besch)}</p>` : '')
     + `<p class="hinweis">${esc(n.typ ? 'Datentyp ' + n.typ + ' · ' : '')}${esc(n.card)}</p>`
     + (n.maps.some(m => m.status !== 'exakt') ? '<h4>Mappingprüfung</h4>' + n.maps.filter(m => m.status !== 'exakt').map(m => `<p><span class="${['schreibvariante', 'gleichwertig'].includes(m.status) ? 'hinweis' : 'warn'}">${esc(m.status)}</span> <code>${esc(m.roh)}</code><br><span class="hinweis">${esc(m.grund)}</span></p>`).join('') : '')
@@ -914,7 +916,7 @@ function pruefungZeigen() {
 }
 
 // ------------------------------------------------------------------ Ereignisse
-function waehlen(sel) { auswahl = sel; fundZeiger = null; markieren(); }
+function waehlen(sel) { auswahl = sel; fundZeiger = null; markieren(); urlSchreiben(); }
 document.addEventListener('click', e => {
   const sprung = e.target.closest('[data-sprung]');
   if (sprung) { e.preventDefault(); return waehlen({ t: 'node', nids: [sprung.dataset.sprung] }); }
@@ -943,15 +945,15 @@ document.addEventListener('keydown', e => {
 $('#leeren').onclick = () => waehlen(null);
 $('#pruefung-auf').onclick = pruefungZeigen;
 $('#profilwahl').onchange = e => { profilAktiv = e.target.value; profilZeichnen(); markieren(false); };
-$$('[data-reiter]').forEach(b => b.onclick = () => { reiter = b.dataset.reiter; fhirZeichnen(); markieren(); });
+$$('[data-reiter]').forEach(b => b.onclick = () => { reiter = b.dataset.reiter; fhirZeichnen(); markieren(); urlSchreiben(); });
 $('#doc-reiter').innerHTML = D.meta.dokumente.map(d => `<button role="tab" data-doc="${d}" aria-selected="false">${DOKUMENTE[d]}</button>`).join('');
-$$('[data-doc]').forEach(b => b.onclick = () => { docReiter = b.dataset.doc; docZeichnen(); markieren(); });
-$('#beispielwahl').onchange = e => { beispielLaden(e.target.value); alles(); waehlen(null); };
+$$('[data-doc]').forEach(b => b.onclick = () => { docReiter = b.dataset.doc; docZeichnen(); markieren(); urlSchreiben(); });
+$('#beispielwahl').onchange = e => { beispielLaden(e.target.value); alles(); waehlen(auswahl && auswahl.t !== 'node' ? auswahl : null); };
 $('#im-auf').onclick = () => { let zu; while ((zu = $$('#im-baum li.zu')).length && $$('#im-baum li').length < 5000) zu.forEach(li => imAufklappen(li, true)); };
 $('#im-zu').onclick = () => $$('#im-baum li').forEach(li => imAufklappen(li, false));
 $$('[data-variante]').forEach(b => b.onclick = () => {
   variante = b.dataset.variante; try { localStorage.setItem('modellexplorer.variante', variante); } catch (e) { /* ohne Speicher */ }
-  filter = null; $('#im-suche').value = ''; fundZeiger = null; imBaumBauen(); markieren();
+  filter = null; $('#im-suche').value = ''; fundZeiger = null; imBaumBauen(); markieren(); urlSchreiben();
 });
 $('#im-suche').oninput = e => {
   const q = e.target.value.trim().toLowerCase();
@@ -979,7 +981,89 @@ if (D.meta.im_hinweis) { $('#im-hinweis').hidden = false; $('#im-hinweis').textC
 if (!D.baum_aus) { $('#varianten').hidden = true; variante = 'referenziert'; }
 $('#ui-untertitel').textContent = D.meta.darstellung === 'laborbefund' ? 'Primärsystem, Befundeingang' : 'Primärsystem, Dokument geöffnet';
 $('#beispielwahl').innerHTML = D.beispiele.map(b => `<option value="${esc(b.id)}" title="${esc(b.zweck)}">${esc(b.titel)}</option>`).join('');
-beispielLaden(decodeURIComponent(location.hash.slice(1))); alles(); markieren(false); obenMessen();
+// ------------------------------------------------------------------ Verweise per URL
+// #b=<Beispiel>&im=<Kennung im Modell>[&k=<Fundstelle im ausmodellierten Baum>]
+// #b=…&el=<Profil-id>/<Element-id>      #b=…&n=<Typ>/<id>|<JSON-Pfad>   (n mehrfach möglich)
+// dazu v=ausmodelliert · f=instanz · d=<Dokumentansicht> · info=1 (Details aufgeklappt). Altform #<Beispiel> gilt weiter.
+function urlLesen() {
+  const h = location.hash.slice(1);
+  if (!h) return { n: [] };
+  if (!h.includes('=')) return { b: decodeURIComponent(h), n: [], alt: true };
+  const p = new URLSearchParams(h), z = { n: p.getAll('n') };
+  for (const k of ['b', 'v', 'f', 'd', 'im', 'k', 'el', 'info']) if (p.has(k)) z[k] = p.get(k);
+  return z;
+}
+function urlSchreiben() {
+  const p = new URLSearchParams();
+  p.set('b', B.id);
+  if (variante !== 'referenziert') p.set('v', variante);
+  if (reiter !== 'profil') p.set('f', reiter);
+  if (docReiter !== D.meta.dokumente[0]) p.set('d', docReiter);
+  if (auswahl?.t === 'im') {
+    p.set('im', auswahl.id);
+    if (auswahl.u && variante === 'ausmodelliert') p.set('k', auswahl.u);
+  } else if (auswahl?.t === 'el') {
+    const prof = D.profile[auswahl.sd], e = prof?.elemente.find(x => x.k === auswahl.k);
+    p.set('el', `${prof ? prof.id : auswahl.sd}/${e ? e.id : auswahl.k}`);
+    if (auswahl.u && variante === 'ausmodelliert') p.set('k', auswahl.u);
+  } else if (auswahl?.t === 'node') auswahl.nids.forEach(n => p.append('n', n));
+  if (auswahl && $('#details').open) p.set('info', '1');
+  // lesbar halten: Trennzeichen der Element- und Knotenkennungen nicht maskieren
+  const text = p.toString().replace(/%3A/g, ':').replace(/%2F/g, '/').replace(/%7C/g, '|');
+  try { history.replaceState(null, '', '#' + text); } catch (e) { /* ohne Verlauf, z. B. in Vorschauen */ }
+}
+function urlAnwenden() {
+  const z = urlLesen();
+  beispielLaden(z.b);
+  if (!z.alt && z.b) variante = (z.v === 'ausmodelliert' && D.baum_aus) ? 'ausmodelliert' : 'referenziert';
+  if (z.f === 'instanz' || z.f === 'profil') reiter = z.f;
+  if (z.d && D.meta.dokumente.includes(z.d)) docReiter = z.d;
+  filter = null; $('#im-suche').value = '';
+  alles();
+  let sel = null, fehlt = '';
+  const t = baumIndex(variante);
+  if (z.im) {
+    if (IMBYID[z.im]) sel = { t: 'im', id: z.im, u: z.k && t.k[z.k] && (t.k[z.k].s === z.im || t.k[z.k].z === z.im) ? z.k : undefined };
+    else fehlt = `Element ${z.im} im Modell`;
+  } else if (z.el) {
+    const i = z.el.indexOf('/'), pid = z.el.slice(0, i), eid = z.el.slice(i + 1);
+    const prof = Object.values(D.profile).find(x => x.id === pid || x.url === pid);
+    const e = prof?.elemente.find(x => x.id === eid || x.k === eid);
+    if (prof && e) sel = { t: 'el', sd: prof.url, k: e.k, u: z.k && t.k[z.k] ? z.k : undefined };
+    else fehlt = `Profilelement ${z.el}`;
+  } else if (z.n.length) {
+    const da = z.n.filter(n => B.elemente[n]);
+    if (da.length) sel = { t: 'node', nids: da }; else fehlt = `Wert ${z.n[0]} im Beispiel ${B.id}`;
+  }
+  auswahl = sel; fundZeiger = null;
+  $('#details').open = !!(sel && z.info === '1');
+  markieren();
+  urlSchreiben();
+  meldung(fehlt ? `Verweis nicht gefunden: ${fehlt}` : '');
+}
+function meldung(text) { const m = $('#link-status'); m.textContent = text; m.classList.toggle('warn', /nicht/.test(text)); }
+// Kopieren: Zwischenablage-API, sonst über ein Textfeld; gelingt beides nicht, steht der Link markierbar in der Statuszeile
+function kopierenAlt(text) {
+  const t = document.createElement('textarea');
+  t.value = text; t.setAttribute('readonly', ''); t.style.position = 'fixed'; t.style.opacity = '0';
+  document.body.appendChild(t); t.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  t.remove();
+  return ok;
+}
+$('#link-kopieren').onclick = async () => {
+  urlSchreiben();
+  const link = location.href;
+  let ok = false;
+  try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(link); ok = true; } } catch (e) { ok = false; }
+  if (!ok) ok = kopierenAlt(link);
+  if (ok) { meldung('Link kopiert'); setTimeout(() => { if ($('#link-status').textContent === 'Link kopiert') meldung(''); }, 2500); }
+  else { const m = $('#link-status'); m.classList.remove('warn'); m.innerHTML = `Link zum Kopieren: <input class="link-feld" readonly value="${esc(link)}" size="40">`; m.querySelector('input').select(); }
+};
+$('#details').addEventListener('toggle', () => { if (auswahl) urlSchreiben(); });
+window.addEventListener('hashchange', urlAnwenden);
+urlAnwenden(); obenMessen();
 </script>
 </body>
 </html>

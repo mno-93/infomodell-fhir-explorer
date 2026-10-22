@@ -7,6 +7,7 @@ gematik-baum   JSON hinter der Baumansicht „Informationsmodell“ eines veröf
 aus-profilen   kein veröffentlichtes Informationsmodell mit Mappings: Struktur aus den Profilen ableiten
                (Composition → Abschnitte → Einträge → Must-Support-Elemente).
 """
+import hashlib
 import html
 import re
 
@@ -180,8 +181,17 @@ def ausmodellieren(knoten, sds, konfig):
     baum, erreicht = [], set()
     ergaenzen = im.get('ergaenzen_aus')
 
+    vergeben = set()
+
     def neu(p, **kw):
-        u = 'a%d' % (len(baum) + 1)
+        # stabile Fundstellen-Kennung aus dem Pfad — bleibt gültig, solange sich der Weg dorthin nicht ändert
+        teil = '|'.join(f'{k}={kw[k]}' for k in sorted(kw) if kw[k] is not None)
+        u = 'a' + hashlib.sha1(f'{p}>{teil}'.encode()).hexdigest()[:8]
+        n = 1
+        while u in vergeben:  # gleiches Element zweimal unter demselben Knoten
+            n += 1
+            u = 'a' + hashlib.sha1(f'{p}>{teil}#{n}'.encode()).hexdigest()[:8]
+        vergeben.add(u)
         baum.append(dict(u=u, p=p, **{k: v for k, v in kw.items() if v is not None}))
         return u
 
@@ -230,9 +240,14 @@ def aus_profilen(konfig, sds):
     im = konfig['informationsmodell']
     tiefe = im.get('tiefe', 3)
     knoten = []
+    vergeben = set()
 
     def neu(p, name, sd=None, eid=None, card='', besch=''):
-        i = 'p%d' % (len(knoten) + 1)
+        # stabile Kennung aus dem Pfad (übergeordneter Knoten, Profil, Element) — für dauerhafte Verweise per URL
+        roh = f'{p}|{sd["id"] if sd else name}|{eid or ""}'
+        i = 'p' + hashlib.sha1(roh.encode()).hexdigest()[:8]
+        assert i not in vergeben, f'Kennung doppelt: {roh}'
+        vergeben.add(i)
         maps = [{'roh': f'{sd["name"]}{eid[len(sd["type"]):] if eid else ""}', 'sd': sd['url'],
                  'k': kanon(eid or sd['type']), 'status': 'exakt', 'grund': ''}] if sd else []
         knoten.append({'id': i, 'p': p, 'name': name, 'typ': '', 'card': card, 'besch': besch, 'rat': '', 'op': '',
