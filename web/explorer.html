@@ -118,6 +118,14 @@ li.zu > ul { display: none; }
 .term-tab td { padding: 2px 8px; border-bottom: 1px solid var(--linie); vertical-align: top; }
 .term-tab tr.belegt td { background: var(--hl2); }
 .werteliste { margin: 2px 0; }
+.legende-kurz { border-top: 1px solid var(--linie); padding: 4px 10px; font-size: 11.5px; color: var(--leise); display: flex; flex-wrap: wrap; gap: 2px 10px; align-items: center; }
+.legende-kurz .eintrag-l { display: inline-flex; gap: 4px; align-items: center; white-space: nowrap; }
+.legende-kurz a { margin-left: auto; }
+.leg-tab td { padding: 3px 8px; border-bottom: 1px solid var(--linie); vertical-align: top; font-size: 13px; }
+.leg-tab td:first-child { white-space: nowrap; width: 9em; }
+.leg-tab .im-zeile { display: inline-flex; padding: 0; }
+.muster-hl { background: var(--hl); color: var(--hl-text); padding: 0 4px; border-radius: 3px; }
+.muster-hl2 { background: var(--hl2); box-shadow: inset 0 0 0 1px var(--hl2-rand); padding: 0 4px; border-radius: 3px; }
 .link-feld { font: 12px var(--mono); border: 1px solid var(--linie); border-radius: 4px; padding: 1px 4px; background: var(--flaeche); color: var(--text); }
 li.versteckt { display: none; }
 
@@ -201,6 +209,7 @@ dialog::backdrop { background: rgba(0,0,0,.35); }
     <label class="hinweis" for="beispielwahl">Beispiel</label>
     <select id="beispielwahl"></select>
     <button class="knopf" id="pruefung-auf">Abdeckung &amp; Prüfung</button>
+    <button class="knopf" id="legende-auf" title="Was die Zeichen und Farben bedeuten">Legende</button>
     <button class="knopf" id="link-kopieren" title="Link auf genau diese Ansicht und Auswahl kopieren">Link kopieren</button>
     <button class="knopf" id="leeren" title="Auswahl aufheben (Esc; Esc schließt zuerst offene Fenster)">Auswahl aufheben</button>
     <span class="hinweis" id="link-status" role="status" aria-live="polite"></span>
@@ -224,6 +233,7 @@ dialog::backdrop { background: rgba(0,0,0,.35); }
     <div class="leerhinweis an" id="im-hinweis" hidden></div>
     <div class="unterkopf"><div class="reiter" id="varianten" role="tablist" aria-label="Darstellung des Informationsmodells"><button role="tab" data-variante="referenziert" aria-selected="true" title="wie im IG: Profile stehen einmal und werden referenziert">referenziert</button><button role="tab" data-variante="ausmodelliert" aria-selected="false" title="jede Referenz an der Stelle ausmodelliert, an der sie vorkommt">ausmodelliert</button></div><input type="search" id="im-suche" placeholder="Element suchen …" aria-label="Informationsmodell durchsuchen"><button class="knopf" id="im-auf" title="Alle aufklappen">+</button><button class="knopf" id="im-zu" title="Alle zuklappen">–</button></div>
     <div class="koerper"><ul class="im-baum" id="im-baum"></ul></div>
+    <div class="legende-kurz" id="lk-im"></div>
   </section>
 
   <section class="pane" id="p-fhir">
@@ -233,6 +243,7 @@ dialog::backdrop { background: rgba(0,0,0,.35); }
     <div class="unterkopf" id="profilwahl-zeile"><select id="profilwahl" aria-label="Profil wählen"></select><a id="profil-link" class="hinweis" target="_blank" rel="noopener">im IG</a></div>
     <div class="leerhinweis" id="lh-fhir"></div>
     <div class="koerper" id="fhir-koerper"></div>
+    <div class="legende-kurz" id="lk-fhir"></div>
   </section>
 
   <section class="pane" id="p-ui">
@@ -251,6 +262,7 @@ dialog::backdrop { background: rgba(0,0,0,.35); }
 </main>
 
 <dialog id="pruefung"><div class="innen" id="pruefung-innen"></div></dialog>
+<dialog id="legende"><div class="innen" id="legende-innen"></div></dialog>
 
 <script>
 const D = /*DATEN*/null;
@@ -432,7 +444,7 @@ function knotenName(b) {
 function zeile(u) {
   const b = T.k[u], kids = T.kids[u], n = b.s ? IMBYID[b.s] : null;
   let art = '', titel = '';
-  if (b.y) { art = '<span class="art fhir">FHIR</span>'; titel = `Nicht im Informationsmodell — aus dem FHIR-Profil ${kurzUrl(b.y[0])} ergänzt (Must Support)\n${b.y[1]}`; }
+  if (b.y) { art = '<span class="art fhir">aus Profil</span>'; titel = `Nicht im Informationsmodell — aus dem FHIR-Profil ${kurzUrl(b.y[0])} ergänzt (Must Support)\n${b.y[1]}`; }
   else if (b.z) { art = '<span class="art zyk">↻</span>'; titel = `Zyklus: „${IMBYID[b.z].name}“ ist weiter oben bereits ausmodelliert und wird hier nicht wiederholt`; }
   else if (b.v) { art = '<span class="art">↳</span>'; titel = `An dieser Stelle ausmodelliert — im IG „${IMBYID[b.v].name}“\n` + n.maps.map(m => m.roh).join('\n'); }
   else if (n) titel = n.maps.map(m => m.roh).join('\n') || 'ohne FHIR-Mapping';
@@ -937,8 +949,8 @@ document.addEventListener('click', e => {
 // Escape schließt von innen nach außen: Prüfdialog, dann die aufgeklappten Details, dann die Auswahl
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
-  const dialog = $('#pruefung');
-  if (dialog.open) { e.preventDefault(); dialog.close(); return; }
+  const dialog = $$('dialog').find(d => d.open);
+  if (dialog) { e.preventDefault(); dialog.close(); return; }
   if ($('#details').open) { $('#details').open = false; obenMessen(); return; }
   waehlen(null);
 });
@@ -1052,6 +1064,67 @@ function kopierenAlt(text) {
   t.remove();
   return ok;
 }
+// ------------------------------------------------------------------ Legende
+const L = {   // Muster der Zeichen, wie sie in den Ansichten erscheinen
+  belegt: '<span class="im-zeile"><span class="punkt"></span></span>',
+  leer: '<span class="im-zeile"><span class="punkt aus"></span></span>',
+  aus: '<span class="im-zeile"><span class="art">↳</span></span>',
+  zyk: '<span class="im-zeile"><span class="art zyk">↻</span></span>',
+  profil: '<span class="im-zeile syn"><span class="art fhir">aus Profil</span> <span class="name">name</span></span>',
+  ohne: '<span class="warn">∅</span>', fehler: '<span class="warn">⚠</span>', bedingt: '<span class="card">0..1 | 1..1 ◇</span>',
+  ms: '<span class="el-tab"><span class="ms">S</span></span>', im: '<span class="el-tab"><span class="im">IM</span></span>',
+};
+function legendeKurz() {
+  const g = D.meta.im_art === 'gematik-baum', e = (z, t) => `<span class="eintrag-l">${z} ${t}</span>`;
+  $('#lk-im').innerHTML = [e(L.belegt, 'im Beispiel belegt'), e(L.leer, 'nicht belegt'),
+    ...(D.baum_aus ? [e(L.aus, 'ausmodelliert'), e(L.zyk, 'Zyklus'), e('<span class="art fhir" style="color:var(--leise)">aus Profil</span>', 'nicht im Modell')] : []),
+    ...(g ? [e(L.ohne, 'ohne Mapping'), e(L.fehler, 'Mapping fehlerhaft'), e('◇', 'bedingte Kardinalität')] : []),
+    '<a href="#" data-legende>Legende</a>'].join('');
+  $('#lk-fhir').innerHTML = [e(L.ms, 'Must Support'), e(L.im, `Ziel eines Mappings ${g ? 'im Informationsmodell' : 'der Struktur'}`),
+    e('<b class="mono">fett</b>', 'im Profil geändert'), '<a href="#" data-legende>Legende</a>'].join('');
+}
+function legendeZeigen() {
+  const g = D.meta.im_art === 'gematik-baum', z = (a, b) => `<tr><td>${a}</td><td>${b}</td></tr>`;
+  $('#legende-innen').innerHTML = `<h2>Legende</h2>
+    <h3>1 ${esc(D.meta.im_titel)}</h3><table class="leg-tab"><tbody>
+      ${z(L.belegt, 'Das Element ist im gewählten Beispiel belegt: Mindestens ein Wert der Instanz liegt im FHIR-Element, auf das das Element abbildet.')}
+      ${z(L.leer, 'Im gewählten Beispiel nicht belegt.')}
+      ${z('<span class="card">1..1</span>', g ? 'Kardinalität in der Transaktion des Informationsmodells.' : 'Kardinalität im FHIR-Profil.')}
+      ${g ? z(L.bedingt, 'Bedingte Kardinalität („WENN … / SONST …“); der volle Text steht im Tooltip und in den Details.') : ''}
+      ${g ? z(L.ohne, 'Element ohne FHIR-Mapping.') : ''}
+      ${g ? z(L.fehler, 'Mapping fehlerhaft: führt auf kein Profilelement oder auf ein im Profil verbotenes (0..0). Einzelheiten in den Details und unter „Abdeckung &amp; Prüfung“.') : ''}
+      ${D.baum_aus ? z(L.aus, 'Ausmodelliert: Im IG steht hier nur „… (Referenz)“; die ausmodellierte Darstellung setzt das referenzierte Profil an dieser Stelle ein.') : ''}
+      ${D.baum_aus ? z(L.zyk, 'Zyklus: Das Profil ist weiter oben auf demselben Weg schon ausmodelliert und wird hier nicht wiederholt.') : ''}
+      ${D.baum_aus ? z(L.profil, '<b>Nicht im Informationsmodell.</b> Das Modell nennt manche Profile nur als Ganzes, ohne Unterelemente — etwa die TI-Common-Profile für Patient:in, Behandelnde Person oder Einrichtung. Damit die Hierarchie bis zum Einzelwert reicht, ergänzt die ausmodellierte Darstellung deren Must-Support-Elemente aus dem <b>FHIR-Profil</b> (bis zur dritten Ebene), kursiv und mit diesem Etikett. Die Verknüpfungsleiste meldet für sie „kein Element im Informationsmodell“.') : ''}
+      ${!g ? z('', 'Diese Struktur ist kein veröffentlichtes Informationsmodell, sondern aus den FHIR-Profilen abgeleitet: Einstiegsprofil, Abschnitte, Einträge, Pflicht- und Must-Support-Elemente.') : ''}
+    </tbody></table>
+    <h3>2 FHIR</h3><table class="leg-tab"><tbody>
+      ${z(L.ms, 'Must Support im Profil.')}
+      ${z(L.im, `Auf dieses Profilelement bildet ein Element ${g ? 'des Informationsmodells' : 'der abgeleiteten Struktur'} ab.`)}
+      ${z('<b class="mono">fett</b>', 'Element ist im Profil gegenüber dem Basisprofil geändert (Differential).')}
+      ${z('<span class="json"><span class="s">"Text"</span> <span class="z">42</span></span>', 'Instanz: Zeichenketten grün, Zahlen und Wahrheitswerte blau.')}
+    </tbody></table>
+    <h3>3 Anwenderansicht · 4 Dokument</h3><table class="leg-tab"><tbody>
+      ${z('<span class="flag H">↑ hoch</span> <span class="flag L">↓ niedrig</span> <span class="flag N">normal</span>', 'Bewertung des Messwerts aus dem Beispiel (Interpretation).')}
+      ${z('<span class="pdfzeile ohne">grau</span>', 'Zeile im PDF oder Erzähltext ohne erkannten Bezug zu einem Wert.')}
+    </tbody></table>
+    <h3>Auswahl in allen Ansichten</h3><table class="leg-tab"><tbody>
+      ${z('<span class="muster-hl">kräftig</span>', 'Die Auswahl selbst — dieser Wert, dieses Element.')}
+      ${z('<span class="muster-hl2">hell</span>', 'Dasselbe Element an anderer Stelle: weitere Werte, weitere Fundstellen im Baum, das nächste übergeordnete Element, wenn das Modell kein genaueres hat.')}
+      ${z('<span class="glied luecke" style="display:inline-block;min-height:0;padding:0 6px">Lücke</span>', 'Glied der Verknüpfungsleiste, das fehlt — z. B. Wert im Beispiel, aber nicht in der Anwenderansicht.')}
+    </tbody></table>
+    <h3>Terminologie (Details)</h3><table class="leg-tab"><tbody>
+      ${z('<span class="muster-hl2">Zeile</span>', 'Code ist im Beispiel belegt; „im Beispiel“ springt zum Wert.')}
+      ${z('<span class="kw">required</span>', 'Bindungsstärke der Werteliste.')}
+      ${z('<span class="warn">· nicht im Paketbestand</span>', 'Werteliste liegt in keinem öffentlichen Paket; kein Link.')}
+    </tbody></table>
+    <p class="hinweis">Esc schließt dieses Fenster.</p>
+    <p><button class="knopf" onclick="this.closest('dialog').close()">Schließen</button></p>`;
+  $('#legende').showModal();
+}
+$('#legende-auf').onclick = legendeZeigen;
+document.addEventListener('click', e => { if (e.target.closest('[data-legende]')) { e.preventDefault(); legendeZeigen(); } });
+legendeKurz();
 $('#link-kopieren').onclick = async () => {
   urlSchreiben();
   const link = location.href;

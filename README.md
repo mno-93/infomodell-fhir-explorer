@@ -46,6 +46,7 @@ Weitere Befehle:
 - **Zwei Markierungsstufen:** kräftig = genau dieser Wert, hell = dasselbe Element an anderer Stelle.
 - **Informationsmodell referenziert oder ausmodelliert:** wie im IG oder mit jeder Referenz an ihrer Verwendungsstelle; Zyklen werden erkannt, Fundstellen mit ‹ › durchlaufen.
 - **Terminologie:** Codes und Wertelisten des Modells als Tabelle mit Kopfzeilen; Wertelisten und Profilbindungen verlinkt auf ihre Originalseite, belegte Codes oben.
+- **Legende:** Knopf im Kopf und Kurzlegende unter Modell und Profil erklären Zeichen und Farben — u. a. ● im Beispiel belegt, ↳ ausmodelliert, ↻ Zyklus, „aus Profil“ (nicht im Informationsmodell, aus dem FHIR-Profil ergänzt), S Must Support, IM Ziel eines Modell-Mappings. Esc schließt Fenster, dann Details, dann die Auswahl.
 - **Abdeckung & Prüfung:** Mappingprüfung, Werte ohne Modellelement, Strukturbefunde des gewählten Beispiels.
 
 ## Direkt verlinken
