@@ -37,7 +37,7 @@ def inhalt_hash(wurzel):
             if f.startswith('.') or not f.endswith('.json'):
                 continue
             p = Path(dp) / f
-            m.update(str(p.relative_to(wurzel)).encode() + b'\0' + p.read_bytes() + b'\0')
+            m.update(p.relative_to(wurzel).as_posix().encode() + b'\0' + p.read_bytes() + b'\0')
     return m.hexdigest()
 
 
@@ -78,7 +78,7 @@ def paket_sicherstellen(spec, sperre, aktualisieren=False, pruefen=True):
 
 
 def quelle_pruefen(pfad, url, sperre, aktualisieren=False):
-    rel = str(Path(pfad).relative_to(WURZEL))
+    rel = Path(pfad).relative_to(WURZEL).as_posix()
     if aktualisieren:
         print(f'  hole {url}', file=sys.stderr)
         Path(pfad).write_bytes(_holen(url))
