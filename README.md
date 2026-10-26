@@ -14,6 +14,7 @@ Informationsmodell ──FHIR-Mapping──▶ Profilelement ──Zuordnung─�
 |---|---|---|---|
 | `laborbefund` | gematik `de.gematik.epa.laboratory` 1.0.0-ballot.1 | veröffentlicht, mit FHIR-Mappings; zusätzlich ausmodellierte Sicht | 3 aus dem Demo-PVS, 2 aus dem IG-Paket |
 | `patient-summary` | HL7 Europe `hl7.fhir.eu.eps` 1.0.0-ballot | keins mit Mappings veröffentlicht — Struktur aus den Profilen abgeleitet | 2 aus dem Demo-PVS |
+| `impfung` | Entwurf eines Impfeintrags nach EU Core (HL7 Europe Base 2.0.1) mit den EPS-Pflichtangaben; Profile als FSH im Projekt, nicht veröffentlicht | keins — Struktur aus den Entwurfsprofilen | 2 fiktive, für das Projekt erstellt (Erstdokumentation, Nachtrag aus dem Impfpass) |
 
 Die Prüfberichte je Projekt stehen in [`berichte/`](berichte/): Mappingprüfung, Abdeckung, Strukturbefunde und das Ergebnis des HL7 Validators je Beispiel.
 
@@ -36,6 +37,7 @@ Weitere Befehle:
 |---|---|
 | `mx.py pruefen` | belegte Elemente aller Beispiele gegen die Profile auflösen; Exit-Code ≠ 0 bei Befund |
 | `mx.py validieren` | Beispieldateien mit dem HL7 FHIR Validator prüfen (Pakete und begründete Ausnahmen je Projekt); Ergebnis nach `berichte/<projekt>.validierung.json` — einchecken |
+| `mx.py fsh <projekt>` | lokales Paket eines Projekts aus FSH neu erzeugen (SUSHI nötig, siehe [`docs/NEUES_PROJEKT.md`](docs/NEUES_PROJEKT.md#lokale-pakete-profile-im-entwurf)) |
 | `mx.py vertraulich` | versionierte Dateien gegen eingebaute und projektbezogene Muster prüfen |
 | `mx.py holen --aktualisieren` | Sperrdatei neu schreiben, Quellen neu laden — nur bewusst, Änderung prüfen und einchecken |
 
@@ -78,6 +80,7 @@ Beispiel: `laborbefund.html#b=hoffmann-2026-08-12&im=1627&info=1` öffnet den Be
 projekte/<id>/projekt.toml     Projektkonfiguration: Pakete, Modellquelle, Darstellung, Beispiele, Validierung
 projekte/<id>/quellen/         gesicherte Quellen (z. B. Informationsmodell und Verarbeitungsregeln eines IG)
 projekte/<id>/beispiele/       Beispieldateien (Bundle oder Einzelressource)
+projekte/<id>/fsh/, paket/     optional: Profile im Entwurf als FSH und das daraus erzeugte lokale Paket (eingecheckt)
 werkzeuge/mx.py                Kommandozeile
 werkzeuge/mx/                  Pakete, Pfadauflösung, Modell-Adapter, Zuordnung, Bau, Berichte, Validierung
 web/explorer.html              eine Oberfläche für alle Projekte
@@ -91,4 +94,5 @@ Neue Beispiele und Projekte: [`docs/NEUES_PROJEKT.md`](docs/NEUES_PROJEKT.md). A
 
 - Profile, Informationsmodell und Verarbeitungsregeln stammen aus veröffentlichten Implementation Guides (gematik, HL7 Europe) in den in `projekt.toml` genannten Versionen.
 - Die Beispiele aus dem Demo-PVS (github.com/mno-93/demo-pvs) sind **fiktiv**; Personen, Einrichtungen und Nummern sind erfunden.
+- Das Projekt `impfung` ist eine **Studie**: Entwurf eines Impfeintrags nach EU Core auf Grundlage veröffentlichter Pakete (HL7 Europe Base, EU Patient Summary, IPS, gematik-Ballot-Pakete), keine veröffentlichte Spezifikation. Seine Beispiele sind für dieses Projekt erstellt und fiktiv (Personen, PZN, Chargen, Handelsnamen).
 - Kennzeichnung in Berichten und Doku: ⚠ = unbelegt · ▸ = Bewertung · ✦ = Vorschlag.

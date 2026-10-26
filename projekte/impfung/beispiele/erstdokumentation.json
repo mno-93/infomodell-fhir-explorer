@@ -1,0 +1,533 @@
+{
+  "resourceType": "Bundle",
+  "id": "impfung-erstdokumentation",
+  "meta": {
+    "profile": [
+      "http://hl7.eu/fhir/eps/StructureDefinition/bundle-eu-eps"
+    ]
+  },
+  "identifier": {
+    "system": "urn:ietf:rfc:3986",
+    "value": "urn:uuid:0f6a1c52-8e3d-4b7a-a1c4-000000000a00"
+  },
+  "type": "document",
+  "timestamp": "2026-10-15T10:50:00+02:00",
+  "entry": [
+    {
+      "fullUrl": "https://example.org/impfung-beispiele/fhir/Composition/ps-erstdokumentation",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "ps-erstdokumentation",
+        "meta": {
+          "profile": [
+            "http://hl7.eu/fhir/eps/StructureDefinition/composition-eu-eps"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Patient Summary für Erika Mustermann (fiktiv), Impfungen vom 15.10.2026</p></div>"
+        },
+        "identifier": {
+          "system": "urn:ietf:rfc:3986",
+          "value": "urn:uuid:0f6a1c52-8e3d-4b7a-a1c4-000000000a10"
+        },
+        "status": "final",
+        "type": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "60591-5",
+              "display": "Patient summary Document"
+            }
+          ]
+        },
+        "subject": {
+          "reference": "Patient/pat-mustermann"
+        },
+        "date": "2026-10-15T10:50:00+02:00",
+        "author": [
+          {
+            "reference": "Practitioner/prac-beispiel"
+          }
+        ],
+        "title": "Patient Summary",
+        "section": [
+          {
+            "title": "Allergien und Unverträglichkeiten",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "48765-2",
+                  "display": "Allergies and adverse reactions Document"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Allergien und Unverträglichkeiten</b></p><p>Nicht erhoben.</p></div>"
+            },
+            "emptyReason": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/list-empty-reason",
+                  "code": "notasked",
+                  "display": "Not Asked"
+                }
+              ]
+            }
+          },
+          {
+            "title": "Diagnosen",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "11450-4",
+                  "display": "Problem list - Reported"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Diagnosen</b></p><p>Nicht erhoben.</p></div>"
+            },
+            "emptyReason": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/list-empty-reason",
+                  "code": "notasked",
+                  "display": "Not Asked"
+                }
+              ]
+            }
+          },
+          {
+            "title": "Medikation",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "10160-0",
+                  "display": "History of Medication use Narrative"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Medikation</b></p><p>Nicht erhoben.</p></div>"
+            },
+            "emptyReason": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/list-empty-reason",
+                  "code": "notasked",
+                  "display": "Not Asked"
+                }
+              ]
+            }
+          },
+          {
+            "title": "Impfungen",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "11369-6",
+                  "display": "History of Immunization Narrative"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Impfungen</b></p><ul><li>15.10.2026 · Influenza · Fluvita Tetra 2026/2027 (fiktiv), Charge FLV26-0815 · Dosis 1</li><li>15.10.2026 · Tetanus, Diphtherie, Pertussis, Poliomyelitis · Tetrasan Booster (fiktiv), Charge TDP-4711 · Dosis 1</li></ul></div>"
+            },
+            "entry": [
+              {
+                "reference": "Immunization/imm-erst-influenza"
+              },
+              {
+                "reference": "Immunization/imm-erst-tdap-ipv"
+              }
+            ]
+          },
+          {
+            "title": "Prozeduren",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "47519-4",
+                  "display": "History of Procedures Document"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Prozeduren</b></p><p>Nicht erhoben.</p></div>"
+            },
+            "emptyReason": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/list-empty-reason",
+                  "code": "notasked",
+                  "display": "Not Asked"
+                }
+              ]
+            }
+          },
+          {
+            "title": "Implantate und Medizinprodukte",
+            "code": {
+              "coding": [
+                {
+                  "system": "http://loinc.org",
+                  "code": "46264-8",
+                  "display": "History of medical device use"
+                }
+              ]
+            },
+            "text": {
+              "status": "generated",
+              "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p><b>Implantate und Medizinprodukte</b></p><p>Nicht erhoben.</p></div>"
+            },
+            "emptyReason": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/list-empty-reason",
+                  "code": "notasked",
+                  "display": "Not Asked"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://example.org/impfung-beispiele/fhir/Patient/pat-mustermann",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "pat-mustermann",
+        "meta": {
+          "profile": [
+            "http://hl7.eu/fhir/eps/StructureDefinition/patient-eu-eps"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Erika Mustermann (fiktiv), weiblich, geb. 12.08.1964</p></div>"
+        },
+        "identifier": [
+          {
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "M000000017"
+          }
+        ],
+        "name": [
+          {
+            "use": "official",
+            "family": "Mustermann",
+            "given": [
+              "Erika"
+            ]
+          }
+        ],
+        "gender": "female",
+        "birthDate": "1964-08-12"
+      }
+    },
+    {
+      "fullUrl": "https://example.org/impfung-beispiele/fhir/Practitioner/prac-beispiel",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "prac-beispiel",
+        "meta": {
+          "profile": [
+            "http://hl7.eu/fhir/base/StructureDefinition/practitioner-eu-core"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Dr. med. Paula Beispiel (fiktiv), Hausarztpraxis</p></div>"
+        },
+        "name": [
+          {
+            "use": "official",
+            "family": "Beispiel",
+            "given": [
+              "Paula"
+            ],
+            "prefix": [
+              "Dr. med."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://example.org/impfung-beispiele/fhir/Immunization/imm-erst-influenza",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "imm-erst-influenza",
+        "meta": {
+          "profile": [
+            "https://example.org/fhir/impfung-entwurf/StructureDefinition/ps-immunization"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Influenza-Impfung am 15.10.2026, Fluvita Tetra 2026/2027 (fiktiv), Charge FLV26-0815, Dosis 1</p></div>"
+        },
+        "contained": [
+          {
+            "resourceType": "Medication",
+            "id": "impfstoff-1",
+            "meta": {
+              "profile": [
+                "https://example.org/fhir/impfung-entwurf/StructureDefinition/ps-immunization-medication"
+              ]
+            },
+            "extension": [
+              {
+                "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-id-vaccine-extension",
+                "valueBoolean": true
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/ifa/pzn",
+                  "code": "12345678",
+                  "display": "Fluvita Tetra 2026/2027 Injektionssuspension in einer Fertigspritze (fiktiv)"
+                }
+              ],
+              "text": "Fluvita Tetra 2026/2027 (fiktiv)"
+            },
+            "batch": {
+              "lotNumber": "FLV26-0815"
+            }
+          }
+        ],
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-Immunization.administeredProduct",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/_datatype",
+                "valueString": "CodeableReference"
+              },
+              {
+                "url": "reference",
+                "valueReference": {
+                  "reference": "#impfstoff-1"
+                }
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:5e0c2a7e-3d4b-4c1a-9f10-000000000a01"
+          }
+        ],
+        "status": "completed",
+        "vaccineCode": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "836377006",
+              "display": "Vaccine product containing Influenza virus antigen (medicinal product)"
+            }
+          ],
+          "text": "Influenza-Impfstoff, tetravalent, inaktiviert"
+        },
+        "patient": {
+          "reference": "Patient/pat-mustermann"
+        },
+        "occurrenceDateTime": "2026-10-15T10:40:00+02:00",
+        "recorded": "2026-10-15T10:45:00+02:00",
+        "primarySource": true,
+        "performer": [
+          {
+            "function": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0443",
+                  "code": "AP",
+                  "display": "Administering Provider"
+                }
+              ]
+            },
+            "actor": {
+              "reference": "Practitioner/prac-beispiel"
+            }
+          }
+        ],
+        "protocolApplied": [
+          {
+            "targetDisease": [
+              {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "6142004",
+                    "display": "Influenza (disorder)"
+                  }
+                ]
+              }
+            ],
+            "doseNumberPositiveInt": 1
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "https://example.org/impfung-beispiele/fhir/Immunization/imm-erst-tdap-ipv",
+      "resource": {
+        "resourceType": "Immunization",
+        "id": "imm-erst-tdap-ipv",
+        "meta": {
+          "profile": [
+            "https://example.org/fhir/impfung-entwurf/StructureDefinition/ps-immunization"
+          ]
+        },
+        "text": {
+          "status": "generated",
+          "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\"><p>Auffrischimpfung Tetanus, Diphtherie, Pertussis, Poliomyelitis am 15.10.2026, Tetrasan Booster (fiktiv), Charge TDP-4711, Dosis 1</p></div>"
+        },
+        "contained": [
+          {
+            "resourceType": "Medication",
+            "id": "impfstoff-2",
+            "meta": {
+              "profile": [
+                "https://example.org/fhir/impfung-entwurf/StructureDefinition/ps-immunization-medication"
+              ]
+            },
+            "extension": [
+              {
+                "url": "https://gematik.de/fhir/epa-medication/StructureDefinition/medication-id-vaccine-extension",
+                "valueBoolean": true
+              }
+            ],
+            "code": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/ifa/pzn",
+                  "code": "87654322",
+                  "display": "Tetrasan Booster Injektionssuspension in einer Fertigspritze (fiktiv)"
+                }
+              ],
+              "text": "Tetrasan Booster (fiktiv)"
+            },
+            "batch": {
+              "lotNumber": "TDP-4711"
+            }
+          }
+        ],
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-Immunization.administeredProduct",
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/_datatype",
+                "valueString": "CodeableReference"
+              },
+              {
+                "url": "reference",
+                "valueReference": {
+                  "reference": "#impfstoff-2"
+                }
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:5e0c2a7e-3d4b-4c1a-9f10-000000000a02"
+          }
+        ],
+        "status": "completed",
+        "vaccineCode": {
+          "coding": [
+            {
+              "system": "http://snomed.info/sct",
+              "code": "871878002",
+              "display": "Bordetella pertussis and Clostridium tetani and Corynebacterium diphtheriae and Human poliovirus antigens only vaccine product"
+            }
+          ],
+          "text": "Tdap-IPV-Kombinationsimpfstoff (Auffrischung)"
+        },
+        "patient": {
+          "reference": "Patient/pat-mustermann"
+        },
+        "occurrenceDateTime": "2026-10-15T10:42:00+02:00",
+        "recorded": "2026-10-15T10:45:00+02:00",
+        "primarySource": true,
+        "performer": [
+          {
+            "function": {
+              "coding": [
+                {
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0443",
+                  "code": "AP",
+                  "display": "Administering Provider"
+                }
+              ]
+            },
+            "actor": {
+              "reference": "Practitioner/prac-beispiel"
+            }
+          }
+        ],
+        "protocolApplied": [
+          {
+            "series": "Auffrischimpfung Erwachsene",
+            "targetDisease": [
+              {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "27836007",
+                    "display": "Pertussis (disorder)"
+                  }
+                ]
+              },
+              {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "76902006",
+                    "display": "Tetanus (disorder)"
+                  }
+                ]
+              },
+              {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "397430003",
+                    "display": "Diphtheria caused by Corynebacterium diphtheriae (disorder)"
+                  }
+                ]
+              },
+              {
+                "coding": [
+                  {
+                    "system": "http://snomed.info/sct",
+                    "code": "398102009",
+                    "display": "Acute poliomyelitis (disorder)"
+                  }
+                ]
+              }
+            ],
+            "doseNumberPositiveInt": 1
+          }
+        ]
+      }
+    }
+  ]
+}

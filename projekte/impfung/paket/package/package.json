@@ -1,0 +1,17 @@
+{
+ "name": "example.impfung.entwurf",
+ "version": "0.1.0",
+ "type": "fhir.ig",
+ "canonical": "https://example.org/fhir/impfung-entwurf",
+ "title": "Impfung (Entwurf, EU-konform)",
+ "description": "Studie eines Impfeintrags nach HL7 Europe Base (EU Core) mit den Pflichtangaben der EU Patient Summary. Nicht veröffentlicht.",
+ "fhirVersions": [
+  "4.0.1"
+ ],
+ "dependencies": {
+  "de.basisprofil.r4": "1.6.0",
+  "de.gematik.epa": "1.4.0-ballot.1",
+  "hl7.fhir.eu.base": "2.0.1",
+  "hl7.fhir.eu.eps": "1.0.0-ballot"
+ }
+}

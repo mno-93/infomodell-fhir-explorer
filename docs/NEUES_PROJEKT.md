@@ -37,6 +37,8 @@ Vorlage: `projekte/patient-summary/projekt.toml` (ohne Informationsmodell) oder 
 | `darstellung` | `laborbefund` oder `dokument` |
 | `dokumente` | Auswahl aus `druck`, `pdf`, `erzaehltext` |
 | `pakete` | alle Pakete mit StructureDefinitions, die Modell und Beispiele brauchen, mit fester Version; Reihenfolge = Vorrang; `hl7.fhir.r4.core#4.0.1` zuletzt |
+| `lokale_pakete` | optional: Ordner im Projekt mit `package/package.json` und den Ressourcen eines FHIR-Pakets (StructureDefinitions mit Snapshot), z. B. `["paket"]`; Vorrang vor `pakete`; siehe unten |
+| `[fsh]` | optional: `quelle` (Ordner mit `*.fsh`, Vorgabe `fsh`) und `paket` (Zielordner des lokalen Pakets) für `mx.py fsh <projekt>` |
 | `terminologiepakete` | optional: Pakete nur zur Auflösung von Wertelisten (z. B. `de.gematik.terminology`, `hl7.terminology.r4`), feste Version |
 | `[ig]` | `name`, `paket`, `status`, `url`, `kanonisch` (für Links auf Profilseiten) |
 | `[standardprofile]` | Profil je Ressourcentyp für Ressourcen ohne `meta.profile` |
@@ -68,6 +70,37 @@ python3 -I werkzeuge/mx.py validieren <projekt>   # Java und ~/.fhir/validator_c
 - Exit-Code ≠ 0, wenn ein Fehler keine begründete Ausnahme ist; Ausnahmen ohne Treffer werden als Hinweis gemeldet. Ausnahmen nur für Grenzen der Prüfung (kein Terminologieserver, bekannte Werkzeug- oder Paketfehler) mit Begründung, nicht für Fehler der Beispiele oder Profile.
 - `bauen` braucht kein Java: Es liest die Datei und zeigt das Ergebnis im Prüfbericht (Abschnitt „FHIR-Validierung (HL7 Validator x.y.z)“), unter „Abdeckung & Prüfung“ des gewählten Beispiels und als Kennzahl auf der Übersichtsseite; ohne Datei steht dort „noch nicht validiert“.
 - Die CI validiert im Job `validieren` neu und prüft mit `git diff --exit-code`, dass `berichte/*.validierung.json` dem eingecheckten Stand entspricht.
+
+## Lokale Pakete (Profile im Entwurf)
+
+Profile, die (noch) in keinem veröffentlichten Paket liegen, kommen als lokales Paket ins Projekt — Beispiel `projekte/impfung/`:
+
+```
+projekte/impfung/sushi-config.yaml   Paket-Id, Version, Canonical, Abhängigkeiten (SUSHI-Format, FSHOnly)
+projekte/impfung/fsh/*.fsh           Quelltext der Profile und Invarianten
+projekte/impfung/paket/package/      erzeugt und eingecheckt: package.json, StructureDefinitions mit Snapshot
+```
+
+In `projekt.toml`: `lokale_pakete = ["paket"]` und `[fsh]` mit `quelle = "fsh"`, `paket = "paket"`. Das lokale Paket steht in Modell, Profilzuordnung, Auflösung und Validierung zur Verfügung (`-ig projekte/<id>/paket/package`); `holen` und die Sperrdatei überspringen es. Berichte nennen es mit `<id>#<version>` aus seiner `package.json`.
+
+Neu erzeugen nach einer Änderung an `fsh/` oder `sushi-config.yaml` (SUSHI ≥ 3, `npm install -g fsh-sushi`; die Abhängigkeiten lädt SUSHI in `~/.fhir/packages`):
+
+```bash
+python3 -I werkzeuge/mx.py fsh impfung
+python3 -I werkzeuge/mx.py validieren impfung
+python3 -I werkzeuge/mx.py bauen
+```
+
+`mx.py fsh` kopiert `fsh/*.fsh` nach `input/fsh/` eines temporären Ordners (SUSHI erwartet diesen Aufbau), ruft `sushi build <tmp> --snapshot -o <tmp>/aus` auf, ersetzt die Ressourcen in `paket/package/` und schreibt `package.json` aus `sushi-config.yaml`. Von Hand dasselbe:
+
+```bash
+mkdir -p /tmp/impfung/input/fsh
+cp projekte/impfung/fsh/*.fsh /tmp/impfung/input/fsh/ && cp projekte/impfung/sushi-config.yaml /tmp/impfung/
+sushi build /tmp/impfung --snapshot -o /tmp/impfung/aus
+cp /tmp/impfung/aus/fsh-generated/resources/*.json projekte/impfung/paket/package/
+```
+
+Die Snapshots braucht der Modellexplorer (Modell, Zuordnung, Strukturprüfung); ein Test prüft, dass `package.json` zur `sushi-config.yaml` passt.
 
 ## Naheliegende nächste Projekte
 

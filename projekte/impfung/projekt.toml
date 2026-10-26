@@ -1,0 +1,89 @@
+# Impfung (Entwurf, EU-konform) — Studie eines Impfeintrags nach HL7 Europe Base (EU Core) mit den
+# Pflichtangaben der EU Patient Summary. Profile als FSH im Projekt (fsh/), Paket eingecheckt (paket/).
+id = "impfung"
+titel = "Impfung (Entwurf, EU-konform)"
+beschreibung = "Studie eines Impfeintrags nach EU Core: Impfprofil und Impfstoffprodukt als Entwurf (FSH im Projekt), zwei fiktive Patient-Summary-Dokumente nach HL7 EU EPS — Erstdokumentation und Nachtrag aus einem Papier-Impfpass."
+darstellung = "dokument"
+dokumente = ["erzaehltext"]
+
+# Lokales Paket im Projektordner (package/package.json + Ressourcen); Vorrang vor allen anderen Paketen.
+# `holen` und die Sperrdatei überspringen es; neu erzeugen mit `python3 -I werkzeuge/mx.py fsh impfung`.
+lokale_pakete = ["paket"]
+
+pakete = [
+  "hl7.fhir.eu.eps#1.0.0-ballot",
+  "hl7.fhir.eu.base#2.0.1",
+  "hl7.fhir.uv.ips#2.0.1",
+  "hl7.fhir.eu.extensions.r4#1.3.1",
+  "hl7.fhir.uv.xver-r5.r4#0.1.0",
+  "hl7.fhir.uv.extensions.r4#5.3.0",
+  "de.gematik.epa#1.4.0-ballot.1",
+  "de.gematik.ti#1.5.0-ballot.2",
+  "de.basisprofil.r4#1.6.0",
+  "hl7.fhir.r4.core#4.0.1",
+]
+
+# Nur für die Auflösung von Wertelisten der Bindungen
+terminologiepakete = [
+  "hl7.terminology.r4#7.3.0",
+]
+
+[fsh]
+quelle = "fsh"
+paket = "paket"
+
+[ig]
+name = "Entwurf (nicht veröffentlicht) — Grundlagen: HL7 Europe Base 2.0.1, HL7 Europe Patient Summary 1.0.0-ballot"
+paket = "example.impfung.entwurf#0.1.0"
+status = "Entwurf, nicht veröffentlicht"
+
+[standardprofile]
+Immunization = "https://example.org/fhir/impfung-entwurf/StructureDefinition/ps-immunization"
+Medication = "https://example.org/fhir/impfung-entwurf/StructureDefinition/ps-immunization-medication"
+
+[informationsmodell]
+art = "aus-profilen"
+einstieg = [
+  "https://example.org/fhir/impfung-entwurf/StructureDefinition/ps-immunization",
+  "https://example.org/fhir/impfung-entwurf/StructureDefinition/ps-immunization-medication",
+]
+tiefe = 3
+hinweis = "Kein Informationsmodell mit FHIR-Mappings: Die Struktur folgt den Entwurfsprofilen (Pflicht- und Must-Support-Elemente bis zur dritten Ebene). Einstieg ist das Impfprofil selbst, nicht die EPS-Composition — deren Abschnitt Impfungen zielt auf immunization-eu-core und würde den Entwurf nicht zeigen. Das Impfstoffprodukt steht als zweiter Einstieg daneben, weil es nur über die Extension administeredProduct als enthaltene Ressource erreicht wird."
+
+[[beispiele]]
+id = "erstdokumentation"
+titel = "Erstdokumentation — zwei Impfungen, Mustermann"
+zweck = "Zwei Impfungen in der Praxis dokumentiert (primarySource = true): Influenza und Auffrischung Tetanus-Diphtherie-Pertussis-Polio, je mit SNOMED-Impfstoff (Vaccines – IPS), Zielerkrankungen (IPS Target Diseases), Dosisnummer, impfender Person (performer.function AP) und verabreichtem Produkt als enthaltene Medication nach ps-immunization-medication (PZN, Handelsname, Charge)."
+herkunft = "Für dieses Projekt erstellt, Gerüst aus dem Beispiel patient-summary/yildiz. Fiktive Daten; PZN, Chargen und Handelsnamen sind erfunden."
+datei = "beispiele/erstdokumentation.json"
+
+[[beispiele]]
+id = "nachtrag-impfpass"
+titel = "Nachtrag aus einem Papier-Impfpass — Mustermann"
+zweck = "Zwei nachgetragene Impfungen (primarySource = false, reportOrigin record „Papier-Impfpass“): ein historischer Kombinationsimpfstoff nur als Text mit unbekannter Dosisnummer (doseNumberString mit data-absent-reason unknown) und eine Influenza-Impfung mit SNOMED-Code, das Produkt laut Etikett als enthaltene Medication ohne PZN."
+herkunft = "Für dieses Projekt erstellt, Gerüst aus dem Beispiel patient-summary/yildiz. Fiktive Daten."
+datei = "beispiele/nachtrag-impfpass.json"
+
+[validierung]
+pakete = [
+  "hl7.fhir.uv.extensions.r4#5.3.0",
+  "de.basisprofil.r4#1.6.0",
+  "hl7.fhir.eu.base#2.0.1",
+  "hl7.fhir.uv.ips#2.0.1",
+  "de.gematik.ti#1.5.0-ballot.2",
+  "de.gematik.epa#1.4.0-ballot.1",
+  "de.gematik.terminology#1.1.0-ballot.2",
+  "hl7.fhir.eu.eps#1.0.0-ballot",
+]
+
+# Werkzeuggrenze, kein Fehler des Entwurfs: die Querversions-Extension administeredProduct (R5 CodeableReference,
+# hl7.fhir.uv.xver-r5.r4#0.1.0) verlangt die Teil-Extension _datatype; der HL7 Validator 7.0.1 lehnt sie in R4 ab.
+[[validierung.ausnahmen]]
+id = "xver-datatype-kontext"
+muster = "The extension http://hl7\\.org/fhir/StructureDefinition/_datatype v5\\.[0-9.]+ is not allowed to be used at this point"
+grund = "Werkzeuggrenze: Die Querversions-Extension administeredProduct (hl7.fhir.uv.xver-r5.r4 0.1.0) verlangt die Teil-Extension _datatype (1..1, Wert CodeableReference). Deren Kontext ist in hl7.fhir.uv.extensions.r4 5.2.0 und 5.3.0 als Element „Base“ angegeben, das es in R4 nicht gibt; der HL7 Validator 7.0.1 lehnt _datatype deshalb an jeder Stelle ab. Ohne _datatype fehlt ein Pflicht-Slice. Gegenprobe ohne administeredProduct: keine Fehler."
+
+[[validierung.ausnahmen]]
+id = "xver-datatype-folgefehler"
+muster = "section\\[\\d+\\]\\.entry\\[\\d+\\]: Unable to find a profile match for Immunization/imm-[a-z-]+ among choices: http://hl7\\.eu/fhir/base/StructureDefinition/immunization-eu-core$|^Bundle: Slice 'Bundle\\.entry:composition': a matching slice is required, but not found"
+grund = "Folgefehler von xver-datatype-kontext: Der Abschnitt Impfungen der EPS-Composition prüft seine Einträge gegen immunization-eu-core; eine Impfung mit administeredProduct scheitert dort nur an _datatype, daraufhin passt die Composition nicht auf den Pflicht-Slice des Bundles. Die Impfungen selbst werden über meta.profile vollständig geprüft; ihre eigenen Meldungen bleiben sichtbar."

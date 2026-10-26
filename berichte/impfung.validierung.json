@@ -1,0 +1,284 @@
+{
+ "projekt": "impfung",
+ "validator": "7.0.1",
+ "fhir": "4.0.1",
+ "optionen": [
+  "-tx",
+  "n/a",
+  "-locale",
+  "en-US"
+ ],
+ "pakete": [
+  "example.impfung.entwurf#0.1.0 (lokal: paket)",
+  "hl7.fhir.uv.extensions.r4#5.3.0",
+  "de.basisprofil.r4#1.6.0",
+  "hl7.fhir.eu.base#2.0.1",
+  "hl7.fhir.uv.ips#2.0.1",
+  "de.gematik.ti#1.5.0-ballot.2",
+  "de.gematik.epa#1.4.0-ballot.1",
+  "de.gematik.terminology#1.1.0-ballot.2",
+  "hl7.fhir.eu.eps#1.0.0-ballot"
+ ],
+ "ausnahmen": [
+  {
+   "id": "xver-datatype-kontext",
+   "muster": "The extension http://hl7\\.org/fhir/StructureDefinition/_datatype v5\\.[0-9.]+ is not allowed to be used at this point",
+   "grund": "Werkzeuggrenze: Die Querversions-Extension administeredProduct (hl7.fhir.uv.xver-r5.r4 0.1.0) verlangt die Teil-Extension _datatype (1..1, Wert CodeableReference). Deren Kontext ist in hl7.fhir.uv.extensions.r4 5.2.0 und 5.3.0 als Element „Base“ angegeben, das es in R4 nicht gibt; der HL7 Validator 7.0.1 lehnt _datatype deshalb an jeder Stelle ab. Ohne _datatype fehlt ein Pflicht-Slice. Gegenprobe ohne administeredProduct: keine Fehler.",
+   "treffer": 6
+  },
+  {
+   "id": "xver-datatype-folgefehler",
+   "muster": "section\\[\\d+\\]\\.entry\\[\\d+\\]: Unable to find a profile match for Immunization/imm-[a-z-]+ among choices: http://hl7\\.eu/fhir/base/StructureDefinition/immunization-eu-core$|^Bundle: Slice 'Bundle\\.entry:composition': a matching slice is required, but not found",
+   "grund": "Folgefehler von xver-datatype-kontext: Der Abschnitt Impfungen der EPS-Composition prüft seine Einträge gegen immunization-eu-core; eine Impfung mit administeredProduct scheitert dort nur an _datatype, daraufhin passt die Composition nicht auf den Pflicht-Slice des Bundles. Die Impfungen selbst werden über meta.profile vollständig geprüft; ihre eigenen Meldungen bleiben sichtbar.",
+   "treffer": 7
+  }
+ ],
+ "summe": {
+  "fehler": 13,
+  "ausnahmen": 13,
+  "warnungen": 21,
+  "hinweise": 37,
+  "offen": 0
+ },
+ "beispiele": [
+  {
+   "id": "erstdokumentation",
+   "datei": "beispiele/erstdokumentation.json",
+   "sha256": "f7f4f6749ac32cf2cb62136a629da96da99d01ae99228f55b0aac993b6771f3d",
+   "fehler": 8,
+   "ausnahmen": 8,
+   "warnungen": 13,
+   "hinweise": 23,
+   "meldungen": [
+    {
+     "stufe": "error",
+     "ort": "Bundle",
+     "zeile": 1,
+     "text": "Slice 'Bundle.entry:composition': a matching slice is required, but not found (from http://hl7.eu/fhir/eps/StructureDefinition/bundle-eu-eps|1.0.0-ballot). Note that other slices are allowed in addition to this required slice",
+     "ausnahme": "xver-datatype-folgefehler"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle",
+     "zeile": 1,
+     "text": "Slice 'Bundle.entry:composition': a matching slice is required, but not found (from http://hl7.org/fhir/uv/ips/StructureDefinition/Bundle-uv-ips|2.0.0). Note that other slices are allowed in addition to this required slice",
+     "ausnahme": "xver-datatype-folgefehler"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[0].resource/*Composition/ps-erstdokumentation*/.section[3].entry[0]",
+     "zeile": 146,
+     "text": "Unable to find a profile match for Immunization/imm-erst-influenza among choices: http://hl7.eu/fhir/base/StructureDefinition/immunization-eu-core",
+     "ausnahme": "xver-datatype-folgefehler"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[0].resource/*Composition/ps-erstdokumentation*/.section[3].entry[1]",
+     "zeile": 149,
+     "text": "Unable to find a profile match for Immunization/imm-erst-tdap-ipv among choices: http://hl7.eu/fhir/base/StructureDefinition/immunization-eu-core",
+     "ausnahme": "xver-datatype-folgefehler"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[3].resource/*Immunization/imm-erst-influenza*/.extension[0]",
+     "zeile": 313,
+     "text": "The extension http://hl7.org/fhir/StructureDefinition/_datatype v5.2.0 is not allowed to be used at this point (this element is [Bundle.entry.resource/*Immunization/imm-erst-influenza*/.extension, Extension, Immunization.extension]; allowed for this version = e:Base)",
+     "ausnahme": "xver-datatype-kontext"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[3].resource/*Immunization/imm-erst-influenza*/.extension[0]",
+     "zeile": 313,
+     "text": "The extension http://hl7.org/fhir/StructureDefinition/_datatype v5.3.0 is not allowed to be used at this point (this element is [Bundle.entry.resource/*Immunization/imm-erst-influenza*/.extension, Extension, Immunization.extension]; allowed for this version = e:Base)",
+     "ausnahme": "xver-datatype-kontext"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[4].resource/*Immunization/imm-erst-tdap-ipv*/.extension[0]",
+     "zeile": 431,
+     "text": "The extension http://hl7.org/fhir/StructureDefinition/_datatype v5.2.0 is not allowed to be used at this point (this element is [Bundle.entry.resource/*Immunization/imm-erst-tdap-ipv*/.extension, Extension, Immunization.extension]; allowed for this version = e:Base)",
+     "ausnahme": "xver-datatype-kontext"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[4].resource/*Immunization/imm-erst-tdap-ipv*/.extension[0]",
+     "zeile": 431,
+     "text": "The extension http://hl7.org/fhir/StructureDefinition/_datatype v5.3.0 is not allowed to be used at this point (this element is [Bundle.entry.resource/*Immunization/imm-erst-tdap-ipv*/.extension, Extension, Immunization.extension]; allowed for this version = e:Base)",
+     "ausnahme": "xver-datatype-kontext"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*Immunization/imm-erst-influenza*/.contained[0]/*Medication/impfstoff-1*/.code.coding[0].system",
+     "zeile": 297,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/ifa/pzn' could not be found, so the code cannot be validated"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*Immunization/imm-erst-influenza*/.extension[0].extension[1].value.ofType(Reference)",
+     "zeile": 322,
+     "text": "Found multiple matching profiles for #impfstoff-1 among choices: http://hl7.org/fhir/5.0/StructureDefinition/profile-Medication|0.1.0, http://hl7.org/fhir/StructureDefinition/Medication|4.0.1"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*Immunization/imm-erst-influenza*/.protocolApplied[0].targetDisease[0]",
+     "zeile": 371,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*Immunization/imm-erst-influenza*/.vaccineCode",
+     "zeile": 336,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIVaccine' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*Immunization/imm-erst-influenza*/.vaccineCode.coding[0]",
+     "zeile": 338,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIVaccine' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Immunization/imm-erst-tdap-ipv*/.contained[0]/*Medication/impfstoff-2*/.code.coding[0].system",
+     "zeile": 415,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/ifa/pzn' could not be found, so the code cannot be validated"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Immunization/imm-erst-tdap-ipv*/.extension[0].extension[1].value.ofType(Reference)",
+     "zeile": 440,
+     "text": "Found multiple matching profiles for #impfstoff-2 among choices: http://hl7.org/fhir/5.0/StructureDefinition/profile-Medication|0.1.0, http://hl7.org/fhir/StructureDefinition/Medication|4.0.1"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Immunization/imm-erst-tdap-ipv*/.protocolApplied[0].targetDisease[0]",
+     "zeile": 490,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Immunization/imm-erst-tdap-ipv*/.protocolApplied[0].targetDisease[1]",
+     "zeile": 499,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Immunization/imm-erst-tdap-ipv*/.protocolApplied[0].targetDisease[2]",
+     "zeile": 508,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Immunization/imm-erst-tdap-ipv*/.protocolApplied[0].targetDisease[3]",
+     "zeile": 517,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Immunization/imm-erst-tdap-ipv*/.vaccineCode",
+     "zeile": 454,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIVaccine' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Immunization/imm-erst-tdap-ipv*/.vaccineCode.coding[0]",
+     "zeile": 456,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIVaccine' not found"
+    }
+   ]
+  },
+  {
+   "id": "nachtrag-impfpass",
+   "datei": "beispiele/nachtrag-impfpass.json",
+   "sha256": "43e93821b8f04ede602a0ecabdd76e41ffd5b6ef99d82ca937b9897fc38a146c",
+   "fehler": 5,
+   "ausnahmen": 5,
+   "warnungen": 8,
+   "hinweise": 14,
+   "meldungen": [
+    {
+     "stufe": "error",
+     "ort": "Bundle",
+     "zeile": 1,
+     "text": "Slice 'Bundle.entry:composition': a matching slice is required, but not found (from http://hl7.eu/fhir/eps/StructureDefinition/bundle-eu-eps|1.0.0-ballot). Note that other slices are allowed in addition to this required slice",
+     "ausnahme": "xver-datatype-folgefehler"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle",
+     "zeile": 1,
+     "text": "Slice 'Bundle.entry:composition': a matching slice is required, but not found (from http://hl7.org/fhir/uv/ips/StructureDefinition/Bundle-uv-ips|2.0.0). Note that other slices are allowed in addition to this required slice",
+     "ausnahme": "xver-datatype-folgefehler"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[0].resource/*Composition/ps-nachtrag-impfpass*/.section[3].entry[1]",
+     "zeile": 149,
+     "text": "Unable to find a profile match for Immunization/imm-nachtrag-influenza among choices: http://hl7.eu/fhir/base/StructureDefinition/immunization-eu-core",
+     "ausnahme": "xver-datatype-folgefehler"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[4].resource/*Immunization/imm-nachtrag-influenza*/.extension[0]",
+     "zeile": 389,
+     "text": "The extension http://hl7.org/fhir/StructureDefinition/_datatype v5.2.0 is not allowed to be used at this point (this element is [Bundle.entry.resource/*Immunization/imm-nachtrag-influenza*/.extension, Extension, Immunization.extension]; allowed for this version = e:Base)",
+     "ausnahme": "xver-datatype-kontext"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[4].resource/*Immunization/imm-nachtrag-influenza*/.extension[0]",
+     "zeile": 389,
+     "text": "The extension http://hl7.org/fhir/StructureDefinition/_datatype v5.3.0 is not allowed to be used at this point (this element is [Bundle.entry.resource/*Immunization/imm-nachtrag-influenza*/.extension, Extension, Immunization.extension]; allowed for this version = e:Base)",
+     "ausnahme": "xver-datatype-kontext"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*Immunization/imm-nachtrag-dt-polio*/.protocolApplied[0].targetDisease[0]",
+     "zeile": 311,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*Immunization/imm-nachtrag-dt-polio*/.protocolApplied[0].targetDisease[1]",
+     "zeile": 320,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*Immunization/imm-nachtrag-dt-polio*/.protocolApplied[0].targetDisease[2]",
+     "zeile": 329,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*Immunization/imm-nachtrag-dt-polio*/.vaccineCode",
+     "zeile": 289,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIVaccine' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Immunization/imm-nachtrag-influenza*/.extension[0].extension[1].value.ofType(Reference)",
+     "zeile": 398,
+     "text": "Found multiple matching profiles for #impfstoff-1 among choices: http://hl7.org/fhir/5.0/StructureDefinition/profile-Medication|0.1.0, http://hl7.org/fhir/StructureDefinition/Medication|4.0.1"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Immunization/imm-nachtrag-influenza*/.protocolApplied[0].targetDisease[0]",
+     "zeile": 441,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Immunization/imm-nachtrag-influenza*/.vaccineCode",
+     "zeile": 412,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIVaccine' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Immunization/imm-nachtrag-influenza*/.vaccineCode.coding[0]",
+     "zeile": 414,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIVaccine' not found"
+    }
+   ]
+  }
+ ]
+}

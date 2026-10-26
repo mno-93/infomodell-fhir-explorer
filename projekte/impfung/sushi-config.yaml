@@ -1,0 +1,15 @@
+# SUSHI-Konfiguration des lokalen Pakets — erzeugen mit `python3 -I werkzeuge/mx.py fsh impfung`
+# (baut fsh/*.fsh in einem temporären Ordner mit `sushi build --snapshot` und schreibt paket/package/).
+id: example.impfung.entwurf
+canonical: https://example.org/fhir/impfung-entwurf
+title: "Impfung (Entwurf, EU-konform)"
+description: "Studie eines Impfeintrags nach HL7 Europe Base (EU Core) mit den Pflichtangaben der EU Patient Summary. Nicht veröffentlicht."
+status: draft
+version: 0.1.0
+fhirVersion: 4.0.1
+FSHOnly: true
+dependencies:
+  hl7.fhir.eu.base: 2.0.1
+  hl7.fhir.eu.eps: 1.0.0-ballot
+  de.basisprofil.r4: 1.6.0
+  de.gematik.epa: 1.4.0-ballot.1
