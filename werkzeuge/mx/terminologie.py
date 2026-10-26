@@ -9,9 +9,10 @@ Liegt eine Werteliste nicht im Paketbestand, wird ihre kanonische URL nur verlin
 und der Herausgeber kanonische URLs auflöst (fhir.kbv.de, hl7.org, terminology.hl7.org). Sonst kein Link.
 """
 import re
+from pathlib import Path
 
 from .grundlagen import json_laden, kanon
-from .pakete import ordner
+from .pakete import bezeichnung, ordner
 
 KANONISCH_AUFLOESBAR = ('https://fhir.kbv.de/', 'http://hl7.org/fhir/', 'http://terminology.hl7.org/')
 
@@ -32,11 +33,13 @@ def _seite(spec, paket_url, vs_id):
 class Wertelisten:
     def __init__(self, specs, sds):
         self.nach_url, self.nach_name = {}, {}
-        for spec in specs:
-            basis = ordner(spec) / 'package'
+        for quelle in specs:
+            basis = ordner(quelle) / 'package'
             if not basis.exists():
                 continue
-            paket_url = json_laden(basis / 'package.json').get('url')
+            # lokale Pakete (Ordner im Projekt) sind nicht veröffentlicht: Bezeichnung ohne Pfad, keine Originalseite
+            spec, lokal = bezeichnung(quelle), isinstance(quelle, Path)
+            paket_url = None if lokal else json_laden(basis / 'package.json').get('url')
             for f in sorted(basis.glob('ValueSet-*.json')):
                 try:
                     v = json_laden(f)
@@ -47,7 +50,8 @@ class Wertelisten:
                 e = self.nach_url.get(v['url'])  # erste Fundstelle gewinnt, Namen aller Fundstellen zählen
                 if e is None:
                     e = {'url': v['url'], 'id': v.get('id'), 'titel': v.get('title') or v.get('name') or v.get('id'),
-                         'version': v.get('version', ''), 'paket': spec, 'seite': _seite(spec, paket_url, v.get('id'))}
+                         'version': v.get('version', ''), 'paket': spec,
+                         'seite': None if lokal else _seite(spec, paket_url, v.get('id'))}
                     self.nach_url[v['url']] = e
                 for schluessel in (v.get('name'), v.get('id'), v.get('title')):
                     if schluessel:

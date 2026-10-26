@@ -1,0 +1,583 @@
+{
+ "projekt": "laborbefund",
+ "validator": "7.0.1",
+ "fhir": "4.0.1",
+ "optionen": [
+  "-tx",
+  "n/a",
+  "-locale",
+  "en-US",
+  "-allow-example-urls",
+  "true",
+  "-extension",
+  "https://example.org/"
+ ],
+ "pakete": [
+  "hl7.fhir.uv.extensions.r4#5.3.0",
+  "de.basisprofil.r4#1.6.0",
+  "hl7.fhir.eu.base#2.0.1",
+  "de.gematik.ti#1.5.0-ballot.2",
+  "de.gematik.epa.laboratory#1.0.0-ballot.1",
+  "de.gematik.terminology#1.1.0-ballot.2"
+ ],
+ "ausnahmen": [
+  {
+   "id": "dr-comp-identifier",
+   "muster": "Constraint failed: dr-comp-identifier:",
+   "grund": "Profilkonflikt im Ballot: Bundle-eu-lab verlangt eine DiagnosticReport-Kennung gleich Composition.identifier; composition-dglp verbietet identifier.type, diagnostic-report-dglp verlangt ihn bei geschlossenem Slicing — mit keiner Instanz erfüllbar.",
+   "treffer": 3
+  },
+  {
+   "id": "abschnitt-ohne-terminologieserver",
+   "muster": "Slice 'Composition\\.section:result': a matching slice is required|Unable to find a profile match for Composition/comp-[0-9a-f]{8} among choices",
+   "grund": "Ohne Terminologieserver nicht auswertbar: composition-dglp ordnet den Abschnitt über eine required-Bindung an lab-studyType-eu-lab (LOINC) zu; der Validator verneint die Zugehörigkeit ohne Server. Dazu Folgefehler am Verweis auf die Composition.",
+   "treffer": 9
+  }
+ ],
+ "summe": {
+  "fehler": 12,
+  "ausnahmen": 12,
+  "warnungen": 70,
+  "hinweise": 36,
+  "offen": 0
+ },
+ "beispiele": [
+  {
+   "id": "hoffmann-2026-08-12",
+   "datei": "beispiele/hoffmann-2026-08-12.json",
+   "sha256": "9caa0162ad5d9fe587d886f7d42ff96f280f55d8cc99132d130557e885dbbe09",
+   "fehler": 4,
+   "ausnahmen": 4,
+   "warnungen": 29,
+   "hinweise": 13,
+   "meldungen": [
+    {
+     "stufe": "error",
+     "ort": "Bundle",
+     "zeile": 1,
+     "text": "Constraint failed: dr-comp-identifier: 'If one or more DiagnosticReport.identifiers are given, at least one of them SHALL be equal to the Composition.identifier' (defined in http://hl7.eu/fhir/laboratory/StructureDefinition/Bundle-eu-lab)",
+     "ausnahme": "dr-comp-identifier"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[0].resource/*Composition/comp-f81d4fae*/",
+     "zeile": 18,
+     "text": "Slice 'Composition.section:result': a matching slice is required, but not found (from https://gematik.de/fhir/epa-laboratory/StructureDefinition/composition-dglp|1.0.0). Note that other slices are allowed in addition to this required slice",
+     "ausnahme": "abschnitt-ohne-terminologieserver"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/dr-f81d4fae*/.extension[0].value.ofType(Reference)",
+     "zeile": 138,
+     "text": "Unable to find a profile match for Composition/comp-f81d4fae among choices: http://hl7.org/fhir/5.0/StructureDefinition/profile-Composition|0.1.0, http://hl7.org/fhir/StructureDefinition/Composition|4.0.1",
+     "ausnahme": "abschnitt-ohne-terminologieserver"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/dr-f81d4fae*/.extension[0].value.ofType(Reference)",
+     "zeile": 138,
+     "text": "Unable to find a profile match for Composition/comp-f81d4fae among choices: https://gematik.de/fhir/epa-laboratory/StructureDefinition/composition-dglp",
+     "ausnahme": "abschnitt-ohne-terminologieserver"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[0].resource/*Composition/comp-f81d4fae*/",
+     "zeile": 18,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Observation/obs-f81d4fae-0-0*/",
+     "zeile": 640,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/Observation) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Observation/obs-f81d4fae-0-0*/.referenceRange[0].high",
+     "zeile": 710,
+     "text": "Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Observation/obs-f81d4fae-0-0*/.referenceRange[0].low",
+     "zeile": 704,
+     "text": "Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Observation/obs-f81d4fae-0-0*/.value.ofType(Quantity)",
+     "zeile": 685,
+     "text": "Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*Observation/obs-f81d4fae-0-1*/.referenceRange[0].high",
+     "zeile": 805,
+     "text": "UCUM Codes that contain human readable annotations like {1.73_m2} can be misleading (e.g. they are ignored when comparing units). Best Practice is not to depend on annotations in the UCUM code, so this usage should be checked, and the Quantity.unit 'ml/min/1,73 m²' SHOULD contain the annotation (it does not)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*Observation/obs-f81d4fae-0-1*/.referenceRange[0].high",
+     "zeile": 805,
+     "text": "Unable to validate code 'mL/min/{1.73_m2}' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*Observation/obs-f81d4fae-0-1*/.referenceRange[0].low",
+     "zeile": 799,
+     "text": "UCUM Codes that contain human readable annotations like {1.73_m2} can be misleading (e.g. they are ignored when comparing units). Best Practice is not to depend on annotations in the UCUM code, so this usage should be checked, and the Quantity.unit 'ml/min/1,73 m²' SHOULD contain the annotation (it does not)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*Observation/obs-f81d4fae-0-1*/.referenceRange[0].low",
+     "zeile": 799,
+     "text": "Unable to validate code 'mL/min/{1.73_m2}' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*Observation/obs-f81d4fae-0-1*/.value.ofType(Quantity)",
+     "zeile": 780,
+     "text": "UCUM Codes that contain human readable annotations like {1.73_m2} can be misleading (e.g. they are ignored when comparing units). Best Practice is not to depend on annotations in the UCUM code, so this usage should be checked, and the Quantity.unit 'ml/min/1,73 m²' SHOULD contain the annotation (it does not)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*Observation/obs-f81d4fae-0-1*/.value.ofType(Quantity)",
+     "zeile": 780,
+     "text": "Unable to validate code 'mL/min/{1.73_m2}' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[14].resource/*Observation/obs-f81d4fae-1-0*/",
+     "zeile": 837,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/Observation) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[14].resource/*Observation/obs-f81d4fae-1-0*/.referenceRange[0].high",
+     "zeile": 907,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[14].resource/*Observation/obs-f81d4fae-1-0*/.referenceRange[0].low",
+     "zeile": 901,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[14].resource/*Observation/obs-f81d4fae-1-0*/.value.ofType(Quantity)",
+     "zeile": 882,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[15].resource/*Observation/obs-f81d4fae-2-0*/.referenceRange[0].high",
+     "zeile": 1009,
+     "text": "Unable to validate code '%' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[15].resource/*Observation/obs-f81d4fae-2-0*/.referenceRange[0].low",
+     "zeile": 996,
+     "text": "Unable to validate code '%' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[15].resource/*Observation/obs-f81d4fae-2-0*/.value.ofType(Quantity)",
+     "zeile": 977,
+     "text": "Unable to validate code '%' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/dr-f81d4fae*/",
+     "zeile": 127,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/dr-f81d4fae*/.identifier[0].type",
+     "zeile": 145,
+     "text": "None of the codings provided are in the value set 'IdentifierType' (http://hl7.org/fhir/ValueSet/identifier-type|4.0.1), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = https://gematik.de/fhir/terminology/CodeSystem/laboratory-identificator#AL)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/dr-f81d4fae*/.identifier[1].type",
+     "zeile": 159,
+     "text": "None of the codings provided are in the value set 'IdentifierType' (http://hl7.org/fhir/ValueSet/identifier-type|4.0.1), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = http://terminology.hl7.org/CodeSystem/v2-0203#RI)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[2].resource/*Patient/pat-A123456780*/",
+     "zeile": 249,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*ServiceRequest/sr-f81d4fae*/",
+     "zeile": 271,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*ServiceRequest/sr-f81d4fae*/.identifier[0].type",
+     "zeile": 281,
+     "text": "None of the codings provided are in the value set 'IdentifierType' (http://hl7.org/fhir/ValueSet/identifier-type|4.0.1), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = https://gematik.de/fhir/terminology/CodeSystem/laboratory-identificator#AE)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Organization/org-f81d4fae*/",
+     "zeile": 321,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/Organization) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[5].resource/*Organization/org-einsender-f81d4fae*/",
+     "zeile": 329,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[6].resource/*Practitioner/prac-f81d4fae*/",
+     "zeile": 337,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/Practitioner) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[7].resource/*PractitionerRole/role-f81d4fae*/",
+     "zeile": 349,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/PractitionerRole) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[8].resource/*Specimen/sp-f81d4fae*/",
+     "zeile": 364,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.eu/fhir/laboratory/StructureDefinition/Specimen-eu-lab) (Best Practice Recommendation)"
+    }
+   ]
+  },
+  {
+   "id": "hoffmann-2026-03-18",
+   "datei": "beispiele/hoffmann-2026-03-18.json",
+   "sha256": "b36289b04623bee2b5a2b51a6e7f917e49efb1c5218fad07cd71781a821233fc",
+   "fehler": 4,
+   "ausnahmen": 4,
+   "warnungen": 25,
+   "hinweise": 12,
+   "meldungen": [
+    {
+     "stufe": "error",
+     "ort": "Bundle",
+     "zeile": 1,
+     "text": "Constraint failed: dr-comp-identifier: 'If one or more DiagnosticReport.identifiers are given, at least one of them SHALL be equal to the Composition.identifier' (defined in http://hl7.eu/fhir/laboratory/StructureDefinition/Bundle-eu-lab)",
+     "ausnahme": "dr-comp-identifier"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[0].resource/*Composition/comp-9a3e6c10*/",
+     "zeile": 18,
+     "text": "Slice 'Composition.section:result': a matching slice is required, but not found (from https://gematik.de/fhir/epa-laboratory/StructureDefinition/composition-dglp|1.0.0). Note that other slices are allowed in addition to this required slice",
+     "ausnahme": "abschnitt-ohne-terminologieserver"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/dr-9a3e6c10*/.extension[0].value.ofType(Reference)",
+     "zeile": 135,
+     "text": "Unable to find a profile match for Composition/comp-9a3e6c10 among choices: http://hl7.org/fhir/5.0/StructureDefinition/profile-Composition|0.1.0, http://hl7.org/fhir/StructureDefinition/Composition|4.0.1",
+     "ausnahme": "abschnitt-ohne-terminologieserver"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/dr-9a3e6c10*/.extension[0].value.ofType(Reference)",
+     "zeile": 135,
+     "text": "Unable to find a profile match for Composition/comp-9a3e6c10 among choices: https://gematik.de/fhir/epa-laboratory/StructureDefinition/composition-dglp",
+     "ausnahme": "abschnitt-ohne-terminologieserver"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[0].resource/*Composition/comp-9a3e6c10*/",
+     "zeile": 18,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[11].resource/*Observation/obs-9a3e6c10-0-0*/",
+     "zeile": 556,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/Observation) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[11].resource/*Observation/obs-9a3e6c10-0-0*/.referenceRange[0].high",
+     "zeile": 626,
+     "text": "Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[11].resource/*Observation/obs-9a3e6c10-0-0*/.referenceRange[0].low",
+     "zeile": 620,
+     "text": "Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[11].resource/*Observation/obs-9a3e6c10-0-0*/.value.ofType(Quantity)",
+     "zeile": 601,
+     "text": "Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Observation/obs-9a3e6c10-0-1*/.referenceRange[0].high",
+     "zeile": 721,
+     "text": "UCUM Codes that contain human readable annotations like {1.73_m2} can be misleading (e.g. they are ignored when comparing units). Best Practice is not to depend on annotations in the UCUM code, so this usage should be checked, and the Quantity.unit 'ml/min/1,73 m²' SHOULD contain the annotation (it does not)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Observation/obs-9a3e6c10-0-1*/.referenceRange[0].high",
+     "zeile": 721,
+     "text": "Unable to validate code 'mL/min/{1.73_m2}' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Observation/obs-9a3e6c10-0-1*/.referenceRange[0].low",
+     "zeile": 715,
+     "text": "UCUM Codes that contain human readable annotations like {1.73_m2} can be misleading (e.g. they are ignored when comparing units). Best Practice is not to depend on annotations in the UCUM code, so this usage should be checked, and the Quantity.unit 'ml/min/1,73 m²' SHOULD contain the annotation (it does not)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Observation/obs-9a3e6c10-0-1*/.referenceRange[0].low",
+     "zeile": 715,
+     "text": "Unable to validate code 'mL/min/{1.73_m2}' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Observation/obs-9a3e6c10-0-1*/.value.ofType(Quantity)",
+     "zeile": 696,
+     "text": "UCUM Codes that contain human readable annotations like {1.73_m2} can be misleading (e.g. they are ignored when comparing units). Best Practice is not to depend on annotations in the UCUM code, so this usage should be checked, and the Quantity.unit 'ml/min/1,73 m²' SHOULD contain the annotation (it does not)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Observation/obs-9a3e6c10-0-1*/.value.ofType(Quantity)",
+     "zeile": 696,
+     "text": "Unable to validate code 'mL/min/{1.73_m2}' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*Observation/obs-9a3e6c10-1-0*/.referenceRange[0].high",
+     "zeile": 830,
+     "text": "Unable to validate code '%' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*Observation/obs-9a3e6c10-1-0*/.referenceRange[0].low",
+     "zeile": 817,
+     "text": "Unable to validate code '%' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*Observation/obs-9a3e6c10-1-0*/.value.ofType(Quantity)",
+     "zeile": 798,
+     "text": "Unable to validate code '%' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/dr-9a3e6c10*/",
+     "zeile": 124,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/dr-9a3e6c10*/.identifier[0].type",
+     "zeile": 142,
+     "text": "None of the codings provided are in the value set 'IdentifierType' (http://hl7.org/fhir/ValueSet/identifier-type|4.0.1), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = https://gematik.de/fhir/terminology/CodeSystem/laboratory-identificator#AL)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/dr-9a3e6c10*/.identifier[1].type",
+     "zeile": 156,
+     "text": "None of the codings provided are in the value set 'IdentifierType' (http://hl7.org/fhir/ValueSet/identifier-type|4.0.1), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = http://terminology.hl7.org/CodeSystem/v2-0203#RI)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[2].resource/*Patient/pat-A123456780*/",
+     "zeile": 237,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*ServiceRequest/sr-9a3e6c10*/",
+     "zeile": 259,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*ServiceRequest/sr-9a3e6c10*/.identifier[0].type",
+     "zeile": 269,
+     "text": "None of the codings provided are in the value set 'IdentifierType' (http://hl7.org/fhir/ValueSet/identifier-type|4.0.1), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = https://gematik.de/fhir/terminology/CodeSystem/laboratory-identificator#AE)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Organization/org-9a3e6c10*/",
+     "zeile": 309,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/Organization) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[5].resource/*Organization/org-einsender-9a3e6c10*/",
+     "zeile": 317,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[6].resource/*Practitioner/prac-9a3e6c10*/",
+     "zeile": 325,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/Practitioner) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[7].resource/*PractitionerRole/role-9a3e6c10*/",
+     "zeile": 337,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/PractitionerRole) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[8].resource/*Specimen/sp-9a3e6c10*/",
+     "zeile": 352,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.eu/fhir/laboratory/StructureDefinition/Specimen-eu-lab) (Best Practice Recommendation)"
+    }
+   ]
+  },
+  {
+   "id": "yildiz-2026-07-02",
+   "datei": "beispiele/yildiz-2026-07-02.json",
+   "sha256": "dbf7320ffae866adac39358b49e3caa7705207ac1a10c87b213f1611460ab5c1",
+   "fehler": 4,
+   "ausnahmen": 4,
+   "warnungen": 16,
+   "hinweise": 11,
+   "meldungen": [
+    {
+     "stufe": "error",
+     "ort": "Bundle",
+     "zeile": 1,
+     "text": "Constraint failed: dr-comp-identifier: 'If one or more DiagnosticReport.identifiers are given, at least one of them SHALL be equal to the Composition.identifier' (defined in http://hl7.eu/fhir/laboratory/StructureDefinition/Bundle-eu-lab)",
+     "ausnahme": "dr-comp-identifier"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[0].resource/*Composition/comp-3b1c9a52*/",
+     "zeile": 18,
+     "text": "Slice 'Composition.section:result': a matching slice is required, but not found (from https://gematik.de/fhir/epa-laboratory/StructureDefinition/composition-dglp|1.0.0). Note that other slices are allowed in addition to this required slice",
+     "ausnahme": "abschnitt-ohne-terminologieserver"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/dr-3b1c9a52*/.extension[0].value.ofType(Reference)",
+     "zeile": 132,
+     "text": "Unable to find a profile match for Composition/comp-3b1c9a52 among choices: http://hl7.org/fhir/5.0/StructureDefinition/profile-Composition|0.1.0, http://hl7.org/fhir/StructureDefinition/Composition|4.0.1",
+     "ausnahme": "abschnitt-ohne-terminologieserver"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/dr-3b1c9a52*/.extension[0].value.ofType(Reference)",
+     "zeile": 132,
+     "text": "Unable to find a profile match for Composition/comp-3b1c9a52 among choices: https://gematik.de/fhir/epa-laboratory/StructureDefinition/composition-dglp",
+     "ausnahme": "abschnitt-ohne-terminologieserver"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[0].resource/*Composition/comp-3b1c9a52*/",
+     "zeile": 18,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[10].resource/*Observation/obs-3b1c9a52-0-0*/",
+     "zeile": 462,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/Observation) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[10].resource/*Observation/obs-3b1c9a52-0-0*/.referenceRange[0].high",
+     "zeile": 532,
+     "text": "Unable to validate code 'm[IU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[10].resource/*Observation/obs-3b1c9a52-0-0*/.referenceRange[0].low",
+     "zeile": 526,
+     "text": "Unable to validate code 'm[IU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[10].resource/*Observation/obs-3b1c9a52-0-0*/.value.ofType(Quantity)",
+     "zeile": 507,
+     "text": "Unable to validate code 'm[IU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/dr-3b1c9a52*/",
+     "zeile": 121,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/dr-3b1c9a52*/.identifier[0].type",
+     "zeile": 139,
+     "text": "None of the codings provided are in the value set 'IdentifierType' (http://hl7.org/fhir/ValueSet/identifier-type|4.0.1), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = https://gematik.de/fhir/terminology/CodeSystem/laboratory-identificator#AL)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/dr-3b1c9a52*/.identifier[1].type",
+     "zeile": 153,
+     "text": "None of the codings provided are in the value set 'IdentifierType' (http://hl7.org/fhir/ValueSet/identifier-type|4.0.1), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = http://terminology.hl7.org/CodeSystem/v2-0203#RI)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[2].resource/*Patient/pat-M555123402*/",
+     "zeile": 224,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*ServiceRequest/sr-3b1c9a52*/",
+     "zeile": 246,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*ServiceRequest/sr-3b1c9a52*/.identifier[0].type",
+     "zeile": 256,
+     "text": "None of the codings provided are in the value set 'IdentifierType' (http://hl7.org/fhir/ValueSet/identifier-type|4.0.1), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = https://gematik.de/fhir/terminology/CodeSystem/laboratory-identificator#AE)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Organization/org-3b1c9a52*/",
+     "zeile": 296,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/Organization) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[5].resource/*Organization/org-einsender-3b1c9a52*/",
+     "zeile": 304,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[6].resource/*Practitioner/prac-3b1c9a52*/",
+     "zeile": 312,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/Practitioner) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[7].resource/*PractitionerRole/role-3b1c9a52*/",
+     "zeile": 324,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/PractitionerRole) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[8].resource/*Specimen/sp-3b1c9a52*/",
+     "zeile": 339,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.eu/fhir/laboratory/StructureDefinition/Specimen-eu-lab) (Best Practice Recommendation)"
+    }
+   ]
+  }
+ ]
+}

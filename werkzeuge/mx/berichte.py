@@ -2,6 +2,7 @@
 import re
 
 from .grundlagen import BERICHTE
+from .validieren import RANG
 
 STATUS_TEXT = {'fehler': 'ohne Ziel', 'verboten': 'auf ein 0..0-Element', 'unbekannt': 'Definition fehlt',
                'anderes-profil': 'anderes Profil als das übergeordnete Element'}
@@ -19,7 +20,10 @@ def bericht(d):
          '', '## Quellen', '',
          f'- Implementation Guide: {m["ig"].get("name", "—")} (`{m["ig"].get("paket", "—")}`, {m["ig"].get("status", "")})',
          f'- Darstellung des Modells: {m["im_titel"]}' + (f' — {m["im_hinweis"]}' if m['im_hinweis'] else ''),
-         '- Pakete: ' + ', '.join(f'`{p}`' for p in m['pakete']), '']
+         '- Pakete: ' + ', '.join(f'`{p}`' for p in m['pakete'])]
+    for lp in m.get('lokale_pakete', []):
+        z.append(f'- Lokales Paket (im Projekt, nicht veröffentlicht): `{lp["paket"]}` aus `{lp["ordner"]}/`')
+    z.append('')
     if m['im_art'] == 'gematik-baum':
         z += ['## Mappingprüfung', '',
               '| Befund | Anzahl |', '|---|---:|',
@@ -91,7 +95,68 @@ def bericht(d):
             z += ['', 'Werte ohne spezifisches Element im Informationsmodell (ohne url, reference, system, version, Erzähltext):', '']
             z += [f'- `{el.split("/")[-1]}` ({n}×)' for el, n in b['abdeckung']['ohne_modell'].items()]
         z.append('')
+    z += validierung(d)
     return '\n'.join(z).rstrip() + '\n'
+
+
+STATUS_VALIDIERUNG = {'veraltet': '⚠ Beispieldatei seit der Validierung geändert — neu validieren',
+                      'nicht validiert': 'noch nicht validiert', 'Paketbeispiel': 'nicht validiert (Beispiel aus einem FHIR-Paket)'}
+
+
+def meldungsgruppen(meldungen):
+    """Gleiche Meldungen (Stufe, Text, Ausnahme) zusammenfassen: [(stufe, text, ausnahme, [Meldungen])],
+    sortiert nach Stufe und Text — gemeinsam für Prüfbericht und Oberfläche."""
+    gruppen = {}
+    for m in meldungen:
+        gruppen.setdefault((m['stufe'], m['text'], m.get('ausnahme') or ''), []).append(m)
+    return [(s, t, a, ms) for (s, t, a), ms in sorted(gruppen.items(), key=lambda g: (RANG.get(g[0][0], 9), g[0][1], g[0][2]))]
+
+
+def _ort(x):
+    return (f'`{x["ort"]}`' if x.get('ort') else '—') + (f' (Zeile {x["zeile"]})' if x.get('zeile') else '')
+
+
+def _gruppe(stufe, text, ausnahme, ms, zeigen=3):
+    anzahl = f' ({len(ms)}×)' if len(ms) > 1 else ''
+    orte = ', '.join(_ort(x) for x in ms[:zeigen]) + (f' und {len(ms) - zeigen} weitere' if len(ms) > zeigen else '')
+    return (f'- **{stufe}**{anzahl}: {_code(text)}' + (f' — begründete Ausnahme `{ausnahme}`' if ausnahme else '')
+            + f'<br>{orte}')
+
+
+def validierung(d):
+    """Abschnitt „FHIR-Validierung“ aus `berichte/<projekt>.validierung.json` (geschrieben von `mx.py validieren`)."""
+    v, pid = d.get('validierung'), d['meta']['projekt']
+    if not v:
+        return ['## FHIR-Validierung', '',
+                f'Noch nicht validiert — `python3 -I werkzeuge/mx.py validieren {pid}` schreibt `berichte/{pid}.validierung.json`.', '']
+    s = v['summe']
+    z = [f'## FHIR-Validierung (HL7 Validator {v["validator"]})', '',
+         f'Stand: `berichte/{pid}.validierung.json`, geschrieben von `python3 -I werkzeuge/mx.py validieren {pid}`; '
+         f'FHIR {v["fhir"]}, Optionen `{" ".join(v["optionen"])}` (ohne Terminologieserver).', '',
+         '- Pakete: ' + ', '.join(f'`{p}`' for p in v['pakete']),
+         f'- Ergebnis: **{s["offen"]} Fehler**, {s["ausnahmen"]} als begründete Ausnahme, {s["warnungen"]} Warnungen, '
+         f'{s["hinweise"]} Hinweise', '',
+         '| Beispiel | Fehler | davon begründete Ausnahme | Warnungen | Hinweise | Stand |', '|---|---:|---:|---:|---:|---|']
+    for b in d['beispiele']:
+        e = b.get('validierung') or {}
+        if e.get('status') in ('aktuell', 'veraltet'):
+            z.append(f'| {b["titel"]} | {e["fehler"]} | {e["ausnahmen"]} | {e["warnungen"]} | {e["hinweise"]} | '
+                     f'{STATUS_VALIDIERUNG.get(e["status"], e["status"])} |')
+        else:
+            z.append(f'| {b["titel"]} | – | – | – | – | {STATUS_VALIDIERUNG.get(e.get("status"), "noch nicht validiert")} |')
+    z.append('')
+    if v['ausnahmen']:
+        z += ['**Begründete Ausnahmen** (`[[validierung.ausnahmen]]` in `projekt.toml`):', '']
+        z += [f'- `{a["id"]}` — {a["treffer"]} Treffer{" ⚠" if not a["treffer"] else ""}: {_code(a["grund"])}'
+              for a in v['ausnahmen']]
+        z.append('')
+    for b in d['beispiele']:
+        e = b.get('validierung') or {}
+        if e.get('meldungen'):
+            z += [f'### Fehler und Warnungen — {b["titel"]}', '',
+                  'Gleiche Meldungen zusammengefasst; Ort als FHIRPath, Zeile in der Beispieldatei.', '']
+            z += [_gruppe(*g) for g in meldungsgruppen(e['meldungen'])] + ['']
+    return z
 
 
 def schreiben(d):

@@ -28,12 +28,14 @@ Jede Verknüpfung läuft über **Profil-URL + kanonische Elementkennung**, z. B.
 
 Der Prüfbericht zählt je Beispiel, wie viele Ressourcen über 2. oder 3. zugeordnet wurden.
 
+Enthaltene Ressourcen (`contained`) bleiben Knoten der umgebenden Ressource (`Immunization/imm-1|contained[0].code.text`), werden aber nach denselben Regeln einem eigenen Profil zugeordnet — wie beim Validator. So zeigt z. B. das Impfstoffprodukt einer Impfung auf `ps-immunization-medication`, nicht auf `Immunization.contained`.
+
 ## Modell-Adapter
 
 | `informationsmodell.art` | Quelle | Ergebnis |
 |---|---|---|
 | `gematik-baum` | JSON hinter der Baumansicht „Informationsmodell“ eines gematik-IG (Felder `fhirMappings`, `termAssocs`, `cardinality`, `otherProperties`) | Modell mit Mappings, Terminologie, Herkunft, eingebetteten Anforderungen; dazu die **ausmodellierte Sicht** (`referenzgruppe`, optional `ergaenzen_aus` für Profile, die das Modell nur als Ganzes nennt) |
-| `aus-profilen` | Einstiegsprofil (`einstieg`), meist die Composition | Struktur aus Pflicht- und Must-Support-Elementen bis `tiefe`; Abschnitte und Eintrags-Slices immer, Zielprofile der Einträge ausmodelliert |
+| `aus-profilen` | Einstiegsprofil (`einstieg`), meist die Composition; auch eine Liste von Profilen nebeneinander (z. B. ein Eintragsprofil und das Profil seiner enthaltenen Ressource) | Struktur aus Pflicht- und Must-Support-Elementen bis `tiefe`; Abschnitte und Eintrags-Slices immer, Zielprofile der Einträge ausmodelliert |
 
 Ein weiterer Adapter — etwa für ein logisches Modell (`StructureDefinition` mit `kind = logical` und `mapping`) — liefert dasselbe Knotenformat (`werkzeuge/mx/infomodell.py`) und braucht keine Änderung an Oberfläche oder Berichten.
 
@@ -66,6 +68,10 @@ Liegt eine Werteliste nicht im Paketbestand, aber bindet ein Profil sie, wird ih
 | `druck` | A4-Druckfassung des Laborbefunds mit Freigabe, Dokument-ID und Version |
 | `pdf` | Textebene des PDF aus `DiagnosticReport.presentedForm` |
 | `erzaehltext` | Erzähltext der Abschnitte (`Composition.section.text`) |
+
+## FHIR-Validierung
+
+`mx.py validieren` ruft den HL7 Validator je Projekt mit festen Optionen auf (`-tx n/a -locale en-US`, JVM mit `-Duser.language=en -Duser.country=US`) und schreibt `berichte/<projekt>.validierung.json` (`werkzeuge/mx/validieren.py`). Jede Meldung wird über ihre Datei dem Beispiel zugeordnet; Fehler werden gegen die begründeten Ausnahmen des Projekts geprüft. `bauen` bettet das Ergebnis ein: Prüfbericht, Dialog „Abdeckung & Prüfung“ (Ort als Sprung zum Wert, sofern er sich einem Knoten des Beispiels zuordnen lässt) und Übersichtsseite. Der Validator selbst läuft nur in `validieren`, nie im Bau.
 
 ## Grenzen
 

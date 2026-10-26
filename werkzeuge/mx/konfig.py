@@ -13,7 +13,8 @@ class KonfigFehler(Exception):
     pass
 
 
-def projekt_laden(pid):
+def projekt_laden(pid, lokal_pruefen=True):
+    """lokal_pruefen=False: lokale Pakete dürfen fehlen (beim Erzeugen mit `mx.py fsh`)."""
     pfad = PROJEKTE / pid / 'projekt.toml'
     with open(pfad, 'rb') as f:
         k = tomllib.load(f)
@@ -39,6 +40,16 @@ def projekt_laden(pid):
         if not (b.get('datei') or b.get('einstieg')):
             raise KonfigFehler(f'{pfad}: Beispiel {b["id"]} braucht "datei" oder "einstieg"')
     k['ordner'] = PROJEKTE / pid
+    # Lokale Pakete: Ordner im Projekt mit package/package.json und den Ressourcen eines FHIR-Pakets
+    k['lokale_ordner'] = []
+    for rel in k.get('lokale_pakete', []):
+        ordner = k['ordner'] / rel
+        if lokal_pruefen and not (ordner / 'package' / 'package.json').exists():
+            raise KonfigFehler(f'{pfad}: lokales Paket "{rel}" ohne package/package.json')
+        k['lokale_ordner'].append(ordner)
+    ausnahmen = [a.get('id') for a in k.get('validierung', {}).get('ausnahmen', []) if a.get('id')]
+    if len(ausnahmen) != len(set(ausnahmen)):
+        raise KonfigFehler(f'{pfad}: Kennungen der Validierungsausnahmen sind nicht eindeutig')
     return k
 
 

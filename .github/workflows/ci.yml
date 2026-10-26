@@ -79,12 +79,18 @@ jobs:
           key: fhir-validator-pakete-${{ hashFiles('projekte/*/projekt.toml') }}
       - name: Beispiele validieren
         run: python3 -I werkzeuge/mx.py validieren
+      # Die Prüfberichte und die Seiten bauen auf berichte/<projekt>.validierung.json auf (ohne Java):
+      # das eingecheckte Ergebnis muss dem Lauf mit festem Validator, festen Paketen und englischen Meldungen entsprechen.
+      - name: Validierungsergebnisse entsprechen dem eingecheckten Stand
+        run: git diff --exit-code -- 'berichte/*.validierung.json'
       - name: Bericht sichern
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: fhir-validierung
-          path: ausgabe/validierung-*.txt
+          path: |
+            ausgabe/validierung-*.txt
+            berichte/*.validierung.json
           if-no-files-found: ignore
 
   veroeffentlichen:

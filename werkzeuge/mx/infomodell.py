@@ -236,7 +236,7 @@ AUSLASSEN = re.compile(r'\.(id|url|meta|implicitRules|language|text|contained|mo
 
 
 def aus_profilen(konfig, sds):
-    """Struktur aus den Profilen ableiten: Einstiegsprofil, Abschnitte, Eintragsprofile, Must Support."""
+    """Struktur aus den Profilen ableiten: Einstiegsprofil(e), Abschnitte, Eintragsprofile, Must Support."""
     im = konfig['informationsmodell']
     tiefe = im.get('tiefe', 3)
     knoten = []
@@ -284,7 +284,9 @@ def aus_profilen(konfig, sds):
                             profil(z, gewaehlt[eid], stapel + [z])
         return wurzel
 
-    profil(im['einstieg'], None, [im['einstieg']])
+    # ein Einstieg oder mehrere nebeneinander (z. B. ein Profil und das Profil seiner enthaltenen Ressourcen)
+    for einstieg in ([im['einstieg']] if isinstance(im['einstieg'], str) else im['einstieg']):
+        profil(einstieg, None, [einstieg])
     return knoten
 
 

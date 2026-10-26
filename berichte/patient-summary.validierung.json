@@ -1,0 +1,1062 @@
+{
+ "projekt": "patient-summary",
+ "validator": "7.0.1",
+ "fhir": "4.0.1",
+ "optionen": [
+  "-tx",
+  "n/a",
+  "-locale",
+  "en-US",
+  "-allow-example-urls",
+  "true",
+  "-extension",
+  "https://example.org/"
+ ],
+ "pakete": [
+  "hl7.fhir.uv.extensions.r4#5.3.0",
+  "de.basisprofil.r4#1.6.0",
+  "hl7.fhir.eu.base#2.0.1",
+  "de.gematik.ti#1.5.0-ballot.2",
+  "de.gematik.epa#1.3.2",
+  "de.gematik.epa.medication#1.3.5",
+  "de.gematik.terminology#1.1.0-ballot.2",
+  "hl7.fhir.eu.eps#1.0.0-ballot"
+ ],
+ "ausnahmen": [
+  {
+   "id": "provenance-versionsverweis",
+   "muster": "Provenance/[^']*' isn't reachable|Can't find '[A-Za-z]+/[^']+/_history/",
+   "grund": "Die Beispiele tragen Änderungseinträge früherer Fassungen (Provenance mit Versionsverweis) für die Herkunftszeile; im Dokument nicht auflösbar. Abbildung im Demo-PVS offen.",
+   "treffer": 4
+  }
+ ],
+ "summe": {
+  "fehler": 4,
+  "ausnahmen": 4,
+  "warnungen": 162,
+  "hinweise": 278,
+  "offen": 0
+ },
+ "beispiele": [
+  {
+   "id": "hoffmann",
+   "datei": "beispiele/hoffmann.json",
+   "sha256": "59e0819ebd26ee4bc6a514715e894693821b5fd7b898c81dd4d51d45ca0eb6cd",
+   "fehler": 2,
+   "ausnahmen": 2,
+   "warnungen": 119,
+   "hinweise": 203,
+   "meldungen": [
+    {
+     "stufe": "error",
+     "ort": "Bundle",
+     "zeile": 1,
+     "text": "Can't find 'MedicationRequest/emp-h-med-4/_history/1' in the bundle (Bundle.entry[25].resource.target[0]). Note that there is a resource in the bundle with the same type and id, but it does not match because of the fullUrl based rules around matching relative references (must be 'https://example.org/demo-pvs/fhir/MedicationRequest/emp-h-med-4/_history/1', but found 'https://example.org/demo-pvs/fhir/MedicationRequest/emp-h-med-4')",
+     "ausnahme": "provenance-versionsverweis"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[26]",
+     "zeile": 1730,
+     "text": "Entry 'https://example.org/demo-pvs/fhir/Provenance/prov-mvazzcdz-8' isn't reachable by traversing links (forward or backward) from the Composition",
+     "ausnahme": "provenance-versionsverweis"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[0].resource/*Composition/ps-mvazzck5-66*/",
+     "zeile": 18,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[10].resource/*Provenance/prov-mvazzce0-13*/",
+     "zeile": 1001,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[11].resource/*Provenance/prov-mvazzce0-14*/",
+     "zeile": 1050,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Provenance/prov-mvazzchy-45*/",
+     "zeile": 1099,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource.reasonCode[0]",
+     "zeile": 1205,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*MedicationRequest/emp-h-med-1*/",
+     "zeile": 1148,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*MedicationRequest/emp-h-med-1*/.dosageInstruction[0]",
+     "zeile": 1210,
+     "text": "Constraint failed: DosageWarnungViererschemaInText: 'Hinweis: In Dosage.text wurde ein Viererschema (z. B. 1-1-1-1) erkannt. Bitte prüfen, ob dies strukturiert abgebildet werden kann.' (defined in http://ig.fhir.de/igs/medication/StructureDefinition/DosageDE)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[14].resource.reasonCode[0]",
+     "zeile": 1275,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[14].resource/*MedicationRequest/emp-h-med-3*/",
+     "zeile": 1218,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[14].resource/*MedicationRequest/emp-h-med-3*/.dosageInstruction[0]",
+     "zeile": 1280,
+     "text": "Constraint failed: DosageWarnungViererschemaInText: 'Hinweis: In Dosage.text wurde ein Viererschema (z. B. 1-1-1-1) erkannt. Bitte prüfen, ob dies strukturiert abgebildet werden kann.' (defined in http://ig.fhir.de/igs/medication/StructureDefinition/DosageDE)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[15].resource.reasonCode[0]",
+     "zeile": 1345,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[15].resource/*MedicationRequest/emp-h-med-4*/",
+     "zeile": 1288,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[15].resource/*MedicationRequest/emp-h-med-4*/.dosageInstruction[0]",
+     "zeile": 1350,
+     "text": "Constraint failed: DosageWarnungViererschemaInText: 'Hinweis: In Dosage.text wurde ein Viererschema (z. B. 1-1-1-1) erkannt. Bitte prüfen, ob dies strukturiert abgebildet werden kann.' (defined in http://ig.fhir.de/igs/medication/StructureDefinition/DosageDE)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[16].resource.reasonCode[0]",
+     "zeile": 1415,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[16].resource/*MedicationRequest/emp-h-med-5*/",
+     "zeile": 1358,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[16].resource/*MedicationRequest/emp-h-med-5*/.dosageInstruction[0]",
+     "zeile": 1420,
+     "text": "Constraint failed: DosageWarnungViererschemaInText: 'Hinweis: In Dosage.text wurde ein Viererschema (z. B. 1-1-1-1) erkannt. Bitte prüfen, ob dies strukturiert abgebildet werden kann.' (defined in http://ig.fhir.de/igs/medication/StructureDefinition/DosageDE)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[17].resource.reasonCode[0]",
+     "zeile": 1485,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[17].resource/*MedicationRequest/emp-k-mvazzchy-37*/",
+     "zeile": 1428,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[17].resource/*MedicationRequest/emp-k-mvazzchy-37*/.dosageInstruction[0]",
+     "zeile": 1490,
+     "text": "Constraint failed: DosageWarnungViererschemaInText: 'Hinweis: In Dosage.text wurde ein Viererschema (z. B. 1-1-1-1) erkannt. Bitte prüfen, ob dies strukturiert abgebildet werden kann.' (defined in http://ig.fhir.de/igs/medication/StructureDefinition/DosageDE)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[18].resource/*Medication/med-h-med-1*/",
+     "zeile": 1498,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[18].resource/*Medication/med-h-med-1*/.code.coding[0].system",
+     "zeile": 1509,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/bfarm/atc' version '2026' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[19].resource/*Medication/med-h-med-3*/",
+     "zeile": 1524,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[19].resource/*Medication/med-h-med-3*/.code.coding[0].system",
+     "zeile": 1535,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/bfarm/atc' version '2026' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[1].resource/*Patient/pat-A123456780*/",
+     "zeile": 367,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[20].resource/*Medication/med-h-med-4*/",
+     "zeile": 1550,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[20].resource/*Medication/med-h-med-4*/.code.coding[0].system",
+     "zeile": 1561,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/bfarm/atc' version '2026' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[21].resource/*Medication/med-h-med-5*/",
+     "zeile": 1576,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[21].resource/*Medication/med-h-med-5*/.code.coding[0].system",
+     "zeile": 1587,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/bfarm/atc' version '2026' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[22].resource/*Medication/med-k-mvazzchy-37*/",
+     "zeile": 1602,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[22].resource/*Medication/med-k-mvazzchy-37*/.code.coding[0].system",
+     "zeile": 1613,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/bfarm/atc' version '2026' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[23].resource/*Provenance/prov-mvazzcdz-3*/",
+     "zeile": 1628,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[24].resource/*Provenance/prov-mvazzcdz-6*/",
+     "zeile": 1680,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[25].resource/*Provenance/prov-mvazzcdz-8*/",
+     "zeile": 1732,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[25].resource/*Provenance/prov-mvazzcdz-8*/.target[0]",
+     "text": "Entry 15 matches the reference MedicationRequest/emp-h-med-4/_history/1 by type and id but its fullUrl https://example.org/demo-pvs/fhir/MedicationRequest/emp-h-med-4 does not match the full target URL https://example.org/demo-pvs/fhir/MedicationRequest/emp-h-med-4 by Bundle resolution rules"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[26].resource/*Provenance/prov-mvazzcdz-10*/",
+     "zeile": 1784,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[27].resource/*Provenance/prov-mvazzchy-40*/",
+     "zeile": 1836,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[28].resource/*Provenance/prov-mvazzchy-41*/",
+     "zeile": 1888,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[29].resource/*Observation/obs-f81d4fae-0-0-labor-2026-08-12*/",
+     "zeile": 1937,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[29].resource/*Observation/obs-f81d4fae-0-0-labor-2026-08-12*/.referenceRange[0].high",
+     "zeile": 2002,
+     "text": "Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[29].resource/*Observation/obs-f81d4fae-0-0-labor-2026-08-12*/.referenceRange[0].low",
+     "zeile": 1996,
+     "text": "Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[29].resource/*Observation/obs-f81d4fae-0-0-labor-2026-08-12*/.value.ofType(Quantity)",
+     "zeile": 1977,
+     "text": "Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[2].resource/*Device/ps-dienst*/",
+     "zeile": 395,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[30].resource/*Observation/obs-f81d4fae-0-1-labor-2026-08-12*/.referenceRange[0].high",
+     "zeile": 2103,
+     "text": "UCUM Codes that contain human readable annotations like {1.73_m2} can be misleading (e.g. they are ignored when comparing units). Best Practice is not to depend on annotations in the UCUM code, so this usage should be checked, and the Quantity.unit 'ml/min/1,73 m²' SHOULD contain the annotation (it does not)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[30].resource/*Observation/obs-f81d4fae-0-1-labor-2026-08-12*/.referenceRange[0].high",
+     "zeile": 2103,
+     "text": "Unable to validate code 'mL/min/{1.73_m2}' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[30].resource/*Observation/obs-f81d4fae-0-1-labor-2026-08-12*/.referenceRange[0].low",
+     "zeile": 2097,
+     "text": "UCUM Codes that contain human readable annotations like {1.73_m2} can be misleading (e.g. they are ignored when comparing units). Best Practice is not to depend on annotations in the UCUM code, so this usage should be checked, and the Quantity.unit 'ml/min/1,73 m²' SHOULD contain the annotation (it does not)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[30].resource/*Observation/obs-f81d4fae-0-1-labor-2026-08-12*/.referenceRange[0].low",
+     "zeile": 2097,
+     "text": "Unable to validate code 'mL/min/{1.73_m2}' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[30].resource/*Observation/obs-f81d4fae-0-1-labor-2026-08-12*/.value.ofType(Quantity)",
+     "zeile": 2078,
+     "text": "UCUM Codes that contain human readable annotations like {1.73_m2} can be misleading (e.g. they are ignored when comparing units). Best Practice is not to depend on annotations in the UCUM code, so this usage should be checked, and the Quantity.unit 'ml/min/1,73 m²' SHOULD contain the annotation (it does not)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[30].resource/*Observation/obs-f81d4fae-0-1-labor-2026-08-12*/.value.ofType(Quantity)",
+     "zeile": 2078,
+     "text": "Unable to validate code 'mL/min/{1.73_m2}' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[31].resource/*Observation/obs-f81d4fae-1-0-labor-2026-08-12*/",
+     "zeile": 2146,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[31].resource/*Observation/obs-f81d4fae-1-0-labor-2026-08-12*/.referenceRange[0].high",
+     "zeile": 2211,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[31].resource/*Observation/obs-f81d4fae-1-0-labor-2026-08-12*/.referenceRange[0].low",
+     "zeile": 2205,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[31].resource/*Observation/obs-f81d4fae-1-0-labor-2026-08-12*/.value.ofType(Quantity)",
+     "zeile": 2186,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[32].resource/*Observation/obs-f81d4fae-2-0-labor-2026-08-12*/.referenceRange[0].high",
+     "zeile": 2319,
+     "text": "Unable to validate code '%' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[32].resource/*Observation/obs-f81d4fae-2-0-labor-2026-08-12*/.referenceRange[0].low",
+     "zeile": 2306,
+     "text": "Unable to validate code '%' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[32].resource/*Observation/obs-f81d4fae-2-0-labor-2026-08-12*/.value.ofType(Quantity)",
+     "zeile": 2287,
+     "text": "Unable to validate code '%' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[33].resource/*Organization/org-f81d4fae-labor-2026-08-12*/",
+     "zeile": 2355,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[34].resource/*Immunization/imm-mvazzchy-47*/",
+     "zeile": 2363,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[34].resource/*Immunization/imm-mvazzchy-47*/.protocolApplied[0].targetDisease[0]",
+     "zeile": 2408,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[34].resource/*Immunization/imm-mvazzchy-47*/.vaccineCode",
+     "zeile": 2373,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIVaccine' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[34].resource/*Immunization/imm-mvazzchy-47*/.vaccineCode.coding[0].system",
+     "zeile": 2373,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/bfarm/atc' version '2026' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[34].resource/*Immunization/imm-mvazzchy-47*/.vaccineCode.coding[1].system",
+     "zeile": 2373,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/ifa/pzn' could not be found, so the code cannot be validated"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[35].resource/*Immunization/imm-h-4*/.protocolApplied[0].targetDisease[0]",
+     "zeile": 2472,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[35].resource/*Immunization/imm-h-4*/.vaccineCode",
+     "zeile": 2437,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIVaccine' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[35].resource/*Immunization/imm-h-4*/.vaccineCode.coding[0].system",
+     "zeile": 2437,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/bfarm/atc' version '2026' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[35].resource/*Immunization/imm-h-4*/.vaccineCode.coding[1].system",
+     "zeile": 2437,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/ifa/pzn' could not be found, so the code cannot be validated"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[36].resource/*Immunization/imm-h-5*/.protocolApplied[0].targetDisease[0]",
+     "zeile": 2543,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[36].resource/*Immunization/imm-h-5*/.vaccineCode",
+     "zeile": 2508,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIVaccine' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[36].resource/*Immunization/imm-h-5*/.vaccineCode.coding[0].system",
+     "zeile": 2508,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/bfarm/atc' version '2026' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[36].resource/*Immunization/imm-h-5*/.vaccineCode.coding[1].system",
+     "zeile": 2508,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/ifa/pzn' could not be found, so the code cannot be validated"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[37].resource/*Immunization/imm-h-3*/",
+     "zeile": 2569,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[37].resource/*Immunization/imm-h-3*/.protocolApplied[0].targetDisease[0]",
+     "zeile": 2614,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[37].resource/*Immunization/imm-h-3*/.vaccineCode",
+     "zeile": 2579,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIVaccine' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[37].resource/*Immunization/imm-h-3*/.vaccineCode.coding[0].system",
+     "zeile": 2579,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/bfarm/atc' version '2026' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[37].resource/*Immunization/imm-h-3*/.vaccineCode.coding[1].system",
+     "zeile": 2579,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/ifa/pzn' could not be found, so the code cannot be validated"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[38].resource/*Immunization/imm-h-2*/.protocolApplied[0].targetDisease[0]",
+     "zeile": 2678,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[38].resource/*Immunization/imm-h-2*/.vaccineCode",
+     "zeile": 2643,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIVaccine' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[38].resource/*Immunization/imm-h-2*/.vaccineCode.coding[0].system",
+     "zeile": 2643,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/bfarm/atc' version '2026' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[38].resource/*Immunization/imm-h-2*/.vaccineCode.coding[1].system",
+     "zeile": 2643,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/ifa/pzn' could not be found, so the code cannot be validated"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[39].resource/*Immunization/imm-h-1*/.protocolApplied[0].targetDisease[0]",
+     "zeile": 2749,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[39].resource/*Immunization/imm-h-1*/.protocolApplied[0].targetDisease[1]",
+     "zeile": 2759,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[39].resource/*Immunization/imm-h-1*/.vaccineCode",
+     "zeile": 2714,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIVaccine' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[39].resource/*Immunization/imm-h-1*/.vaccineCode.coding[0].system",
+     "zeile": 2714,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/bfarm/atc' version '2026' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[39].resource/*Immunization/imm-h-1*/.vaccineCode.coding[1].system",
+     "zeile": 2714,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/ifa/pzn' could not be found, so the code cannot be validated"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource.code",
+     "zeile": 431,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIAllergenNoDrug' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource.reaction[0].manifestation[0]",
+     "zeile": 465,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIReactionAllergy' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*AllergyIntolerance/allg-h-1*/",
+     "zeile": 408,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[40].resource/*Provenance/prov-mvazzce0-20*/",
+     "zeile": 2785,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[41].resource/*Provenance/prov-mvazzce0-21*/",
+     "zeile": 2834,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[42].resource/*Provenance/prov-mvazzce0-22*/",
+     "zeile": 2883,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[43].resource/*Provenance/prov-mvazzce1-23*/",
+     "zeile": 2932,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[44].resource/*Provenance/prov-mvazzce1-24*/",
+     "zeile": 2981,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[45].resource/*Provenance/chron-mvazzce1-25*/",
+     "zeile": 3030,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[45].resource/*Provenance/chron-mvazzce1-25*/.meta.profile[0]",
+     "zeile": 3030,
+     "text": "Profile reference 'https://example.org/demo-pvs/fhir/StructureDefinition/immunization-list-chronology-provenance' has not been checked because it could not be found; fetching it failed (response details omitted)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[46].resource/*Provenance/prov-mvazzchy-49*/",
+     "zeile": 3097,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[47].resource/*Provenance/chron-mvazzchy-50*/",
+     "zeile": 3146,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[47].resource/*Provenance/chron-mvazzchy-50*/.meta.profile[0]",
+     "zeile": 3146,
+     "text": "Profile reference 'https://example.org/demo-pvs/fhir/StructureDefinition/immunization-list-chronology-provenance' has not been checked because it could not be found; fetching it failed (response details omitted)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[48].resource/*Procedure/eab-mvazzchx-36-proc-1-eab-mvazzchx-36*/",
+     "zeile": 3216,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[49].resource/*Procedure/kh-proc-1-kh-e-2026-07-17*/",
+     "zeile": 3253,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[49].resource/*Procedure/kh-proc-1-kh-e-2026-07-17*/.code.coding[0].system",
+     "zeile": 3257,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/bfarm/ops' version '2026' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource.code",
+     "zeile": 536,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIAllergenNoDrug' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource.reaction[0].manifestation[0]",
+     "zeile": 565,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIReactionAllergy' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*AllergyIntolerance/allg-h-2*/",
+     "zeile": 513,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[50].resource/*Procedure/kh-proc-2-kh-e-2026-07-17*/",
+     "zeile": 3288,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[50].resource/*Procedure/kh-proc-2-kh-e-2026-07-17*/.code.coding[0].system",
+     "zeile": 3292,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/bfarm/ops' version '2026' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[51].resource/*Procedure/kh-proc-3-kh-e-2026-07-17*/",
+     "zeile": 3323,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[51].resource/*Procedure/kh-proc-3-kh-e-2026-07-17*/.code.coding[0].system",
+     "zeile": 3327,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/bfarm/ops' version '2026' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[52].resource/*DeviceUseStatement/kh-device-use-1-kh-e-2026-07-17*/",
+     "zeile": 3358,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[53].resource/*Device/kh-device-1-kh-e-2026-07-17*/",
+     "zeile": 3393,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[5].resource/*Provenance/prov-mvazzce0-17*/",
+     "zeile": 613,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[6].resource/*Provenance/prov-mvazzce0-18*/",
+     "zeile": 662,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[7].resource.code",
+     "zeile": 742,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[7].resource/*Condition/cond-h-1*/",
+     "zeile": 711,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[7].resource/*Condition/cond-h-1*/.code.coding[0].extension[0].value.ofType(Coding)",
+     "zeile": 752,
+     "text": "ValueSet 'https://fhir.kbv.de/ValueSet/KBV_VS_SFHIR_ICD_DIAGNOSESICHERHEIT' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[8].resource.code",
+     "zeile": 841,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[8].resource/*Condition/cond-h-2*/",
+     "zeile": 810,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[8].resource/*Condition/cond-h-2*/.code.coding[0].extension[0].value.ofType(Coding)",
+     "zeile": 851,
+     "text": "ValueSet 'https://fhir.kbv.de/ValueSet/KBV_VS_SFHIR_ICD_DIAGNOSESICHERHEIT' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[9].resource.code",
+     "zeile": 940,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[9].resource/*Condition/cond-mvazzchy-43*/",
+     "zeile": 909,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[9].resource/*Condition/cond-mvazzchy-43*/.code.coding[0].extension[0].value.ofType(Coding)",
+     "zeile": 950,
+     "text": "ValueSet 'https://fhir.kbv.de/ValueSet/KBV_VS_SFHIR_ICD_DIAGNOSESICHERHEIT' not found"
+    }
+   ]
+  },
+  {
+   "id": "yildiz",
+   "datei": "beispiele/yildiz.json",
+   "sha256": "051b406f1ed6d7d602686a96e6f50f06a11d946642b5938889235512bf95726a",
+   "fehler": 2,
+   "ausnahmen": 2,
+   "warnungen": 43,
+   "hinweise": 75,
+   "meldungen": [
+    {
+     "stufe": "error",
+     "ort": "Bundle",
+     "zeile": 1,
+     "text": "Can't find 'MedicationRequest/emp-y-1/_history/1' in the bundle (Bundle.entry[13].resource.target[0]). Note that there is a resource in the bundle with the same type and id, but it does not match because of the fullUrl based rules around matching relative references (must be 'https://example.org/demo-pvs/fhir/MedicationRequest/emp-y-1/_history/1', but found 'https://example.org/demo-pvs/fhir/MedicationRequest/emp-y-1')",
+     "ausnahme": "provenance-versionsverweis"
+    },
+    {
+     "stufe": "error",
+     "ort": "Bundle.entry[14]",
+     "zeile": 980,
+     "text": "Entry 'https://example.org/demo-pvs/fhir/Provenance/prov-mvazzce1-30' isn't reachable by traversing links (forward or backward) from the Composition",
+     "ausnahme": "provenance-versionsverweis"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[0].resource/*Composition/ps-mvazzcl5-68*/",
+     "zeile": 18,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[10].resource.reasonCode[0]",
+     "zeile": 917,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[10].resource/*MedicationRequest/emp-k-mvazzci2-52*/",
+     "zeile": 860,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[10].resource/*MedicationRequest/emp-k-mvazzci2-52*/.dosageInstruction[0]",
+     "zeile": 922,
+     "text": "Constraint failed: DosageWarnungViererschemaInText: 'Hinweis: In Dosage.text wurde ein Viererschema (z. B. 1-1-1-1) erkannt. Bitte prüfen, ob dies strukturiert abgebildet werden kann.' (defined in http://ig.fhir.de/igs/medication/StructureDefinition/DosageDE)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[11].resource/*Medication/med-y-1*/",
+     "zeile": 930,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[11].resource/*Medication/med-y-1*/.code.coding[0].system",
+     "zeile": 941,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/bfarm/atc' version '2026' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Medication/med-k-mvazzci2-52*/",
+     "zeile": 956,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Medication/med-k-mvazzci2-52*/.code.coding[0].system",
+     "zeile": 967,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/bfarm/atc' version '2026' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*Provenance/prov-mvazzce1-30*/",
+     "zeile": 982,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*Provenance/prov-mvazzce1-30*/.target[0]",
+     "text": "Entry 9 matches the reference MedicationRequest/emp-y-1/_history/1 by type and id but its fullUrl https://example.org/demo-pvs/fhir/MedicationRequest/emp-y-1 does not match the full target URL https://example.org/demo-pvs/fhir/MedicationRequest/emp-y-1 by Bundle resolution rules"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[14].resource/*Provenance/prov-mvazzci2-55*/",
+     "zeile": 1034,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[15].resource/*Provenance/prov-mvazzci2-56*/",
+     "zeile": 1086,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[16].resource/*Observation/obs-3b1c9a52-0-0-labor-2026-07-02*/",
+     "zeile": 1135,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[16].resource/*Observation/obs-3b1c9a52-0-0-labor-2026-07-02*/.referenceRange[0].high",
+     "zeile": 1200,
+     "text": "Unable to validate code 'm[IU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[16].resource/*Observation/obs-3b1c9a52-0-0-labor-2026-07-02*/.referenceRange[0].low",
+     "zeile": 1194,
+     "text": "Unable to validate code 'm[IU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[16].resource/*Observation/obs-3b1c9a52-0-0-labor-2026-07-02*/.value.ofType(Quantity)",
+     "zeile": 1175,
+     "text": "Unable to validate code 'm[IU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[17].resource/*Organization/org-3b1c9a52-labor-2026-07-02*/",
+     "zeile": 1236,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[18].resource/*Immunization/imm-mvazzci3-62*/",
+     "zeile": 1244,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[18].resource/*Immunization/imm-mvazzci3-62*/.protocolApplied[0].targetDisease[0]",
+     "zeile": 1289,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[18].resource/*Immunization/imm-mvazzci3-62*/.vaccineCode",
+     "zeile": 1254,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIVaccine' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[18].resource/*Immunization/imm-mvazzci3-62*/.vaccineCode.coding[0].system",
+     "zeile": 1254,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/bfarm/atc' version '2026' could not be found, so the code cannot be validated. No versions of this code system are known"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[18].resource/*Immunization/imm-mvazzci3-62*/.vaccineCode.coding[1].system",
+     "zeile": 1254,
+     "text": "A definition for CodeSystem 'http://fhir.de/CodeSystem/ifa/pzn' could not be found, so the code cannot be validated"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[19].resource/*Provenance/prov-mvazzci3-64*/",
+     "zeile": 1308,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[1].resource/*Patient/pat-M555123402*/",
+     "zeile": 326,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[20].resource/*Provenance/chron-mvazzci3-65*/",
+     "zeile": 1357,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[20].resource/*Provenance/chron-mvazzci3-65*/.meta.profile[0]",
+     "zeile": 1357,
+     "text": "Profile reference 'https://example.org/demo-pvs/fhir/StructureDefinition/immunization-list-chronology-provenance' has not been checked because it could not be found; fetching it failed (response details omitted)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[21].resource/*Procedure/eab-mvazzchz-51-proc-1-eab-mvazzchz-51*/",
+     "zeile": 1412,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[2].resource/*Device/ps-dienst*/",
+     "zeile": 354,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource.code",
+     "zeile": 398,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*Condition/cond-y-1*/",
+     "zeile": 367,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*Condition/cond-y-1*/.code.coding[0].extension[0].value.ofType(Coding)",
+     "zeile": 408,
+     "text": "ValueSet 'https://fhir.kbv.de/ValueSet/KBV_VS_SFHIR_ICD_DIAGNOSESICHERHEIT' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource.code",
+     "zeile": 490,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Condition/cond-y-2*/",
+     "zeile": 459,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Condition/cond-y-2*/.code.coding[0].extension[0].value.ofType(Coding)",
+     "zeile": 500,
+     "text": "ValueSet 'https://fhir.kbv.de/ValueSet/KBV_VS_SFHIR_ICD_DIAGNOSESICHERHEIT' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[5].resource.code",
+     "zeile": 582,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[5].resource/*Condition/cond-mvazzci3-58*/",
+     "zeile": 551,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[5].resource/*Condition/cond-mvazzci3-58*/.code.coding[0].extension[0].value.ofType(Coding)",
+     "zeile": 592,
+     "text": "ValueSet 'https://fhir.kbv.de/ValueSet/KBV_VS_SFHIR_ICD_DIAGNOSESICHERHEIT' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[6].resource/*Provenance/prov-mvazzce1-33*/",
+     "zeile": 643,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[7].resource/*Provenance/prov-mvazzce1-34*/",
+     "zeile": 692,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[8].resource/*Provenance/prov-mvazzci3-60*/",
+     "zeile": 741,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[9].resource.reasonCode[0]",
+     "zeile": 847,
+     "text": "ValueSet 'http://terminology.ehdsi.eu/ValueSet/eHDSIIllnessandDisorder' not found"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[9].resource/*MedicationRequest/emp-y-1*/",
+     "zeile": 790,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[9].resource/*MedicationRequest/emp-y-1*/.dosageInstruction[0]",
+     "zeile": 852,
+     "text": "Constraint failed: DosageWarnungViererschemaInText: 'Hinweis: In Dosage.text wurde ein Viererschema (z. B. 1-1-1-1) erkannt. Bitte prüfen, ob dies strukturiert abgebildet werden kann.' (defined in http://ig.fhir.de/igs/medication/StructureDefinition/DosageDE)"
+    }
+   ]
+  }
+ ]
+}

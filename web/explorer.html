@@ -111,6 +111,7 @@ li.zu > ul { display: none; }
 .im-zeile.syn .name { font-style: italic; color: var(--leise); }
 .knopf.mini { padding: 0 6px; font-size: 12px; line-height: 18px; }
 .fehlerliste td:first-child { white-space: nowrap; }
+.fehler-t { color: var(--fehler); font-weight: 600; }
 .detail-raster section.voll { grid-column: 1 / -1; }
 .term-wrap { max-height: 240px; overflow: auto; border: 1px solid var(--linie); border-radius: 6px; margin: 4px 0 8px; }
 .term-tab { width: 100%; border-collapse: collapse; font-size: 12.5px; }
@@ -301,7 +302,7 @@ const IMMAPS = IM.flatMap(n => n.maps.filter(m => m.sd).map(m => ({ im: n.id, sd
 function beispielLaden(id) {
   B = D.beispiele.find(b => b.id === id) || D.beispiele[0];
   $('#beispielwahl').value = B.id;
-  $('#beispiel-info').innerHTML = `<b>Zweck:</b> ${esc(B.zweck)} · <b>Herkunft:</b> ${esc(B.herkunft)}`;
+  $('#beispiel-info').innerHTML = `<b>Zweck:</b> ${esc(B.zweck)} · <b>Herkunft:</b> ${esc(B.herkunft)} · <b>FHIR-Validierung:</b> ${esc(validierungKurz(B))}`;
   RES = {}; URL2KEY = {};
   B.ressourcen.forEach(r => { RES[r.key] = r; URL2KEY[r.fullUrl] = r.key; URL2KEY[r.key] = r.key; });
   KNOTEN = Object.entries(B.elemente).map(([nid, el]) => { const [sd, k] = trenne(el); return { nid, sd, k }; });
@@ -508,7 +509,7 @@ function imMarkieren() {
 // ------------------------------------------------------------------ FHIR: Profil und Instanz
 let reiter = 'profil', profilAktiv = null;
 function profilWahlBauen() {
-  const benutzt = new Set(B.ressourcen.map(r => r.sd));
+  const benutzt = new Set([...B.ressourcen.map(r => r.sd), ...KNOTEN.map(kn => kn.sd)]);   // auch Profile enthaltener Ressourcen
   const liste = Object.values(D.profile).sort((a, b) => (benutzt.has(b.url) - benutzt.has(a.url)) || a.name.localeCompare(b.name));
   $('#profilwahl').innerHTML = liste.map(p => `<option value="${esc(p.url)}">${benutzt.has(p.url) ? '● ' : '○ '}${esc(p.name)} (${esc(p.typ)})</option>`).join('');
   if (!profilAktiv || !D.profile[profilAktiv]) profilAktiv = liste[0].url;
@@ -678,6 +679,21 @@ function uiZeichnen() {
   </div>`;
 }
 // ------------------------------------------------------------------ Anwenderansicht für Dokumente (Composition mit Abschnitten)
+// Impfung: Dosis ohne Nummer, verabreichtes Produkt (enthaltene Medication über administeredProduct) mit Charge, Nachtrag
+function impfungTeile(r) {
+  const x = r.res, teile = [], pa = x.protocolApplied?.[0];
+  if (pa?.doseNumberString) teile.push('Dosis ' + F(r, 'protocolApplied[0].doseNumberString'));
+  else if (pa?._doseNumberString) teile.push(`<span data-n="${esc(r.key + '|protocolApplied[0]._doseNumberString')}">Dosis unbekannt</span>`);
+  const ap = idx(x.extension, e => /Immunization\.administeredProduct$/.test(e.url || ''));
+  const ref = ap >= 0 ? (x.extension[ap].extension || []).find(e => e.url === 'reference')?.valueReference?.reference : null;
+  const ci = ref ? idx(x.contained, c => '#' + c.id === ref) : -1;
+  if (ci >= 0) {
+    teile.push(codingText(r, `contained[${ci}].code`));
+    if (x.contained[ci].batch?.lotNumber) teile.push('Charge ' + F(r, `contained[${ci}].batch.lotNumber`));
+  } else if (x.lotNumber) teile.push('Charge ' + F(r, 'lotNumber'));
+  if (x.primarySource === false) teile.push(`<span data-n="${esc(r.key + '|primarySource')}">nachgetragen</span>` + (x.reportOrigin ? ' aus ' + codingText(r, 'reportOrigin') : ''));
+  return teile;
+}
 const DATUMSFELDER = ['onsetDateTime', 'recordedDate', 'occurrenceDateTime', 'performedDateTime', 'effectiveDateTime', 'authoredOn', 'dateAsserted', 'issued'];
 function eintragZeile(r) {
   if (!r) return '<div class="eintrag leer-abschnitt">Verweis nicht auflösbar</div>';
@@ -694,6 +710,7 @@ function eintragZeile(r) {
   const dosis = x.dosageInstruction?.[0]?.text ? 'dosageInstruction[0].text' : (x.dosage?.[0]?.text ? 'dosage[0].text' : null);
   if (dosis) teile.push(F(r, dosis));
   if (x.protocolApplied?.[0]?.doseNumberPositiveInt) teile.push('Dosis ' + F(r, 'protocolApplied[0].doseNumberPositiveInt'));
+  if (x.resourceType === 'Immunization') teile.push(...impfungTeile(r));
   const df = DATUMSFELDER.find(f => x[f]);
   if (df) teile.push(F(r, df, datum));
   else if (x.effectivePeriod?.start) teile.push('seit ' + F(r, 'effectivePeriod.start', datum));
@@ -878,6 +895,50 @@ function terminologieHtml(n) {
       + `<p class="hinweis">${zeilen.length} Einträge${zeilen.some(z => z.code && belegt.has(z.code)) ? ' · hinterlegt und oben: im Beispiel belegt' : ''}</p>` : '');
 }
 
+// ------------------------------------------------------------------ FHIR-Validierung (aus berichte/<projekt>.validierung.json, vom Build eingebettet)
+const STUFE = { fatal: 'fatal', error: 'Fehler', warning: 'Warnung' };
+function validierungKurz(b) {
+  const v = b.validierung;
+  if (!D.validierung || !v || !['aktuell', 'veraltet'].includes(v.status)) return v?.status === 'Paketbeispiel' ? 'nicht validiert (Beispiel aus einem FHIR-Paket)' : 'noch nicht validiert';
+  const n = v.ausnahmen;
+  return `${v.fehler - n} Fehler${n ? ` (dazu ${n} begründete Ausnahme${n > 1 ? 'n' : ''})` : ''} · ${v.warnungen} Warnungen · ${v.hinweise} Hinweise`
+    + (v.status === 'veraltet' ? ' · ⚠ Beispieldatei seit der Validierung geändert' : '');
+}
+// Ort der Meldung (FHIRPath mit /*Typ/id*/) auf einen Wert im Beispiel abbilden — nächster vorhandener Vorfahr
+function meldungsKnoten(ort) {
+  const m = (ort || '').match(/\/\*([A-Za-z]+\/[^*]+)\*\/\.?(.*)$/);
+  if (!m) return null;
+  let jp = m[2].replace(/\/\*[^*]*\*\//g, '');
+  while (true) {
+    if (B.elemente[m[1] + '|' + jp]) return m[1] + '|' + jp;
+    if (!jp) return null;
+    const i = Math.max(jp.lastIndexOf('.'), jp.lastIndexOf('['));
+    jp = i > 0 ? jp.slice(0, i) : '';
+  }
+}
+function validierungHtml() {
+  const V = D.validierung, v = B.validierung, pid = esc(D.meta.projekt);
+  if (!V) return `<h3>FHIR-Validierung</h3><p class="hinweis">Noch nicht validiert — <code>python3 -I werkzeuge/mx.py validieren ${pid}</code> schreibt <code>berichte/${pid}.validierung.json</code>.</p>`;
+  const kopf = `<h3>FHIR-Validierung (HL7 Validator ${esc(V.validator)})</h3><p class="hinweis">FHIR ${esc(V.fhir)} · <code>${esc(V.optionen.join(' '))}</code> · Pakete: ${V.pakete.map(p => `<code>${esc(p)}</code>`).join(', ')} · Stand: <code>berichte/${pid}.validierung.json</code></p>`;
+  if (!v || !['aktuell', 'veraltet'].includes(v.status)) return kopf + `<p>${esc(validierungKurz(B))}</p>`;
+  const grund = Object.fromEntries(V.ausnahmen.map(a => [a.id, a.grund]));
+  // gleiche Meldungen (Stufe, Text, Ausnahme) zusammenfassen wie im Prüfbericht
+  const gruppen = new Map();
+  v.meldungen.forEach(m => { const g = [m.stufe, m.text, m.ausnahme || ''].join('\u0000'); if (!gruppen.has(g)) gruppen.set(g, []); gruppen.get(g).push(m); });
+  const RANG = { fatal: 0, error: 1, warning: 2 };
+  const ortHtml = m => { const n = meldungsKnoten(m.ort), o = `<code>${esc(m.ort || '—')}</code>`; return (n ? `<a href="#" data-sprung="${esc(n)}" title="Wert im Beispiel markieren">${o}</a>` : o) + (m.zeile ? ` <span class="hinweis">Zeile ${m.zeile}</span>` : ''); };
+  const zeilen = [...gruppen.values()].sort((a, b) => (RANG[a[0].stufe] - RANG[b[0].stufe]) || (a[0].text < b[0].text ? -1 : a[0].text > b[0].text ? 1 : 0)).map(ms => {
+    const m = ms[0];
+    return `<tr><td><span class="${m.stufe === 'warning' ? 'warn' : 'fehler-t'}">${esc(STUFE[m.stufe] || m.stufe)}</span>${ms.length > 1 ? ` ${ms.length}×` : ''}`
+      + (m.ausnahme ? `<br><span class="hinweis" title="${esc(grund[m.ausnahme] || '')}">begründete Ausnahme <code>${esc(m.ausnahme)}</code></span>` : '') + '</td>'
+      + `<td>${esc(m.text)}<br>${ms.slice(0, 12).map(ortHtml).join('<br>')}${ms.length > 12 ? `<br><span class="hinweis">… und ${ms.length - 12} weitere</span>` : ''}</td></tr>`;
+  }).join('');
+  const genutzt = new Set(v.meldungen.map(m => m.ausnahme).filter(Boolean));
+  return kopf + `<p><b>${esc(validierungKurz(B))}</b></p>`
+    + (genutzt.size ? '<p class="hinweis">Begründete Ausnahmen (<code>[[validierung.ausnahmen]]</code> in projekt.toml): ' + V.ausnahmen.filter(a => genutzt.has(a.id)).map(a => `<code>${esc(a.id)}</code> — ${esc(a.grund)}`).join(' · ') + '</p>' : '')
+    + (zeilen ? `<table class="fehlerliste"><tbody>${zeilen}</tbody></table>` : '<p class="hinweis">Keine Fehler und Warnungen.</p>');
+}
+
 // ------------------------------------------------------------------ Prüfbericht
 const TECHNISCH = /\.(url|reference|system|version)$|\.text\.(div|status)$/;   // technische Angaben ohne eigenes fachliches Gegenstück
 function pruefungZeigen() {
@@ -905,7 +966,9 @@ function pruefungZeigen() {
       ${s.wertelisten && s.wertelisten.gesamt ? zeile('Wertelisten im Modell', `${s.wertelisten.gesamt}, davon ${s.wertelisten.aufgeloest} im Paketbestand oder über eine Profilbindung aufgelöst, ${s.wertelisten.mit_link} mit Link auf die Originalseite${s.wertelisten.ohne.length ? ' · nicht auflösbar: ' + s.wertelisten.ohne.map(esc).join(', ') : ''}`) : ''}
       ${s.anforderungen || s.im_anforderungen ? zeile('Anforderungen', `${s.anforderungen} in den Verarbeitungsregeln, davon ${s.anforderungen_mit_pfad} mit erkennbarem Elementpfad; ${s.im_anforderungen} direkt im Informationsmodell`) : ''}
       ${zeile(esc(B.titel), `${B.ressourcen.length} Ressourcen · ${ab.werte} fachliche Einzelwerte, davon ${ab.gedeckt} durch ein spezifisches Element ${gematik ? 'des Informationsmodells' : 'der abgeleiteten Struktur'} gedeckt · ${B.struktur.length} Strukturbefunde`)}
+      ${zeile(D.validierung ? `FHIR-Validierung (HL7 Validator ${esc(D.validierung.validator)})` : 'FHIR-Validierung', esc(validierungKurz(B)))}
     </tbody></table>
+    ${validierungHtml()}
     ${B.struktur.length ? '<h3>Strukturbefunde im Beispiel</h3><p class="hinweis">Belegtes Element, das sich im Profil nicht auflösen lässt.</p><table class="fehlerliste"><tbody>' + B.struktur.map(x => zeile(`<code>${esc(x.element)}</code>`, esc(x.grund))).join('') + '</tbody></table>' : ''}
     ${s.bindungsabgleich && Object.keys(s.bindungsabgleich.zaehlung || {}).length ? `<h3>Werteliste im Modell gegen Bindung im Profil</h3>
     <p class="hinweis">Je Mapping: Bindung am Element, am CodeableConcept, am Wert einer Extension oder an einem Slice darunter. ${Object.entries(s.bindungsabgleich.zaehlung).map(([k, v]) => `${esc(k)}: <b>${v}</b>`).join(' · ')}</p>
@@ -931,7 +994,7 @@ function pruefungZeigen() {
 function waehlen(sel) { auswahl = sel; fundZeiger = null; markieren(); urlSchreiben(); }
 document.addEventListener('click', e => {
   const sprung = e.target.closest('[data-sprung]');
-  if (sprung) { e.preventDefault(); return waehlen({ t: 'node', nids: [sprung.dataset.sprung] }); }
+  if (sprung) { e.preventDefault(); sprung.closest('dialog')?.close(); return waehlen({ t: 'node', nids: [sprung.dataset.sprung] }); }
   const fund = e.target.closest('[data-fund]');
   if (fund) { const n = FUNDE.length; fundZeiger = ((fundZeiger ?? (+fund.dataset.fund > 0 ? -1 : 0)) + +fund.dataset.fund + n) % n; return markieren(); }
   const pfeil = e.target.closest('.pfeil');

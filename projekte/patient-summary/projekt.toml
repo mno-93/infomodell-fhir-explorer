@@ -74,5 +74,6 @@ pakete = [
 erweiterungen = ["https://example.org/"]
 
 [[validierung.ausnahmen]]
+id = "provenance-versionsverweis"
 muster = "Provenance/[^']*' isn't reachable|Can't find '[A-Za-z]+/[^']+/_history/"
 grund = "Die Beispiele tragen Änderungseinträge früherer Fassungen (Provenance mit Versionsverweis) für die Herkunftszeile; im Dokument nicht auflösbar. Abbildung im Demo-PVS offen."

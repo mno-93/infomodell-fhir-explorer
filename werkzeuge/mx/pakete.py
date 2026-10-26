@@ -6,6 +6,8 @@ Zusatzordner) und die Prüfung gegen die Sperrdatei sonst vom Rechner abhinge.
 Die Sperrdatei hält je Paket einen Inhalts-Hash über alle JSON-Dateien des Pakets (ohne die Indexdateien,
 die Werkzeuge nachträglich anlegen) — damit sind ein frischer Download und ein vorhandener Cache gleich prüfbar.
 Quelldateien (von IG-Seiten) liegen im Repo; die Sperrdatei hält Herkunfts-URL und SHA-256.
+Lokale Pakete (`lokale_pakete` in projekt.toml) liegen eingecheckt im Projektordner; `holen` und die Sperrdatei
+überspringen sie, Modell, Auflösung und Validierung nutzen sie wie ein Paket aus dem Cache.
 """
 import hashlib
 import io
@@ -25,7 +27,21 @@ def cache():
 
 
 def ordner(spec):
-    return cache() / spec
+    """Ordner eines Pakets: `<id>#<version>` im Cache; ein lokales Paket (Path) ist selbst der Ordner."""
+    return spec if isinstance(spec, Path) else cache() / spec
+
+
+def projektpakete(konfig):
+    """Pakete eines Projekts in der Reihenfolge des Vorrangs: lokale Pakete zuerst, dann `pakete`."""
+    return [*konfig.get('lokale_ordner', []), *konfig['pakete']]
+
+
+def bezeichnung(spec):
+    """`<id>#<version>` — für lokale Pakete aus ihrer package.json, ohne Pfad (Berichte bleiben rechnerunabhängig)."""
+    if isinstance(spec, Path):
+        p = json_laden(spec / 'package' / 'package.json')
+        return f'{p["name"]}#{p["version"]}'
+    return spec
 
 
 def inhalt_hash(wurzel):
@@ -96,11 +112,14 @@ def sperre_schreiben(sperre):
 
 
 def definitionen(specs):
-    """Alle StructureDefinitions der Pakete, erste Fundstelle gewinnt (Reihenfolge der Konfiguration)."""
+    """Alle StructureDefinitions der Pakete, erste Fundstelle gewinnt (Reihenfolge der Konfiguration).
+    `specs`: `<id>#<version>` aus dem Cache oder Ordner lokaler Pakete (siehe `projektpakete`)."""
     sds = {}
     for spec in specs:
         basis = ordner(spec) / 'package'
         if not basis.exists():
+            if isinstance(spec, Path):
+                raise SystemExit(f'Lokales Paket {spec} ohne Ordner package/')
             raise SystemExit(f'Paket {spec} fehlt im Cache — zuerst `python3 werkzeuge/mx.py holen`')
         for f in sorted(basis.glob('StructureDefinition-*.json')):
             try:

@@ -15,11 +15,11 @@ Informationsmodell ──FHIR-Mapping──▶ Profilelement ──Zuordnung─�
 | `laborbefund` | gematik `de.gematik.epa.laboratory` 1.0.0-ballot.1 | veröffentlicht, mit FHIR-Mappings; zusätzlich ausmodellierte Sicht | 3 aus dem Demo-PVS, 2 aus dem IG-Paket |
 | `patient-summary` | HL7 Europe `hl7.fhir.eu.eps` 1.0.0-ballot | keins mit Mappings veröffentlicht — Struktur aus den Profilen abgeleitet | 2 aus dem Demo-PVS |
 
-Die Prüfberichte je Projekt stehen in [`berichte/`](berichte/): Mappingprüfung, Abdeckung, Strukturbefunde je Beispiel.
+Die Prüfberichte je Projekt stehen in [`berichte/`](berichte/): Mappingprüfung, Abdeckung, Strukturbefunde und das Ergebnis des HL7 Validators je Beispiel.
 
 ## Schnellstart
 
-Python ab 3.12, sonst nichts. Für die Validierung zusätzlich Java 21 und der HL7 FHIR Validator.
+Python ab 3.12, sonst nichts. Für die Validierung zusätzlich Java (ab 17; die CI nutzt 21) und der HL7 FHIR Validator in der Version und mit der Prüfsumme aus `.github/workflows/ci.yml`; für den Bau genügt Python.
 
 ```bash
 python3 -I werkzeuge/mx.py holen      # FHIR-Pakete aus der Registry nach .pakete/, Prüfung gegen sperrdatei.json
@@ -35,7 +35,7 @@ Weitere Befehle:
 | Befehl | Wirkung |
 |---|---|
 | `mx.py pruefen` | belegte Elemente aller Beispiele gegen die Profile auflösen; Exit-Code ≠ 0 bei Befund |
-| `mx.py validieren` | Beispieldateien mit dem HL7 FHIR Validator prüfen (Pakete und begründete Ausnahmen je Projekt) |
+| `mx.py validieren` | Beispieldateien mit dem HL7 FHIR Validator prüfen (Pakete und begründete Ausnahmen je Projekt); Ergebnis nach `berichte/<projekt>.validierung.json` — einchecken |
 | `mx.py vertraulich` | versionierte Dateien gegen eingebaute und projektbezogene Muster prüfen |
 | `mx.py holen --aktualisieren` | Sperrdatei neu schreiben, Quellen neu laden — nur bewusst, Änderung prüfen und einchecken |
 
@@ -47,7 +47,7 @@ Weitere Befehle:
 - **Informationsmodell referenziert oder ausmodelliert:** wie im IG oder mit jeder Referenz an ihrer Verwendungsstelle; Zyklen werden erkannt, Fundstellen mit ‹ › durchlaufen.
 - **Terminologie:** Codes und Wertelisten des Modells als Tabelle mit Kopfzeilen; Wertelisten und Profilbindungen verlinkt auf ihre Originalseite, belegte Codes oben.
 - **Legende:** Knopf im Kopf und Kurzlegende unter Modell und Profil erklären Zeichen und Farben — u. a. ● im Beispiel belegt, ↳ ausmodelliert, ↻ Zyklus, „aus Profil“ (nicht im Informationsmodell, aus dem FHIR-Profil ergänzt), S Must Support, IM Ziel eines Modell-Mappings. Esc schließt Fenster, dann Details, dann die Auswahl.
-- **Abdeckung & Prüfung:** Mappingprüfung, Werte ohne Modellelement, Strukturbefunde des gewählten Beispiels.
+- **Abdeckung & Prüfung:** Mappingprüfung, Werte ohne Modellelement, Strukturbefunde und FHIR-Validierung des gewählten Beispiels — Fehler und Warnungen des HL7 Validators mit Ort, Zeile und begründeter Ausnahme; ein Klick auf den Ort markiert den Wert in allen Ansichten. Die Übersichtsseite zeigt je Projekt die Kennzahl der Validierung.
 
 ## Direkt verlinken
 
@@ -69,7 +69,8 @@ Beispiel: `laborbefund.html#b=hoffmann-2026-08-12&im=1627&info=1` öffnet den Be
 - **Sperrdatei** [`sperrdatei.json`](sperrdatei.json): je FHIR-Paket Herkunft und Inhalts-Hash über alle JSON-Dateien — ein frischer Download und ein vorhandener Cache sind gleich prüfbar. Die Pakete liegen in einem eigenen Cache `.pakete/`, nicht im gemeinsamen `~/.fhir/packages`, den andere Werkzeuge mit abweichenden Fassungen befüllen. Quellen von IG-Seiten liegen im Repository, ihre SHA-256 in der Sperrdatei.
 - **Deterministischer Bau:** keine Zeitstempel, feste Reihenfolgen. Ein Test baut zweimal und vergleicht.
 - **Berichte als Gegenprobe:** Die CI baut neu und bricht ab, wenn `berichte/` vom eingecheckten Stand abweicht.
-- **Gleiche Regeln für alle Beispiele:** Profilzuordnung (inkl. Slices) und Strukturprüfung laufen über dieselben Funktionen; der HL7-Validator mit fester Version und Prüfsumme prüft jede Beispieldatei.
+- **Gleiche Regeln für alle Beispiele:** Profilzuordnung (inkl. Slices und enthaltener Ressourcen) und Strukturprüfung laufen über dieselben Funktionen; der HL7-Validator mit fester Version und Prüfsumme prüft jede Beispieldatei.
+- **Validierungsergebnis im Projekt:** `mx.py validieren` schreibt `berichte/<projekt>.validierung.json` — sortiert, ohne Zeitstempel und absolute Pfade, Meldungstexte englisch (`-Duser.language=en -Duser.country=US`, `-locale en-US`), je Beispiel mit SHA-256 der Datei. `bauen` liest die Datei ohne Java; ein seit der Validierung geändertes Beispiel wird als veraltet gemeldet. Die CI validiert neu und bricht ab, wenn das Ergebnis vom eingecheckten Stand abweicht.
 
 ## Aufbau
 
@@ -80,7 +81,7 @@ projekte/<id>/beispiele/       Beispieldateien (Bundle oder Einzelressource)
 werkzeuge/mx.py                Kommandozeile
 werkzeuge/mx/                  Pakete, Pfadauflösung, Modell-Adapter, Zuordnung, Bau, Berichte, Validierung
 web/explorer.html              eine Oberfläche für alle Projekte
-berichte/                      erzeugte Prüfberichte (eingecheckt)
+berichte/                      erzeugte Prüfberichte und Validierungsergebnisse (eingecheckt)
 tests/                         Tests
 ```
 

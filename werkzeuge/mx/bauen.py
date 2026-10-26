@@ -3,10 +3,10 @@ verknüpfen und als eigenständige HTML-Seite ausgeben. Die Ausgabe ist determin
 import html
 import json
 
-from . import anforderungen, beispiele, infomodell
+from . import anforderungen, beispiele, infomodell, validieren
 from .grundlagen import AUSGABE, WURZEL
 from .konfig import projekt_laden
-from .pakete import definitionen
+from .pakete import bezeichnung, definitionen, projektpakete
 from .profile import profil_aufbereiten
 from .terminologie import Bindungsabgleich, Wertelisten
 
@@ -15,8 +15,9 @@ IM_TITEL = {'gematik-baum': 'Informationsmodell', 'aus-profilen': 'Struktur aus 
 
 def projekt_bauen(pid):
     k = projekt_laden(pid)
-    sds = definitionen(k['pakete'])
-    wl = Wertelisten(k['pakete'] + k.get('terminologiepakete', []), sds)
+    quellen = projektpakete(k)  # lokale Pakete zuerst
+    sds = definitionen(quellen)
+    wl = Wertelisten(quellen + k.get('terminologiepakete', []), sds)
     knoten, baum_aus = infomodell.laden(k, sds, wl)
     pruefung = infomodell.mappings_pruefen(knoten)
     anf = anforderungen.laden(k, sds)
@@ -26,6 +27,11 @@ def projekt_bauen(pid):
         if 'y' in b:
             genutzt.add(b['y'][0])
 
+    def profil_von(res):  # Profil enthaltener Ressourcen (contained)
+        url, _wie = beispiele.profil_fuer(res, k, sds)
+        return sds.get(url) if url else None
+
+    validierung = validieren.ergebnis_laden(k)  # berichte/<projekt>.validierung.json, falls vorhanden
     liste = []
     for bk in k['beispiele']:
         ressourcen, bundle = beispiele.laden(k, bk)
@@ -35,8 +41,10 @@ def projekt_bauen(pid):
             if not url:
                 raise SystemExit(f'{pid}/{bk["id"]}: {r["key"]} ohne bekanntes Profil')
             r['sd'], zuordnung[r['key']] = url, wie
-            genutzt.add(url)
-            elemente.update(beispiele.zuordnen(r['res'], sds[url], r['key']))
+            elemente.update(beispiele.zuordnen(r['res'], sds[url], r['key'], profil_von))
+            for c in r['res'].get('contained', []):
+                zuordnung[f'{r["key"]}#{c.get("id", "")}'] = beispiele.profil_fuer(c, k, sds)[1]
+        genutzt.update(el.split('#', 1)[0] for el in elemente.values())
         werte = beispiele._wertindex(ressourcen)
         b = {
             'id': bk['id'], 'titel': bk['titel'], 'zweck': bk['zweck'], 'herkunft': bk['herkunft'],
@@ -47,6 +55,7 @@ def projekt_bauen(pid):
         }
         b['abdeckung'] = beispiele.abdeckung(knoten, b)
         b['struktur'] = beispiele.struktur_pruefen(b, sds)
+        b['validierung'] = validierung['beispiele'][bk['id']] if validierung else None
         liste.append(b)
 
     gemappt = {}
@@ -85,10 +94,14 @@ def projekt_bauen(pid):
         'projekt': pid, 'titel': k['titel'], 'beschreibung': k.get('beschreibung', ''),
         'darstellung': k['darstellung'], 'dokumente': k.get('dokumente', []),
         'im_art': k['informationsmodell']['art'], 'im_titel': IM_TITEL[k['informationsmodell']['art']],
-        'im_hinweis': k['informationsmodell'].get('hinweis', ''), 'ig': ig, 'pakete': k['pakete'],
+        'im_hinweis': k['informationsmodell'].get('hinweis', ''), 'ig': ig,
+        'pakete': [bezeichnung(q) for q in quellen],
+        'lokale_pakete': [{'paket': bezeichnung(o), 'ordner': o.relative_to(WURZEL).as_posix()} for o in k['lokale_ordner']],
     }
+    if validierung:
+        validierung = {x: y for x, y in validierung.items() if x != 'beispiele'}
     return {'meta': meta, 'statistik': statistik, 'pruefung': pruefung, 'im': knoten, 'baum_aus': baum_aus,
-            'profile': profile, 'anforderungen': anf, 'beispiele': liste}
+            'profile': profile, 'anforderungen': anf, 'beispiele': liste, 'validierung': validierung}
 
 
 def _wertelisten_statistik(knoten):
@@ -131,6 +144,25 @@ def seite_schreiben(daten):
     (AUSGABE / f'{daten["meta"]["projekt"]}.html').write_text(seite, encoding='utf-8')
 
 
+def validierung_kurz(d):
+    """Kennzahl der FHIR-Validierung für die Übersichtsseite (HTML)."""
+    v = d.get('validierung')
+    if not v:
+        return 'FHIR-Validierung: <b class="warn">noch nicht validiert</b>'
+    s = v['summe']
+    validiert = [b for b in d['beispiele'] if (b.get('validierung') or {}).get('status') in ('aktuell', 'veraltet')]
+    veraltet = sum(1 for b in validiert if b['validierung']['status'] == 'veraltet')
+    paket = sum(1 for b in d['beispiele'] if (b.get('validierung') or {}).get('status') == 'Paketbeispiel')
+    teile = [f'<b class="{"fehler" if s["offen"] else "gut"}">{s["offen"]} Fehler</b>'
+             + (f' (dazu {s["ausnahmen"]} begründete Ausnahme{"n" if s["ausnahmen"] != 1 else ""})' if s['ausnahmen'] else ''),
+             f'{s["warnungen"]} Warnungen',
+             f'{len(validiert)} von {len(d["beispiele"]) - paket} Beispieldateien validiert'
+             + (' (Beispiele aus FHIR-Paketen prüft deren IG-Build)' if paket else '')]
+    if veraltet:
+        teile.append(f'<b class="warn">{veraltet} seit der Validierung geändert</b>')
+    return f'FHIR-Validierung (HL7 Validator {html.escape(v["validator"])}): ' + ' · '.join(teile)
+
+
 def index_schreiben(alle):
     zeilen = []
     for d in alle:
@@ -142,17 +174,19 @@ def index_schreiben(alle):
         zeilen.append(f'''<section class="karte"><h2><a href="{m["projekt"]}.html">{html.escape(m["titel"])}</a></h2>
 <p>{html.escape(m["beschreibung"])}</p>
 <p class="leise">{html.escape(m["ig"].get("name", ""))} · <code>{html.escape(m["ig"].get("paket", ""))}</code> · {html.escape(modell)}</p>
+<p class="kennzahl">{validierung_kurz(d)}</p>
 <h3>{len(d["beispiele"])} Beispiele</h3><ul>{bsp}</ul></section>''')
     seite = f'''<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Modellexplorer</title><style>
-:root {{ --bg:#f6f7f9; --flaeche:#fff; --linie:#d9dde3; --text:#1c2430; --leise:#5b6676; --akzent:#1f5fae; }}
-@media (prefers-color-scheme: dark) {{ :root:not([data-theme="light"]) {{ --bg:#12161c; --flaeche:#1a1f27; --linie:#313947; --text:#e3e8ef; --leise:#9aa5b4; --akzent:#7fb0f0; }} }}
-:root[data-theme="dark"] {{ --bg:#12161c; --flaeche:#1a1f27; --linie:#313947; --text:#e3e8ef; --leise:#9aa5b4; --akzent:#7fb0f0; }}
+:root {{ --bg:#f6f7f9; --flaeche:#fff; --linie:#d9dde3; --text:#1c2430; --leise:#5b6676; --akzent:#1f5fae; --gut:#1d7a46; --warn:#a15c00; --fehler:#b42318; }}
+@media (prefers-color-scheme: dark) {{ :root:not([data-theme="light"]) {{ --bg:#12161c; --flaeche:#1a1f27; --linie:#313947; --text:#e3e8ef; --leise:#9aa5b4; --akzent:#7fb0f0; --gut:#5cc48a; --warn:#e3a64a; --fehler:#f07c70; }} }}
+:root[data-theme="dark"] {{ --bg:#12161c; --flaeche:#1a1f27; --linie:#313947; --text:#e3e8ef; --leise:#9aa5b4; --akzent:#7fb0f0; --gut:#5cc48a; --warn:#e3a64a; --fehler:#f07c70; }}
 body {{ margin:0; background:var(--bg); color:var(--text); font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }}
 main {{ max-width:900px; margin:0 auto; padding:24px 16px; }} h1 {{ font-size:24px; margin:0 0 4px; }}
 .karte {{ background:var(--flaeche); border:1px solid var(--linie); border-radius:10px; padding:14px 18px; margin:16px 0; }}
 .karte h2 {{ margin:0 0 6px; font-size:18px; }} .karte h3 {{ font-size:14px; margin:10px 0 2px; }}
 a {{ color:var(--akzent); }} .leise {{ color:var(--leise); font-size:13.5px; }} code {{ font-size:12.5px; }} ul {{ margin:4px 0; padding-left:20px; }}
+.kennzahl {{ font-size:13.5px; margin:6px 0; }} .kennzahl b.gut {{ color:var(--gut); }} .kennzahl b.fehler {{ color:var(--fehler); }} .kennzahl b.warn {{ color:var(--warn); }}
 </style></head><body><main><h1>Modellexplorer</h1>
 <p class="leise">Informationsmodell, FHIR-Profile, Beispielinstanzen, Anwenderansicht und Dokument — auf Elementebene verknüpft.</p>
 {"".join(zeilen)}</main></body></html>'''

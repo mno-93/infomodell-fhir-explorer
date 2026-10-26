@@ -127,32 +127,41 @@ class Zuordnung:
         return roh + '.' + schluessel
 
 
-def zuordnen(res, sd, key):
-    """{nid: '<Profil-URL>#<kanonische Kennung>'} für alle Knoten der Ressource."""
-    z = Zuordnung(sd)
+def zuordnen(res, sd, key, profil_von=None):
+    """{nid: '<Profil-URL>#<kanonische Kennung>'} für alle Knoten der Ressource.
+
+    Enthaltene Ressourcen (`contained`) bleiben Knoten der umgebenden Ressource (`…|contained[0].code`), werden
+    aber — wie beim Validator — gegen ihr eigenes Profil zugeordnet, sofern `profil_von(ressource)` eines liefert.
+    """
     ergebnis = {}
 
-    def gehe(wert, roh, k, jpfad):
-        ergebnis[key + '|' + jpfad] = k
+    def gehe(z, wert, roh, k, jpfad):
+        ergebnis[key + '|' + jpfad] = (z.sd['url'], k)
         if not isinstance(wert, dict):
             return
+        wurzel = roh == z.sd['type']
         for schl, w in wert.items():
-            if schl == 'resourceType' or (roh == sd['type'] and schl in ('id', 'meta', 'text')):
+            if schl == 'resourceType' or (wurzel and schl in ('id', 'meta', 'text')):
                 continue
             name = schl[1:] if schl.startswith('_') else schl
             kid = z.kind_id(roh, name)
             kk = k + '.' + name
             jp = (jpfad + '.' if jpfad else '') + schl
             if isinstance(w, list):
-                ergebnis[key + '|' + jp] = kk
+                ergebnis[key + '|' + jp] = (z.sd['url'], kk)
                 for i, eintrag in enumerate(w):
+                    csd = profil_von(eintrag) if wurzel and name == 'contained' and profil_von \
+                        and isinstance(eintrag, dict) and eintrag.get('resourceType') else None
+                    if csd:
+                        gehe(Zuordnung(csd), eintrag, csd['type'], csd['type'], f'{jp}[{i}]')
+                        continue
                     s = z.slice_fuer(kid, eintrag) if isinstance(eintrag, dict) else None
-                    gehe(eintrag, kid + (':' + s if s else ''), kk + (':' + s if s else ''), f'{jp}[{i}]')
+                    gehe(z, eintrag, kid + (':' + s if s else ''), kk + (':' + s if s else ''), f'{jp}[{i}]')
             else:
-                gehe(w, kid, kk, jp)
+                gehe(z, w, kid, kk, jp)
 
-    gehe(res, sd['type'], sd['type'], '')
-    return {nid: sd['url'] + '#' + kanon(k) for nid, k in ergebnis.items()}
+    gehe(Zuordnung(sd), res, sd['type'], sd['type'], '')
+    return {nid: url + '#' + kanon(k) for nid, (url, k) in ergebnis.items()}
 
 
 def profil_fuer(res, konfig, sds):

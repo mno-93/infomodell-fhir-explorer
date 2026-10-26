@@ -109,9 +109,11 @@ pakete = [
 erweiterungen = ["https://example.org/"]
 
 [[validierung.ausnahmen]]
+id = "dr-comp-identifier"
 muster = "Constraint failed: dr-comp-identifier:"
 grund = "Profilkonflikt im Ballot: Bundle-eu-lab verlangt eine DiagnosticReport-Kennung gleich Composition.identifier; composition-dglp verbietet identifier.type, diagnostic-report-dglp verlangt ihn bei geschlossenem Slicing — mit keiner Instanz erfüllbar."
 
 [[validierung.ausnahmen]]
+id = "abschnitt-ohne-terminologieserver"
 muster = "Slice 'Composition\\.section:result': a matching slice is required|Unable to find a profile match for Composition/comp-[0-9a-f]{8} among choices"
 grund = "Ohne Terminologieserver nicht auswertbar: composition-dglp ordnet den Abschnitt über eine required-Bindung an lab-studyType-eu-lab (LOINC) zu; der Validator verneint die Zugehörigkeit ohne Server. Dazu Folgefehler am Verweis auf die Composition."
