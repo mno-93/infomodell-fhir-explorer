@@ -5,16 +5,100 @@
 ## Quellen
 
 - Implementation Guide: Entwurf (nicht veröffentlicht) — Grundlagen: HL7 Europe Base 2.0.1, HL7 Europe Patient Summary 1.0.0-ballot (`example.impfung.entwurf#0.1.0`, Entwurf, nicht veröffentlicht)
-- Darstellung des Modells: Struktur aus den Profilen — Kein Informationsmodell mit FHIR-Mappings: Die Struktur folgt den Entwurfsprofilen (Pflicht- und Must-Support-Elemente bis zur dritten Ebene). Einstieg ist das Impfprofil selbst, nicht die EPS-Composition — deren Abschnitt Impfungen zielt auf immunization-eu-core und würde den Entwurf nicht zeigen. Das Impfstoffprodukt steht als zweiter Einstieg daneben, weil es nur über die Extension administeredProduct als enthaltene Ressource erreicht wird.
+- Darstellung des Modells: Informationsmodell — Teilbaum „Impfung“ aus dem Informationsmodell der ePA Patient Summary (CI-Build ePS-0.0.1). Das Modell selbst enthält keine FHIR-Mappings; die Zuordnung zu den Entwurfsprofilen ps-immunization und ps-immunization-medication steht als Mappingtabelle in dieser Projektkonfiguration. Elemente des Entwurfs ohne Knoten im Modell (z. B. identifier, primarySource, reportOrigin, recorded, Dosisnummer, PZN, Charge) zeigt die ausmodellierte Darstellung als „aus Profil“ — dort wäre das Modell nachzuziehen.
 - Pakete: `example.impfung.entwurf#0.1.0`, `hl7.fhir.eu.eps#1.0.0-ballot`, `hl7.fhir.eu.base#2.0.1`, `hl7.fhir.uv.ips#2.0.1`, `hl7.fhir.eu.extensions.r4#1.3.1`, `hl7.fhir.uv.xver-r5.r4#0.1.0`, `hl7.fhir.uv.extensions.r4#5.3.0`, `de.gematik.epa#1.4.0-ballot.1`, `de.gematik.ti#1.5.0-ballot.2`, `de.basisprofil.r4#1.6.0`, `hl7.fhir.r4.core#4.0.1`
 - Lokales Paket (im Projekt, nicht veröffentlicht): `example.impfung.entwurf#0.1.0` aus `projekte/impfung/paket/`
+- Logikmodelle für das EHDS-Mapping: `xtehr.eu.ehds.models#1.0.0`
+
+## Mappingprüfung (Mappingtabelle des Projekts)
+
+| Befund | Anzahl |
+|---|---:|
+| Elemente im Informationsmodell | 31 |
+| davon mit FHIR-Mapping | 17 |
+| FHIR-Mappings | 17 |
+| exakt | 14 |
+| gleichwertige Schreibweise (JSON-Name der Typwahl, Typ-Slice) — keine Korrektur nötig | 1 |
+| Schreibvariante (gemischte Notation) — vereinheitlichen | 0 |
+| über Extension-Definition oder Datentyp aufgelöst | 2 |
+| **ohne Ziel** | **0** |
+| **auf ein 0..0-Element** | **0** |
+| Definition nicht im Paketbestand | 0 |
+| in ein anderes Profil als das übergeordnete Element | 0 |
+| bewusst ohne Ziel (Mappingtabelle) | 3 |
+
+### Bewusst ohne Ziel (3)
+
+| Element im Modell | Grund |
+|---|---|
+| Code aus einem Code-System <br>*Zielerkrankung - Code/Bezeichnung / Code-Auswahl* | Der Entwurf sieht für die Zielerkrankung nur SNOMED CT vor. |
+| Code aus einem Code-System <br>*Impfstoff - Code/Bezeichnung / Code-Auswahl* | Der Entwurf sieht für den Impfstoff nur SNOMED CT vor (Slice snomed). |
+| Datentyp <br>*Impfung / Verabreichtes Produkt* | Hilfsknoten des Modells für den Datentyp (CodeableReference), kein eigenes Element. |
+
+### Gleichwertige Schreibweisen (keine Korrektur nötig) (1)
+
+| Element im Modell | Mapping | Befund |
+|---|---|---|
+| Impfdatum <br>*Impfung* | `PSImmunization.occurrenceDateTime` | JSON-Name `occurrenceDateTime` für die Typwahl `occurrence[x]` — gleichwertig |
+
+## Wertelisten
+
+1 Wertelisten im Modell, davon 1 im Paketbestand oder über eine Profilbindung aufgelöst, 1 mit Link auf die Originalseite.
+
+### Werteliste im Modell gegen Bindung im Profil
+
+Je Mapping eines Elements mit Werteliste: Bindung am Element, am zugehörigen CodeableConcept, am Wert einer gemappten Extension oder an einem Slice darunter.
+
+| Ergebnis | Anzahl |
+|---|---:|
+| gleich | 1 |
+
+## Ausmodellierte Darstellung
+
+101 Knoten · 0 Referenzen an der Verwendungsstelle aufgelöst · 0 Zyklen erkannt · 70 Knoten aus FHIR-Profilen ergänzt
+
+## EHDS-Mappingprüfung
+
+9 Verweise an 9 Elementen, aufgelöst gegen `xtehr.eu.ehds.models#1.0.0` (82 Logikmodelle).
+
+| Auflösung | Anzahl |
+|---|---:|
+| auflösbar: Element im Logikmodell | 8 |
+| nur Modell ohne Element | 1 |
+| **Element fehlt im Modell** | 0 |
+| **Modell nicht im Paketbestand** | 0 |
+| ausdrücklich ohne Gegenstück („im EHDS Logical Model nicht vorhanden“) | 0 |
+
+| Linkformat | Anzahl |
+|---|---:|
+| Link auf die Seite des Modells mit Version (`…/models/1.0.0/en/…`) | 0 |
+| **uneinheitlich: Link ohne Version** (`…/models/en/…`, jeweils aktueller Stand) | 8 |
+| kanonische URL des Modells (`http://www.xt-ehr.eu/fhir/models/StructureDefinition/…`) | 1 |
+| **Linkziel nur der Pfad**, keine URL | 0 |
+| **Klartext ohne Link** | 0 |
+| **Link auf eine andere Seite** als das Logikmodell | 0 |
+
+Kontext: **0** Verweise auf das Modell eines anderen Bausteins (Modell weder das des übergeordneten Elements noch dort als Typ genannt).
+
+### Link ohne Version (8)
+
+| Element im Modell | EHDS-Verweis |
+|---|---|
+| Status <br>*Impfung* | `EHDSImmunisation.header.status` |
+| Zielerkrankung - Code/Bezeichnung <br>*Impfung* | `EHDSImmunisation.diseaseOrAgentTargeted` |
+| Impfstoff - Code/Bezeichnung <br>*Impfung* | `EHDSImmunisation.vaccine` |
+| Verabreichtes Produkt <br>*Impfung* | `EHDSImmunisation.administeredProduct` |
+| Impfdatum <br>*Impfung* | `EHDSImmunisation.administrationTime` |
+| Verantwortliche Einrichtung <br>*Impfung* | `EHDSImmunisation.administeringCentre` |
+| Impfende Person/Einrichtung <br>*Impfung* | `EHDSImmunisation.administrator` |
+| Notiz <br>*Impfung* | `EHDSImmunisation.note` |
 
 ## Beispiele
 
-| Beispiel | Ressourcen | fachliche Werte | durch die abgeleitete Struktur gedeckt | Strukturbefunde |
+| Beispiel | Ressourcen | fachliche Werte | durch das Modell gedeckt | Strukturbefunde |
 |---|---:|---:|---:|---:|
-| Erstdokumentation — zwei Impfungen, Mustermann | 5 | 89 | 45 | 0 |
-| Nachtrag aus einem Papier-Impfpass — Mustermann | 5 | 78 | 34 | 0 |
+| Erstdokumentation — zwei Impfungen, Mustermann | 5 | 89 | 22 | 0 |
+| Nachtrag aus einem Papier-Impfpass — Mustermann | 5 | 78 | 17 | 0 |
 
 ### Erstdokumentation — zwei Impfungen, Mustermann
 
@@ -22,11 +106,128 @@
 - Herkunft: Für dieses Projekt erstellt, Gerüst aus dem Beispiel patient-summary/yildiz. Fiktive Daten; PZN, Chargen und Handelsnamen sind erfunden.
 - Datei: `beispiele/erstdokumentation.json`
 
+Werte ohne spezifisches Element im Informationsmodell (ohne url, reference, system, version, Erzähltext):
+
+- `practitioner-eu-core#Practitioner.name.family` (1×)
+- `practitioner-eu-core#Practitioner.name.given` (1×)
+- `practitioner-eu-core#Practitioner.name.prefix` (1×)
+- `practitioner-eu-core#Practitioner.name.use` (1×)
+- `composition-eu-eps#Composition.date` (1×)
+- `composition-eu-eps#Composition.identifier.value` (1×)
+- `composition-eu-eps#Composition.section:sectionAllergies.code.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionAllergies.code.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionAllergies.emptyReason.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionAllergies.emptyReason.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionAllergies.title` (1×)
+- `composition-eu-eps#Composition.section:sectionImmunizations.code.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionImmunizations.code.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionImmunizations.title` (1×)
+- `composition-eu-eps#Composition.section:sectionMedicalDevices.code.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionMedicalDevices.code.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionMedicalDevices.emptyReason.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionMedicalDevices.emptyReason.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionMedicalDevices.title` (1×)
+- `composition-eu-eps#Composition.section:sectionMedications.code.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionMedications.code.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionMedications.emptyReason.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionMedications.emptyReason.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionMedications.title` (1×)
+- `composition-eu-eps#Composition.section:sectionProblems.code.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionProblems.code.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionProblems.emptyReason.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionProblems.emptyReason.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionProblems.title` (1×)
+- `composition-eu-eps#Composition.section:sectionProceduresHx.code.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionProceduresHx.code.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionProceduresHx.emptyReason.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionProceduresHx.emptyReason.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionProceduresHx.title` (1×)
+- `composition-eu-eps#Composition.status` (1×)
+- `composition-eu-eps#Composition.title` (1×)
+- `composition-eu-eps#Composition.type.coding.code` (1×)
+- `composition-eu-eps#Composition.type.coding.display` (1×)
+- `patient-eu-eps#Patient.birthDate` (1×)
+- `patient-eu-eps#Patient.gender` (1×)
+- `patient-eu-eps#Patient.identifier.value` (1×)
+- `patient-eu-eps#Patient.name.family` (1×)
+- `patient-eu-eps#Patient.name.given` (1×)
+- `patient-eu-eps#Patient.name.use` (1×)
+- `ps-immunization#Immunization.identifier.value` (2×)
+- `ps-immunization#Immunization.performer:administeringCentreOrHp.function.coding.code` (2×)
+- `ps-immunization#Immunization.performer:administeringCentreOrHp.function.coding.display` (2×)
+- `ps-immunization#Immunization.primarySource` (2×)
+- `ps-immunization#Immunization.protocolApplied.doseNumberPositiveInt` (2×)
+- `ps-immunization#Immunization.protocolApplied.series` (1×)
+- `ps-immunization#Immunization.recorded` (2×)
+- `ps-immunization-medication#Medication.batch.lotNumber` (2×)
+- `ps-immunization-medication#Medication.code.coding:pzn.code` (2×)
+- `ps-immunization-medication#Medication.code.coding:pzn.display` (2×)
+- `ps-immunization-medication#Medication.code.text` (2×)
+- `ps-immunization-medication#Medication.extension:isVaccine.valueBoolean` (2×)
+
 ### Nachtrag aus einem Papier-Impfpass — Mustermann
 
 - Zweck: Zwei nachgetragene Impfungen (primarySource = false, reportOrigin record „Papier-Impfpass“): ein historischer Kombinationsimpfstoff nur als Text mit unbekannter Dosisnummer (doseNumberString mit data-absent-reason unknown) und eine Influenza-Impfung mit SNOMED-Code, das Produkt laut Etikett als enthaltene Medication ohne PZN.
 - Herkunft: Für dieses Projekt erstellt, Gerüst aus dem Beispiel patient-summary/yildiz. Fiktive Daten.
 - Datei: `beispiele/nachtrag-impfpass.json`
+
+Werte ohne spezifisches Element im Informationsmodell (ohne url, reference, system, version, Erzähltext):
+
+- `practitioner-eu-core#Practitioner.name.family` (1×)
+- `practitioner-eu-core#Practitioner.name.given` (1×)
+- `practitioner-eu-core#Practitioner.name.prefix` (1×)
+- `practitioner-eu-core#Practitioner.name.use` (1×)
+- `composition-eu-eps#Composition.date` (1×)
+- `composition-eu-eps#Composition.identifier.value` (1×)
+- `composition-eu-eps#Composition.section:sectionAllergies.code.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionAllergies.code.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionAllergies.emptyReason.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionAllergies.emptyReason.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionAllergies.title` (1×)
+- `composition-eu-eps#Composition.section:sectionImmunizations.code.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionImmunizations.code.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionImmunizations.title` (1×)
+- `composition-eu-eps#Composition.section:sectionMedicalDevices.code.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionMedicalDevices.code.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionMedicalDevices.emptyReason.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionMedicalDevices.emptyReason.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionMedicalDevices.title` (1×)
+- `composition-eu-eps#Composition.section:sectionMedications.code.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionMedications.code.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionMedications.emptyReason.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionMedications.emptyReason.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionMedications.title` (1×)
+- `composition-eu-eps#Composition.section:sectionProblems.code.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionProblems.code.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionProblems.emptyReason.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionProblems.emptyReason.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionProblems.title` (1×)
+- `composition-eu-eps#Composition.section:sectionProceduresHx.code.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionProceduresHx.code.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionProceduresHx.emptyReason.coding.code` (1×)
+- `composition-eu-eps#Composition.section:sectionProceduresHx.emptyReason.coding.display` (1×)
+- `composition-eu-eps#Composition.section:sectionProceduresHx.title` (1×)
+- `composition-eu-eps#Composition.status` (1×)
+- `composition-eu-eps#Composition.title` (1×)
+- `composition-eu-eps#Composition.type.coding.code` (1×)
+- `composition-eu-eps#Composition.type.coding.display` (1×)
+- `patient-eu-eps#Patient.birthDate` (1×)
+- `patient-eu-eps#Patient.gender` (1×)
+- `patient-eu-eps#Patient.identifier.value` (1×)
+- `patient-eu-eps#Patient.name.family` (1×)
+- `patient-eu-eps#Patient.name.given` (1×)
+- `patient-eu-eps#Patient.name.use` (1×)
+- `ps-immunization#Immunization.identifier.value` (2×)
+- `ps-immunization#Immunization.primarySource` (2×)
+- `ps-immunization#Immunization.protocolApplied.doseNumberPositiveInt` (1×)
+- `ps-immunization#Immunization.protocolApplied.doseNumberString.extension.valueCode` (1×)
+- `ps-immunization#Immunization.recorded` (2×)
+- `ps-immunization#Immunization.reportOrigin.coding.code` (2×)
+- `ps-immunization#Immunization.reportOrigin.coding.display` (2×)
+- `ps-immunization#Immunization.reportOrigin.text` (2×)
+- `ps-immunization-medication#Medication.batch.lotNumber` (1×)
+- `ps-immunization-medication#Medication.code.text` (1×)
+- `ps-immunization-medication#Medication.extension:isVaccine.valueBoolean` (1×)
 
 ## FHIR-Validierung (HL7 Validator 7.0.1)
 

@@ -42,10 +42,11 @@ Vorlage: `projekte/patient-summary/projekt.toml` (ohne Informationsmodell) oder 
 | `terminologiepakete` | optional: Pakete nur zur Auflösung von Wertelisten (z. B. `de.gematik.terminology`, `hl7.terminology.r4`), feste Version |
 | `[ig]` | `name`, `paket`, `status`, `url`, `kanonisch` (für Links auf Profilseiten) |
 | `[standardprofile]` | Profil je Ressourcentyp für Ressourcen ohne `meta.profile` |
-| `[informationsmodell]` | `art` und die Angaben des Adapters (siehe `docs/AUFBAU.md`); bei `aus-profilen` darf `einstieg` eine Liste sein |
+| `logikmodellpakete` | optional: Pakete mit Logikmodellen für die EHDS-Mappingprüfung eines `mio-baum`, z. B. `xtehr.eu.ehds.models#1.0.0` |
+| `[informationsmodell]` | `art` und die Angaben des Adapters (siehe `docs/AUFBAU.md`); bei `aus-profilen` darf `einstieg` eine Liste sein; bei `mio-baum` `quelle`, `referenzgruppe`, optional `teilbaum`, `profil_ergaenzen` und `[[informationsmodell.mappings]]` |
 | `[anforderungen]` | optional: `art = "gematik-requirements"`, `quelle` |
 | `[[quellen]]` | gesicherte Quelldateien mit Herkunfts-URL |
-| `[[beispiele]]` | siehe oben |
+| `[[beispiele]]` | siehe oben; `beispiele = []` für ein Projekt, das nur ein Modell zeigt (Begründung in `hinweis`) |
 | `[validierung]` | Pakete für den HL7-Validator (lokale Pakete kommen automatisch mit `-ig <ordner>/package` dazu), `erweiterungen` (zugelassene Beispiel-Namensräume), `[[validierung.ausnahmen]]` mit `id`, `muster` (regulärer Ausdruck auf „Ort: Text“ einer Fehlermeldung) und `grund` |
 | `[[strukturausnahmen]]` | optional: `element`, `grund` — nur für bekannte Profilfehler |
 
@@ -101,6 +102,44 @@ cp /tmp/impfung/aus/fsh-generated/resources/*.json projekte/impfung/paket/packag
 ```
 
 Die Snapshots braucht der Modellexplorer (Modell, Zuordnung, Strukturprüfung); ein Test prüft, dass `package.json` zur `sushi-config.yaml` passt.
+
+## Informationsmodell eines MIO-IG (mio-baum)
+
+Beispiel `projekte/epa-patient-summary/`: Das Modell kommt als gesicherte Quelle aus dem öffentlichen IG (`[[quellen]]` mit
+Herkunfts-URL; `holen` lädt eine neue Quelle und nimmt ihre SHA-256 in die Sperrdatei auf), dazu `logikmodellpakete` für die
+EHDS-Mappingprüfung:
+
+```toml
+logikmodellpakete = ["xtehr.eu.ehds.models#1.0.0"]
+
+[informationsmodell]
+art = "mio-baum"
+quelle = "quellen/infomodell_js_treeview_<ig>.json"
+referenzgruppe = "Profile"
+```
+
+Nur einen Ast des Modells zeigen und ihn über eine **Mappingtabelle** mit eigenen Profilen verbinden — Beispiel `projekte/impfung/`:
+
+```toml
+[informationsmodell]
+art = "mio-baum"
+quelle = "../epa-patient-summary/quellen/infomodell_js_treeview_epa-ps.json"
+teilbaum = "Profile / ePA ePS Profile (in Erarbeitung) / Impfung"
+profil_ergaenzen = true
+
+[[informationsmodell.mappings]]
+knoten = "Impfung / Impfstoff - Code/Bezeichnung / Code-Auswahl / SNOMED-CT-Code"
+fhir = "PSImmunization.vaccineCode.coding:snomed"
+
+[[informationsmodell.mappings]]
+knoten = "Impfung / Verabreichtes Produkt / Datentyp"
+ohne_ziel = "Hilfsknoten des Modells, kein eigenes Element."
+```
+
+`knoten` ist der Pfad im Teilbaum mit „ / “ zwischen den Namen (beim letzten Glied darf „ (Referenz)“ fehlen), `fhir` der
+Profilname mit Elementpfad wie in den FHIR-Mappings eines gematik-Modells. Ein unbekannter Knoten bricht den Bau ab. Danach läuft
+die Kette Modell → Profil → Instanz → Ansicht wie beim Laborbefund; `profil_ergaenzen` zeigt Must-Support-Elemente der gemappten
+Profile, für die das Modell keinen Knoten hat, in der ausmodellierten Darstellung als „aus Profil“.
 
 ## Naheliegende nächste Projekte
 

@@ -91,9 +91,17 @@
   "hl7.terminology.r4#7.3.0": {
    "url": "https://packages.fhir.org/hl7.terminology.r4/7.3.0",
    "inhalt_sha256": "0a1822957f798ae7a4fa060d4dc4a1604d81832f774ba8d9f249282349cdeec9"
+  },
+  "xtehr.eu.ehds.models#1.0.0": {
+   "url": "https://packages.fhir.org/xtehr.eu.ehds.models/1.0.0",
+   "inhalt_sha256": "efde96ead12c283d9c54ea3e2f3ff6bec692f1c0122bde255acf9a4cce9c20f8"
   }
  },
  "quellen": {
+  "projekte/epa-patient-summary/quellen/infomodell_js_treeview_epa-ps.json": {
+   "url": "https://mio42-gmbh.github.io/MIO-ePA-Patient-Summary/ePS-0.0.1/infomodell_js_treeview_epa-ps.json",
+   "sha256": "a5b07e96df1043a300f3fb59a2dc2078f341eaf31101785a1572b97fd41ad7e8"
+  },
   "projekte/laborbefund/quellen/infomodell_js_treeview_labbefund.json": {
    "url": "https://gemspec.gematik.de/ig/fhir/epa-laboratory/1.0.0-ballot.1/de/infomodell_js_treeview_labbefund.json",
    "sha256": "44baf30aa71dd050b627b3bd694c3fa6bfb21035edb362f42b868519effa039f"

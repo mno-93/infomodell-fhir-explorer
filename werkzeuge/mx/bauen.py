@@ -3,14 +3,14 @@ verknüpfen und als eigenständige HTML-Seite ausgeben. Die Ausgabe ist determin
 import html
 import json
 
-from . import anforderungen, beispiele, infomodell, validieren
+from . import anforderungen, beispiele, ehds, infomodell, validieren
 from .grundlagen import AUSGABE, WURZEL
 from .konfig import projekt_laden
 from .pakete import bezeichnung, definitionen, projektpakete
 from .profile import profil_aufbereiten
 from .terminologie import Bindungsabgleich, Wertelisten
 
-IM_TITEL = {'gematik-baum': 'Informationsmodell', 'aus-profilen': 'Struktur aus den Profilen'}
+IM_TITEL = {'gematik-baum': 'Informationsmodell', 'mio-baum': 'Informationsmodell', 'aus-profilen': 'Struktur aus den Profilen'}
 
 
 def projekt_bauen(pid):
@@ -20,6 +20,11 @@ def projekt_bauen(pid):
     wl = Wertelisten(quellen + k.get('terminologiepakete', []), sds)
     knoten, baum_aus = infomodell.laden(k, sds, wl)
     pruefung = infomodell.mappings_pruefen(knoten)
+    # EHDS-Mappings (mio-baum) gegen die Logikmodelle der `logikmodellpakete`
+    ehds_statistik, ehds_pruefung = None, []
+    if k['informationsmodell']['art'] == 'mio-baum':
+        logik = ehds.Logikmodelle(definitionen(k.get('logikmodellpakete', [])), ', '.join(k.get('logikmodellpakete', [])))
+        ehds_statistik, ehds_pruefung = ehds.pruefen(knoten, logik)
     anf = anforderungen.laden(k, sds)
 
     genutzt = {m['sd'] for n in knoten for m in n['maps'] if m['sd']}
@@ -84,6 +89,8 @@ def projekt_bauen(pid):
         'anderes_profil': sum(1 for p in pruefung if p['status'] == 'anderes-profil'),
         'anforderungen': len(anf), 'anforderungen_mit_pfad': sum(1 for a in anf if a['pfade']),
         'im_anforderungen': sum(len(n['anf']) for n in knoten),
+        'ohne_ziel': sum(1 for n in knoten if n.get('ohne_ziel')),
+        'ehds': ehds_statistik,
         'wertelisten': _wertelisten_statistik(knoten),
         'bindungsabgleich': _bindungsabgleich(knoten, sds),
         'baum_aus': {'knoten': len(baum_aus), 'zyklen': sum(1 for b in baum_aus if 'z' in b),
@@ -95,13 +102,13 @@ def projekt_bauen(pid):
         'darstellung': k['darstellung'], 'dokumente': k.get('dokumente', []),
         'im_art': k['informationsmodell']['art'], 'im_titel': IM_TITEL[k['informationsmodell']['art']],
         'im_hinweis': k['informationsmodell'].get('hinweis', ''), 'ig': ig,
-        'pakete': [bezeichnung(q) for q in quellen],
+        'pakete': [bezeichnung(q) for q in quellen], 'logikmodellpakete': k.get('logikmodellpakete', []),
         'lokale_pakete': [{'paket': bezeichnung(o), 'ordner': o.relative_to(WURZEL).as_posix()} for o in k['lokale_ordner']],
     }
     if validierung:
         validierung = {x: y for x, y in validierung.items() if x != 'beispiele'}
-    return {'meta': meta, 'statistik': statistik, 'pruefung': pruefung, 'im': knoten, 'baum_aus': baum_aus,
-            'profile': profile, 'anforderungen': anf, 'beispiele': liste, 'validierung': validierung}
+    return {'meta': meta, 'statistik': statistik, 'pruefung': pruefung, 'ehds_pruefung': ehds_pruefung, 'im': knoten,
+            'baum_aus': baum_aus, 'profile': profile, 'anforderungen': anf, 'beispiele': liste, 'validierung': validierung}
 
 
 def _wertelisten_statistik(knoten):
@@ -147,6 +154,8 @@ def seite_schreiben(daten):
 def validierung_kurz(d):
     """Kennzahl der FHIR-Validierung für die Übersichtsseite (HTML)."""
     v = d.get('validierung')
+    if not d['beispiele']:
+        return 'FHIR-Validierung: keine Beispiele im Projekt'
     if not v:
         return 'FHIR-Validierung: <b class="warn">noch nicht validiert</b>'
     s = v['summe']
@@ -170,6 +179,14 @@ def index_schreiben(alle):
         st = s['mapping_status']
         modell = (f'{s["im_knoten"]} Elemente, {s["mappings"]} FHIR-Mappings, davon {st["fehler"] + st["verboten"]} fehlerhaft'
                   if m['im_art'] == 'gematik-baum' else 'kein veröffentlichtes Informationsmodell mit Mappings — Struktur aus den Profilen')
+        if m['im_art'] == 'mio-baum':
+            e = s['ehds']
+            modell = (f'{s["im_knoten"]} Elemente, '
+                      + (f'{s["mappings"]} FHIR-Mappings aus der Mappingtabelle des Projekts, davon {st["fehler"] + st["verboten"]} fehlerhaft'
+                         if s['mappings'] else 'keine FHIR-Mappings')
+                      + f'; EHDS-Mapping: {e["verweise"]} Verweise, {e["status"]["aufloesbar"]} auf ein Element und {e["status"]["nur-modell"]} '
+                      f'auf ein Modell aufgelöst, '
+                      f'{e["status"]["element-fehlt"] + e["status"]["modell-fehlt"]} nicht auflösbar, {e["anderes_modell"]} auf das Modell eines anderen Bausteins')
         bsp = ''.join(f'<li>{html.escape(b["titel"])} <span class="leise">— {html.escape(b["zweck"])}</span></li>' for b in d['beispiele'])
         zeilen.append(f'''<section class="karte"><h2><a href="{m["projekt"]}.html">{html.escape(m["titel"])}</a></h2>
 <p>{html.escape(m["beschreibung"])}</p>

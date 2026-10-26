@@ -1,0 +1,43 @@
+# ePA Patient Summary (mio42, CI-Build ePS-0.0.1) — Informationsmodell mit EHDS-Mapping, noch ohne FHIR-Profile.
+# Quelle ist ausschließlich der öffentliche CI-Build des IG (Baumansicht „Informationsmodell“).
+id = "epa-patient-summary"
+titel = "ePA Patient Summary (mio42, CI-Build ePS-0.0.1)"
+beschreibung = "Informationsmodell der ePA Patient Summary aus dem öffentlichen CI-Build: Composition-Sicht, Profile und mehrfach verwendete Elemente, jedes Element mit seinem Gegenstück im EHDS-Logikmodell (Xt-EHR 1.0.0) — EHDS-Mappingprüfung statt FHIR-Mappingprüfung."
+darstellung = "dokument"
+dokumente = []
+# Keine Beispiele — Begründung im Hinweis zum Informationsmodell
+beispiele = []
+
+# FHIR-Profile gibt es im CI-Build noch nicht; die Pakete dienen nur der Auflösung von Wertelisten des Modells.
+pakete = [
+  "hl7.fhir.eu.base#2.0.1",
+  "hl7.fhir.uv.ips#2.0.1",
+  "de.basisprofil.r4#1.6.0",
+  "hl7.fhir.r4.core#4.0.1",
+]
+
+terminologiepakete = [
+  "de.gematik.terminology#1.1.0-ballot.2",
+  "hl7.terminology.r4#7.3.0",
+]
+
+# Logikmodelle für die Prüfung der EHDS-Mappings (StructureDefinitions mit kind = logical)
+logikmodellpakete = [
+  "xtehr.eu.ehds.models#1.0.0",
+]
+
+[ig]
+name = "MIO ePA Patient Summary (CI-Build)"
+paket = "ePS-0.0.1 (kein Paket in der Registry)"
+status = "in Arbeit (CI-Build)"
+url = "https://mio42-gmbh.github.io/MIO-ePA-Patient-Summary/ePS-0.0.1/"
+
+[informationsmodell]
+art = "mio-baum"
+quelle = "quellen/infomodell_js_treeview_epa-ps.json"
+referenzgruppe = "Profile"
+hinweis = "Das Modell enthält keine FHIR-Mappings, aber je Element das EHDS-Mapping auf die Xt-EHR-Logikmodelle; geprüft wird deshalb dieses Mapping. Keine Beispiele: Die beiden Patient-Summary-Beispiele des Projekts patient-summary folgen den EPS- und gematik-Profilen, nicht diesem Modell. Ohne FHIR-Mappings bliebe die Kette Modell → Profil → Instanz leer; verbunden wären sie nur über einige allgemeine Codes (Hoffmann 11 von 74 Codes, Yildiz 5 von 41, z. B. Status und Diagnosesicherheit) — das wäre eine scheinbare, keine fachliche Verknüpfung."
+
+[[quellen]]
+datei = "quellen/infomodell_js_treeview_epa-ps.json"
+url = "https://mio42-gmbh.github.io/MIO-ePA-Patient-Summary/ePS-0.0.1/infomodell_js_treeview_epa-ps.json"

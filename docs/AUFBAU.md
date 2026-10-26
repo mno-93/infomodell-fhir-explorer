@@ -35,7 +35,10 @@ Enthaltene Ressourcen (`contained`) bleiben Knoten der umgebenden Ressource (`Im
 | `informationsmodell.art` | Quelle | Ergebnis |
 |---|---|---|
 | `gematik-baum` | JSON hinter der Baumansicht „Informationsmodell“ eines gematik-IG (Felder `fhirMappings`, `termAssocs`, `cardinality`, `otherProperties`) | Modell mit Mappings, Terminologie, Herkunft, eingebetteten Anforderungen; dazu die **ausmodellierte Sicht** (`referenzgruppe`, optional `ergaenzen_aus` für Profile, die das Modell nur als Ganzes nennt) |
+| `mio-baum` | JSON hinter der Baumansicht „Informationsmodell“ eines MIO-IG (Felder `cardinality`, `codes`, `termAssocs`, `operationalisations`, `otherProperties`; kein `fhirMappings`) | Modell mit Kardinalität und Konformität (auch bedingt), Terminologie, Anforderungen (MUSS/SOLL/KANN), weiteren Angaben und dem **EHDS-Mapping** je Element (`ehds`); ausmodellierte Sicht über `referenzgruppe` (Referenzziele in beliebiger Tiefe). Optional `teilbaum` (nur ein Ast, z. B. ein Profil), `[[informationsmodell.mappings]]` (FHIR-Mappings aus einer Mappingtabelle des Projekts: `knoten`, `fhir` oder `ohne_ziel`) und `profil_ergaenzen` (Must-Support-Elemente eines gemappten Profils ohne Modellknoten als „aus Profil“) |
 | `aus-profilen` | Einstiegsprofil (`einstieg`), meist die Composition; auch eine Liste von Profilen nebeneinander (z. B. ein Eintragsprofil und das Profil seiner enthaltenen Ressource) | Struktur aus Pflicht- und Must-Support-Elementen bis `tiefe`; Abschnitte und Eintrags-Slices immer, Zielprofile der Einträge ausmodelliert |
+
+Knoten können zusätzlich `ehds` (Verweise auf das EHDS-Logikmodell, siehe unten) und `ohne_ziel` (Grund, warum ein Element bewusst kein FHIR-Ziel hat) tragen.
 
 Ein weiterer Adapter — etwa für ein logisches Modell (`StructureDefinition` mit `kind = logical` und `mapping`) — liefert dasselbe Knotenformat (`werkzeuge/mx/infomodell.py`) und braucht keine Änderung an Oberfläche oder Berichten.
 
@@ -68,6 +71,21 @@ Liegt eine Werteliste nicht im Paketbestand, aber bindet ein Profil sie, wird ih
 | `druck` | A4-Druckfassung des Laborbefunds mit Freigabe, Dokument-ID und Version |
 | `pdf` | Textebene des PDF aus `DiagnosticReport.presentedForm` |
 | `erzaehltext` | Erzähltext der Abschnitte (`Composition.section.text`) |
+
+## EHDS-Mappingprüfung (mio-baum)
+
+Ein MIO-Modell nennt je Element sein Gegenstück in den EHDS-Logikmodellen von Xt-EHR (`otherProperties`, Abschnitte „EHDS Logical Model“, „EHDS-Mapping“). `werkzeuge/mx/ehds.py` liest die Verweise und löst sie gegen die StructureDefinitions (`kind = logical`) der `logikmodellpakete` auf — wie die FHIR-Mappingprüfung gegen Profil-Snapshots.
+
+| Ergebnis | Bedeutung |
+|---|---|
+| auflösbar | Modell und Element gibt es im Paket |
+| nur Modell | nur das Modell genannt (passend für Elemente, die ein ganzes Modell abbilden) |
+| Element fehlt im Modell · Modell nicht im Paketbestand | Verweis führt ins Leere |
+| ausdrücklich ohne Gegenstück | „Element ist im EHDS Logical Model nicht vorhanden“ |
+| Linkformat | versioniert (`…/models/1.0.0/en/…`) · ohne Version (`…/models/en/…`, jeweils aktueller Stand) · kanonische URL · Linkziel nur der Pfad · Klartext ohne Link · Link auf eine andere Seite |
+| Modell eines anderen Bausteins | Modell weder das des nächsten übergeordneten Elements mit EHDS-Mapping noch dort als Typ genannt (z. B. Element unter „Allergie/Unverträglichkeit“ → `EHDSCondition.*`) |
+
+Links auf die Originalseiten nur nach dem geprüften Muster `https://www.xt-ehr.eu/fhir/models/<Version>/en/StructureDefinition-<Modell>[-definitions].html[#<Element>]`.
 
 ## FHIR-Validierung
 

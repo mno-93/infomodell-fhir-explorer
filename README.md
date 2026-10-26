@@ -14,9 +14,10 @@ Informationsmodell ──FHIR-Mapping──▶ Profilelement ──Zuordnung─�
 |---|---|---|---|
 | `laborbefund` | gematik `de.gematik.epa.laboratory` 1.0.0-ballot.1 | veröffentlicht, mit FHIR-Mappings; zusätzlich ausmodellierte Sicht | 3 aus dem Demo-PVS, 2 aus dem IG-Paket |
 | `patient-summary` | HL7 Europe `hl7.fhir.eu.eps` 1.0.0-ballot | keins mit Mappings veröffentlicht — Struktur aus den Profilen abgeleitet | 2 aus dem Demo-PVS |
-| `impfung` | Entwurf eines Impfeintrags nach EU Core (HL7 Europe Base 2.0.1) mit den EPS-Pflichtangaben; Profile als FSH im Projekt, nicht veröffentlicht | keins — Struktur aus den Entwurfsprofilen | 2 fiktive, für das Projekt erstellt (Erstdokumentation, Nachtrag aus dem Impfpass) |
+| `impfung` | Entwurf eines Impfeintrags nach EU Core (HL7 Europe Base 2.0.1) mit den EPS-Pflichtangaben; Profile als FSH im Projekt, nicht veröffentlicht | Teilbaum „Impfung“ des Modells der ePA Patient Summary; FHIR-Mappings aus einer Mappingtabelle des Projekts | 2 fiktive, für das Projekt erstellt (Erstdokumentation, Nachtrag aus dem Impfpass) |
+| `epa-patient-summary` | MIO ePA Patient Summary, öffentlicher CI-Build ePS-0.0.1 (noch ohne FHIR-Profile) | veröffentlicht im CI-Build, ohne FHIR-Mappings, mit EHDS-Mapping auf die Xt-EHR-Logikmodelle 1.0.0 — geprüft wird dieses | keine (Begründung im Projekt) |
 
-Die Prüfberichte je Projekt stehen in [`berichte/`](berichte/): Mappingprüfung, Abdeckung, Strukturbefunde und das Ergebnis des HL7 Validators je Beispiel.
+Die Prüfberichte je Projekt stehen in [`berichte/`](berichte/): Mappingprüfung (FHIR- bzw. EHDS-Mapping), Abdeckung, Strukturbefunde und das Ergebnis des HL7 Validators je Beispiel.
 
 ## Schnellstart
 
@@ -39,7 +40,7 @@ Weitere Befehle:
 | `mx.py validieren` | Beispieldateien mit dem HL7 FHIR Validator prüfen (Pakete und begründete Ausnahmen je Projekt); Ergebnis nach `berichte/<projekt>.validierung.json` — einchecken |
 | `mx.py fsh <projekt>` | lokales Paket eines Projekts aus FSH neu erzeugen (SUSHI nötig, siehe [`docs/NEUES_PROJEKT.md`](docs/NEUES_PROJEKT.md#lokale-pakete-profile-im-entwurf)) |
 | `mx.py vertraulich` | versionierte Dateien gegen eingebaute und projektbezogene Muster prüfen |
-| `mx.py holen --aktualisieren` | Sperrdatei neu schreiben, Quellen neu laden — nur bewusst, Änderung prüfen und einchecken |
+| `mx.py holen --aktualisieren` | Sperrdatei neu schreiben, Quellen neu laden — nur bewusst, Änderung prüfen und einchecken. Neue Pakete und Quellen nimmt schon `holen` auf, ohne die vorhandenen neu zu laden |
 
 ## Bedienung
 
@@ -49,7 +50,8 @@ Weitere Befehle:
 - **Informationsmodell referenziert oder ausmodelliert:** wie im IG oder mit jeder Referenz an ihrer Verwendungsstelle; Zyklen werden erkannt, Fundstellen mit ‹ › durchlaufen.
 - **Terminologie:** Codes und Wertelisten des Modells als Tabelle mit Kopfzeilen; Wertelisten und Profilbindungen verlinkt auf ihre Originalseite, belegte Codes oben.
 - **Legende:** Knopf im Kopf und Kurzlegende unter Modell und Profil erklären Zeichen und Farben — u. a. ● im Beispiel belegt, ↳ ausmodelliert, ↻ Zyklus, „aus Profil“ (nicht im Informationsmodell, aus dem FHIR-Profil ergänzt), S Must Support, IM Ziel eines Modell-Mappings. Esc schließt Fenster, dann Details, dann die Auswahl.
-- **Abdeckung & Prüfung:** Mappingprüfung, Werte ohne Modellelement, Strukturbefunde und FHIR-Validierung des gewählten Beispiels — Fehler und Warnungen des HL7 Validators mit Ort, Zeile und begründeter Ausnahme; ein Klick auf den Ort markiert den Wert in allen Ansichten. Die Übersichtsseite zeigt je Projekt die Kennzahl der Validierung.
+- **EHDS-Mapping:** Bei MIO-Modellen steht am Element sein Gegenstück im EHDS-Logikmodell (Xt-EHR) mit Link, Auflösung, Linkformat und Kontext; „E“ im Baum markiert Auffälligkeiten, ⊘ ein Element, das die Mappingtabelle bewusst ohne FHIR-Ziel lässt.
+- **Abdeckung & Prüfung:** Mappingprüfung (FHIR- bzw. EHDS-Mapping), Werte ohne Modellelement, Strukturbefunde und FHIR-Validierung des gewählten Beispiels — Fehler und Warnungen des HL7 Validators mit Ort, Zeile und begründeter Ausnahme; ein Klick auf den Ort markiert den Wert in allen Ansichten. Die Übersichtsseite zeigt je Projekt die Kennzahl der Validierung.
 
 ## Direkt verlinken
 

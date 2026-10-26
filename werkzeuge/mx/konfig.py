@@ -6,7 +6,7 @@ from .grundlagen import PROJEKTE
 PFLICHT = ('id', 'titel', 'darstellung', 'pakete', 'informationsmodell', 'beispiele')
 DARSTELLUNGEN = ('laborbefund', 'dokument')
 DOKUMENTE = ('druck', 'pdf', 'erzaehltext')
-IM_ARTEN = ('gematik-baum', 'aus-profilen')
+IM_ARTEN = ('gematik-baum', 'aus-profilen', 'mio-baum')
 
 
 class KonfigFehler(Exception):

@@ -94,8 +94,11 @@ def paket_sicherstellen(spec, sperre, aktualisieren=False, pruefen=True):
 
 
 def quelle_pruefen(pfad, url, sperre, aktualisieren=False):
+    """Quelldatei gegen die Sperrdatei prüfen. Fehlt sie noch (neue Quelle), wird sie geladen und aufgenommen —
+    so nimmt `holen` neue Quellen auf, ohne die vorhandenen neu zu laden."""
     rel = Path(pfad).relative_to(WURZEL).as_posix()
-    if aktualisieren:
+    if aktualisieren or not Path(pfad).exists():
+        Path(pfad).parent.mkdir(parents=True, exist_ok=True)
         print(f'  hole {url}', file=sys.stderr)
         Path(pfad).write_bytes(_holen(url))
     ist = datei_hash(pfad)

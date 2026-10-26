@@ -23,9 +23,15 @@ def bericht(d):
          '- Pakete: ' + ', '.join(f'`{p}`' for p in m['pakete'])]
     for lp in m.get('lokale_pakete', []):
         z.append(f'- Lokales Paket (im Projekt, nicht veröffentlicht): `{lp["paket"]}` aus `{lp["ordner"]}/`')
+    if m.get('logikmodellpakete'):
+        z.append('- Logikmodelle für das EHDS-Mapping: ' + ', '.join(f'`{p}`' for p in m['logikmodellpakete']))
     z.append('')
-    if m['im_art'] == 'gematik-baum':
-        z += ['## Mappingprüfung', '',
+    modell_echt = m['im_art'] in ('gematik-baum', 'mio-baum')  # ein Informationsmodell, keine aus Profilen abgeleitete Struktur
+    if m['im_art'] == 'mio-baum' and not s['mappings']:
+        z += ['## Mappingprüfung', '', f'{s["im_knoten"]} Elemente im Informationsmodell. Das Modell enthält keine FHIR-Mappings; '
+              'geprüft wird das EHDS-Mapping (unten).', '']
+    elif modell_echt:
+        z += ['## Mappingprüfung' + (' (Mappingtabelle des Projekts)' if m['im_art'] == 'mio-baum' else ''), '',
               '| Befund | Anzahl |', '|---|---:|',
               f'| Elemente im Informationsmodell | {s["im_knoten"]} |',
               f'| davon mit FHIR-Mapping | {s["im_mit_mapping"]} |',
@@ -36,7 +42,15 @@ def bericht(d):
               f'| über Extension-Definition oder Datentyp aufgelöst | {st["ueber-definition"]} |',
               f'| **ohne Ziel** | **{st["fehler"]}** |', f'| **auf ein 0..0-Element** | **{st["verboten"]}** |',
               f'| Definition nicht im Paketbestand | {st["unbekannt"]} |',
-              f'| in ein anderes Profil als das übergeordnete Element | {s["anderes_profil"]} |', '']
+              f'| in ein anderes Profil als das übergeordnete Element | {s["anderes_profil"]} |']
+        if s.get('ohne_ziel'):
+            z.append(f'| bewusst ohne Ziel (Mappingtabelle) | {s["ohne_ziel"]} |')
+        z.append('')
+        ohne = [n for n in d['im'] if n.get('ohne_ziel')]
+        if ohne:
+            z += [f'### Bewusst ohne Ziel ({len(ohne)})', '', '| Element im Modell | Grund |', '|---|---|']
+            z += [f'| {n["name"]} <br>*{" / ".join(_pfad_im(d, n).split(" / ")[-3:-1])}* | {_code(n["ohne_ziel"])} |' for n in ohne]
+            z.append('')
         for titel, stati in (('Fehlerhafte Mappings', ('fehler', 'verboten', 'unbekannt')),
                              ('Mappings in ein anderes Profil', ('anderes-profil',)),
                              ('Schreibvarianten (gemischte Notation)', ('schreibvariante',)),
@@ -48,6 +62,7 @@ def bericht(d):
             z += [f'| {p["im"]} <br>*{" / ".join(p["pfad"].split(" / ")[-3:-1])}* | `{p["mapping"]}` | {_code(p["grund"])} |'
                   for p in eintraege]
             z.append('')
+    if modell_echt:  # Wertelisten und ausmodellierte Sicht auch für ein Modell ohne FHIR-Mappings
         w = s.get('wertelisten') or {}
         if w.get('gesamt'):
             z += ['## Wertelisten', '', f'{w["gesamt"]} Wertelisten im Modell, davon {w["aufgeloest"]} im Paketbestand oder über eine '
@@ -75,7 +90,11 @@ def bericht(d):
             z += ['## Ausmodellierte Darstellung', '',
                   f'{b["knoten"]} Knoten · {b["ausmodelliert"]} Referenzen an der Verwendungsstelle aufgelöst · '
                   f'{b["zyklen"]} Zyklen erkannt · {b["aus_profil"]} Knoten aus FHIR-Profilen ergänzt', '']
-    gedeckt = 'durch das Modell gedeckt' if m['im_art'] == 'gematik-baum' else 'durch die abgeleitete Struktur gedeckt'
+    z += ehds_pruefung(d)
+    gedeckt = 'durch das Modell gedeckt' if modell_echt else 'durch die abgeleitete Struktur gedeckt'
+    if not d['beispiele']:
+        z += ['## Beispiele', '', 'Keine Beispiele im Projekt' + (' — Begründung im Hinweis zum Modell (oben).' if m['im_hinweis'] else '.'), '']
+        return '\n'.join(z + validierung(d)).rstrip() + '\n'
     z += ['## Beispiele', '', f'| Beispiel | Ressourcen | fachliche Werte | {gedeckt} | Strukturbefunde |',
           '|---|---:|---:|---:|---:|']
     for b in d['beispiele']:
@@ -91,7 +110,7 @@ def bericht(d):
         if b['struktur']:
             z += ['', '**Strukturbefunde** (Element im Profil nicht auflösbar):', '']
             z += [f'- `{x["element"]}` — {_code(x["grund"])}' for x in b['struktur']]
-        if b['abdeckung']['ohne_modell'] and d['meta']['im_art'] == 'gematik-baum':
+        if b['abdeckung']['ohne_modell'] and modell_echt and s['mappings']:
             z += ['', 'Werte ohne spezifisches Element im Informationsmodell (ohne url, reference, system, version, Erzähltext):', '']
             z += [f'- `{el.split("/")[-1]}` ({n}×)' for el, n in b['abdeckung']['ohne_modell'].items()]
         z.append('')
@@ -123,9 +142,65 @@ def _gruppe(stufe, text, ausnahme, ms, zeigen=3):
             + f'<br>{orte}')
 
 
+def _pfad_im(d, n):
+    by = {x['id']: x for x in d['im']}
+    teile = []
+    while n:
+        teile.insert(0, n['name'])
+        n = by.get(n['p'])
+    return ' / '.join(teile)
+
+
+EHDS_STATUS = [('aufloesbar', 'auflösbar: Element im Logikmodell'), ('nur-modell', 'nur Modell ohne Element'),
+               ('element-fehlt', '**Element fehlt im Modell**'), ('modell-fehlt', '**Modell nicht im Paketbestand**'),
+               ('ohne-entsprechung', 'ausdrücklich ohne Gegenstück („im EHDS Logical Model nicht vorhanden“)')]
+EHDS_FORMATE = [('versioniert', 'Link auf die Seite des Modells mit Version (`…/models/1.0.0/en/…`)'),
+                ('ohne-version', '**uneinheitlich: Link ohne Version** (`…/models/en/…`, jeweils aktueller Stand)'),
+                ('kanonisch', 'kanonische URL des Modells (`http://www.xt-ehr.eu/fhir/models/StructureDefinition/…`)'),
+                ('ohne-url', '**Linkziel nur der Pfad**, keine URL'), ('klartext', '**Klartext ohne Link**'),
+                ('fremder-link', '**Link auf eine andere Seite** als das Logikmodell')]
+
+
+def ehds_pruefung(d):
+    """Abschnitt „EHDS-Mappingprüfung“ (mio-baum): Auflösung, Linkformat, Kontext, Befunde."""
+    e = d['statistik'].get('ehds')
+    if not e:
+        return []
+    z = ['## EHDS-Mappingprüfung', '',
+         f'{e["verweise"]} Verweise an {e["knoten"]} Elementen, aufgelöst gegen `{e["paket"]}` ({e["modelle"]} Logikmodelle).', '',
+         '| Auflösung | Anzahl |', '|---|---:|'] + [f'| {t} | {e["status"][k]} |' for k, t in EHDS_STATUS]
+    z += ['', '| Linkformat | Anzahl |', '|---|---:|'] + [f'| {t} | {e["format"][k]} |' for k, t in EHDS_FORMATE]
+    z += ['', f'Kontext: **{e["anderes_modell"]}** Verweise auf das Modell eines anderen Bausteins (Modell weder das des '
+          'übergeordneten Elements noch dort als Typ genannt).', '']
+    gruppen = [
+        ('Nicht auflösbar', lambda b: b['status'] in ('element-fehlt', 'modell-fehlt')),
+        ('Modell eines anderen Bausteins', lambda b: b['kontext']),
+        ('Klartext, Linkziel ohne URL, Link auf eine andere Seite', lambda b: b['format'] in ('klartext', 'ohne-url', 'fremder-link')),
+        ('Link ohne Version', lambda b: b['format'] == 'ohne-version'),
+    ]
+    for titel, passt in gruppen:
+        liste = [b for b in d.get('ehds_pruefung', []) if passt(b)]
+        if not liste:
+            continue
+        mit_befund = titel != 'Link ohne Version'  # dort ist der Befund für alle gleich
+        z += [f'### {titel} ({len(liste)})', '', '| Element im Modell | EHDS-Verweis |' + (' Befund |' if mit_befund else ''),
+              '|---|---|' + ('---|' if mit_befund else '')]
+        z += [f'| {b["im"]} <br>*{" / ".join(b["pfad"].split(" / ")[-3:-1])}* | `{_code(b["roh"])}` |'
+              + (f' {_code(b["grund"])} |' if mit_befund else '') for b in liste]
+        z.append('')
+    ohne = [(n, v) for n in d['im'] for v in n.get('ehds', []) if v['status'] == 'ohne-entsprechung']
+    if ohne:
+        z += [f'### Ausdrücklich ohne Gegenstück im EHDS-Modell ({len(ohne)})', '']
+        z += [f'- {n["name"]} *({" / ".join(_pfad_im(d, n).split(" / ")[-3:-1])})*' for n, _v in ohne]
+        z.append('')
+    return z
+
+
 def validierung(d):
     """Abschnitt „FHIR-Validierung“ aus `berichte/<projekt>.validierung.json` (geschrieben von `mx.py validieren`)."""
     v, pid = d.get('validierung'), d['meta']['projekt']
+    if not d['beispiele']:
+        return ['## FHIR-Validierung', '', 'Keine Beispiele — nichts zu validieren.', '']
     if not v:
         return ['## FHIR-Validierung', '',
                 f'Noch nicht validiert — `python3 -I werkzeuge/mx.py validieren {pid}` schreibt `berichte/{pid}.validierung.json`.', '']

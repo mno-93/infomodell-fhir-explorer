@@ -299,10 +299,15 @@ const IM = D.im, IMBYID = {}, IMKIDS = {};
 IM.forEach(n => { IMBYID[n.id] = n; (IMKIDS[n.p || '#'] ||= []).push(n.id); });
 const IMMAPS = IM.flatMap(n => n.maps.filter(m => m.sd).map(m => ({ im: n.id, sd: m.sd, k: m.k })));
 
+// Projekt ohne Beispiele (nur Modell): ein leeres Beispiel, damit alle Ansichten gleich arbeiten
+const OHNE_BEISPIEL = { id: '', titel: 'kein Beispiel', zweck: '', herkunft: '', quelle: '', bundle: null, ressourcen: [], elemente: {}, profilzuordnung: {},
+  pdf: null, texte: [], abdeckung: { werte: 0, gedeckt: 0, ohne_modell: {} }, struktur: [], validierung: null };
+const MIT_FHIR = D.statistik.mappings > 0 || D.meta.im_art === 'aus-profilen';   // ∅ „ohne FHIR-Mapping“ nur, wenn das Modell überhaupt FHIR-Mappings hat
 function beispielLaden(id) {
-  B = D.beispiele.find(b => b.id === id) || D.beispiele[0];
+  B = D.beispiele.find(b => b.id === id) || D.beispiele[0] || OHNE_BEISPIEL;
   $('#beispielwahl').value = B.id;
-  $('#beispiel-info').innerHTML = `<b>Zweck:</b> ${esc(B.zweck)} · <b>Herkunft:</b> ${esc(B.herkunft)} · <b>FHIR-Validierung:</b> ${esc(validierungKurz(B))}`;
+  $('#beispiel-info').innerHTML = D.beispiele.length ? `<b>Zweck:</b> ${esc(B.zweck)} · <b>Herkunft:</b> ${esc(B.herkunft)} · <b>FHIR-Validierung:</b> ${esc(validierungKurz(B))}`
+    : '<b>Keine Beispiele in diesem Projekt</b> — Begründung im Hinweis über dem Modell.';
   RES = {}; URL2KEY = {};
   B.ressourcen.forEach(r => { RES[r.key] = r; URL2KEY[r.fullUrl] = r.key; URL2KEY[r.key] = r.key; });
   KNOTEN = Object.entries(B.elemente).map(([nid, el]) => { const [sd, k] = trenne(el); return { nid, sd, k }; });
@@ -448,14 +453,18 @@ function zeile(u) {
   if (b.y) { art = '<span class="art fhir">aus Profil</span>'; titel = `Nicht im Informationsmodell — aus dem FHIR-Profil ${kurzUrl(b.y[0])} ergänzt (Must Support)\n${b.y[1]}`; }
   else if (b.z) { art = '<span class="art zyk">↻</span>'; titel = `Zyklus: „${IMBYID[b.z].name}“ ist weiter oben bereits ausmodelliert und wird hier nicht wiederholt`; }
   else if (b.v) { art = '<span class="art">↳</span>'; titel = `An dieser Stelle ausmodelliert — im IG „${IMBYID[b.v].name}“\n` + n.maps.map(m => m.roh).join('\n'); }
-  else if (n) titel = n.maps.map(m => m.roh).join('\n') || 'ohne FHIR-Mapping';
+  else if (n) titel = n.maps.map(m => m.roh).join('\n') || (n.ohne_ziel ? 'bewusst ohne Ziel: ' + n.ohne_ziel : (MIT_FHIR ? 'ohne FHIR-Mapping' : ''));
+  if (n && n.ehds?.length) titel += (titel ? '\n' : '') + 'EHDS: ' + n.ehds.map(v => v.roh).join(', ');
   const card = b.y ? (profilEl(b.y[0], b.y[1])?.card || '') : (n ? cardKurz(n.card) : '');
-  const leer = n && !b.z && !b.v && !n.maps.length && !kids;
+  const leer = MIT_FHIR && n && !b.z && !b.v && !n.maps.length && !kids && !n.ohne_ziel;
   const fehler = n && !b.z && n.maps.some(m => m.status === 'fehler' || m.status === 'verboten');
+  const ehds = n && !b.z ? (n.ehds || []).filter(ehdsAuffaellig) : [];
   return `<li data-li="${u}" class="${kids ? 'zu' : ''}"><div class="im-zeile${b.y ? ' syn' : ''}" data-u="${u}" title="${esc(titel)}">`
     + `<span class="pfeil">${kids ? '▸' : ''}</span><span class="punkt ${belegt(b) ? '' : 'aus'}" title="${belegt(b) ? 'im Beispiel belegt' : 'im Beispiel nicht belegt'}"></span>${art}`
     + `<span class="name">${esc(knotenName(b))}</span><span class="card" title="${esc(n ? n.card : '')}">${esc(card)}</span>`
     + (leer ? '<span class="warn" title="ohne FHIR-Mapping">∅</span>' : '') + (fehler ? '<span class="warn" title="Mapping fehlerhaft — siehe Details">⚠</span>' : '')
+    + (n && n.ohne_ziel && !b.z ? `<span class="hinweis" title="bewusst ohne Ziel: ${esc(n.ohne_ziel)}">⊘</span>` : '')
+    + (ehds.length ? `<span class="warn" title="EHDS-Mapping auffällig — siehe Details">E</span>` : '')
     + `</div>${kids ? '<ul></ul>' : ''}</li>`;
 }
 function kinderRendern(li) {
@@ -512,12 +521,13 @@ function profilWahlBauen() {
   const benutzt = new Set([...B.ressourcen.map(r => r.sd), ...KNOTEN.map(kn => kn.sd)]);   // auch Profile enthaltener Ressourcen
   const liste = Object.values(D.profile).sort((a, b) => (benutzt.has(b.url) - benutzt.has(a.url)) || a.name.localeCompare(b.name));
   $('#profilwahl').innerHTML = liste.map(p => `<option value="${esc(p.url)}">${benutzt.has(p.url) ? '● ' : '○ '}${esc(p.name)} (${esc(p.typ)})</option>`).join('');
-  if (!profilAktiv || !D.profile[profilAktiv]) profilAktiv = liste[0].url;
+  if (!profilAktiv || !D.profile[profilAktiv]) profilAktiv = liste[0]?.url || null;
   $('#profilwahl').value = profilAktiv;
 }
 const IMEXAKT = new Set(IMMAPS.map(m => m.sd + '#' + m.k));
 function profilZeichnen() {
   const p = D.profile[profilAktiv];
+  if (!p) { $('#profil-link').style.display = 'none'; $('#fhir-koerper').innerHTML = '<p class="hinweis">Keine FHIR-Profile in diesem Projekt.</p>'; return; }
   $('#profilwahl').value = profilAktiv;
   const link = $('#profil-link'); link.style.display = p.seite ? '' : 'none'; link.href = p.seite || '#';
   const zeilen = p.elemente.map(e => {
@@ -718,6 +728,7 @@ function eintragZeile(r) {
   return `<div class="eintrag" data-n="${esc(r.key + '|')}"><span class="art">${esc(x.resourceType)}</span> ${titel || '–'}${teile.filter(Boolean).length ? ' · ' + teile.filter(Boolean).join(' · ') : ''}</div>`;
 }
 function dokumentAnsichtZeichnen() {
+  if (!D.beispiele.length) { $('#ui-koerper').innerHTML = '<p class="hinweis">Keine Beispiele in diesem Projekt.</p>'; return; }
   const comp = B.ressourcen.find(r => r.res.resourceType === 'Composition');
   if (!comp) { $('#ui-koerper').innerHTML = '<p class="hinweis">Keine Composition im Beispiel.</p>'; return; }
   const pat = verweis(comp.res.subject), autor = verweis(comp.res.author?.[0]);
@@ -767,7 +778,9 @@ function erzaehltextZeichnen() {
 }
 function docZeichnen() {
   $$('[data-doc]').forEach(b => b.setAttribute('aria-selected', b.dataset.doc === docReiter));
-  ({ druck: druckZeichnen, pdf: pdfZeichnen, erzaehltext: erzaehltextZeichnen })[docReiter]();
+  const f = ({ druck: druckZeichnen, pdf: pdfZeichnen, erzaehltext: erzaehltextZeichnen })[docReiter];
+  if (!f) { $('#doc-koerper').innerHTML = '<p class="hinweis">Keine Dokumentansicht in diesem Projekt.</p>'; return; }
+  f();
 }
 
 // ------------------------------------------------------------------ Markieren
@@ -831,9 +844,9 @@ function ketteZeichnen(imZahl, fhirZahl, uiZahl, docZahl) {
     $('#detail-raster').innerHTML = ''; return;
   }
   const ims = [...R.im].map(id => IMBYID[id]);
-  glied('#g-im', ims.length ? ims.slice(0, 3).map(n => `<b>${esc(n.name)}</b> <span class="mono">${esc(cardKurz(n.card))}</span>`).join('<br>') + (ims.length > 3 ? `<br>… ${ims.length - 3} weitere` : '') + (R.imSchwach && auswahl.t !== 'im' ? '<br><span class="hinweis">nächstes übergeordnetes Element</span>' : '') : (D.meta.im_art === 'gematik-baum' ? 'kein Element im Informationsmodell' : 'kein Element in der abgeleiteten Struktur'), !ims.length, !ims.length);
+  glied('#g-im', ims.length ? ims.slice(0, 3).map(n => `<b>${esc(n.name)}</b> <span class="mono">${esc(cardKurz(n.card))}</span>`).join('<br>') + (ims.length > 3 ? `<br>… ${ims.length - 3} weitere` : '') + (R.imSchwach && auswahl.t !== 'im' ? '<br><span class="hinweis">nächstes übergeordnetes Element</span>' : '') : (D.meta.im_art !== 'aus-profilen' ? 'kein Element im Informationsmodell' : 'kein Element in der abgeleiteten Struktur'), !ims.length, !ims.length);
   const els = R.el.slice(0, 3).map(({ sd, k }) => { const p = D.profile[sd]; const e = p?.elemente.find(x => x.k === k); return `<b>${esc(p ? p.name : kurzUrl(sd))}</b><br><code>${esc(e ? e.id : k)}</code>${e ? ` <span class="mono">${esc(e.card)}</span>${e.ms ? ' <span class="ms">S</span>' : ''}` : ''}`; });
-  glied('#g-fhir', els.length ? els.join('<br>') + (R.el.length > 3 ? `<br>… ${R.el.length - 3} weitere` : '') : 'kein FHIR-Mapping', !els.length, !els.length);
+  glied('#g-fhir', els.length ? els.join('<br>') + (R.el.length > 3 ? `<br>… ${R.el.length - 3} weitere` : '') : (MIT_FHIR ? 'kein FHIR-Mapping' : 'das Modell enthält keine FHIR-Mappings'), !els.length, !els.length && MIT_FHIR);
   const blaetter = [...R.n1].filter(n => { const w = wert(...n.split('|')); return w !== undefined && (w === null || typeof w !== 'object'); });
   const probe = blaetter.slice(0, 3).map(n => { const [key, jp] = n.split('|'); return `<code>${esc(key.split('/')[0])}.${esc(jp)}</code> = ${esc(JSON.stringify(wert(key, jp)).slice(0, 60))}`; });
   glied('#g-inst', R.n1.size ? `${blaetter.length} Werte${R.n2.size ? `, ${R.n2.size} gleichartige in anderen Ressourcen` : ''}<br>${probe.join('<br>')}` : 'im Beispiel nicht belegt', !R.n1.size);
@@ -849,7 +862,9 @@ function detailsZeichnen(ims) {
     + (() => { const ba = D.statistik.bindungsabgleich || {}; return [...(ba.slice || []).filter(x => x.id === n.id).map(x => `<p><span class="warn">Mapping präzisieren</span> Werteliste am Slice gebunden → <code>${esc(x.vorschlag)}</code></p>`),
         ...(ba.abweichend || []).filter(x => x.id === n.id).map(x => `<p><span class="warn">Werteliste ≠ Bindung</span> Profil <code>${esc(kurzUrl(x.profil))}</code> (${esc(x.staerke_profil)}, ${esc(x.wo)})</p>`),
         ...(ba.ungeklaert || []).filter(x => x.id === n.id).map(x => `<p><span class="hinweis">Abgleich ungeklärt</span> Werteliste nicht im Paketbestand; Profil bindet <code>${esc(kurzUrl(x.profil))}</code> (${esc(x.staerke_profil)})</p>`)].join(''); })()
-    + (n.herkunft.length ? '<h4>Herkunft (Altdaten)</h4>' + n.herkunft.map(h => `<p><b>${esc(h.quelle)}:</b> ${esc(h.text)}</p>`).join('') : '')).join('');
+    + (n.ohne_ziel ? `<p><span class="hinweis">bewusst ohne Ziel</span> ${esc(n.ohne_ziel)}</p>` : '')
+    + ehdsHtml(n)
+    + (n.herkunft.length ? `<h4>${D.meta.im_art === 'mio-baum' ? 'Weitere Angaben' : 'Herkunft (Altdaten)'}</h4>` + n.herkunft.map(h => `<p><b>${esc(h.quelle)}:</b> ${esc(h.text)}</p>`).join('') : '')).join('');
   const fhirTeil = R.el.slice(0, 2).map(({ sd, k }) => { const p = D.profile[sd]; const e = p?.elemente.find(x => x.k === k); return e ? `<h4>FHIR: ${esc(p.name)}</h4><p><code>${esc(e.id)}</code> ${esc(e.card)}${e.ms ? ' · Must Support' : ''}</p><p>${esc(e.short)}</p>${e.bindung ? `<p class="werteliste">Bindung: ${wertelisteHtml(e.bindung)}</p>` : (e.bind ? `<p class="hinweis">Bindung: ${esc(e.bind)}</p>` : '')}${e.fest ? `<p class="hinweis mono">${esc(e.fest)}</p>` : ''}${e.def ? `<p class="hinweis">${esc(e.def)}</p>` : ''}` : `<h4>FHIR: ${esc(p ? p.name : kurzUrl(sd))}</h4><p><code>${esc(k)}</code> — kein Element im Profil-Snapshot (siehe Mappingprüfung)</p>`; }).join('');
   const anf = anforderungenFuer(R);
   const imAnf = ims.flatMap(n => n.anf);
@@ -862,6 +877,34 @@ function detailsZeichnen(ims) {
     .map(terminologieHtml).join('');
   $('#detail-raster').innerHTML = `<section>${imTeil || '<p class="hinweis">Kein Element im Informationsmodell.</p>'}</section><section>${fhirTeil || '<p class="hinweis">Kein Profilelement.</p>'}</section><section>${anfTeil}</section>`
     + (termTeil ? `<section class="voll">${termTeil}</section>` : '');
+}
+// ------------------------------------------------------------------ EHDS-Mapping (mio-baum): Verweise auf die Xt-EHR-Logikmodelle
+const EHDS_STATUS = { aufloesbar: 'auflösbar', 'nur-modell': 'nur Modell, kein Element', 'element-fehlt': 'Element fehlt im Modell', 'modell-fehlt': 'Modell nicht im Paketbestand', 'ohne-entsprechung': 'ausdrücklich ohne Gegenstück' };
+const EHDS_FORMAT = { versioniert: 'Link mit Version', 'ohne-version': 'Link ohne Version', kanonisch: 'kanonische URL des Modells', 'ohne-url': 'Linkziel nur der Pfad', klartext: 'nur Text, kein Link', 'fremder-link': 'Link auf eine andere Seite' };
+const ehdsAuffaellig = v => ['element-fehlt', 'modell-fehlt'].includes(v.status) || !!v.kontext || ['ohne-url', 'klartext', 'fremder-link'].includes(v.format);
+const codeMarke = t => esc(t).replace(/`([^`]+)`/g, '<code>$1</code>');
+function ehdsHtml(n) {
+  if (!n.ehds?.length) return '';
+  return '<h4>EHDS-Mapping</h4>' + n.ehds.map(v => {
+    if (v.status === 'ohne-entsprechung') return `<p><span class="hinweis">ausdrücklich ohne Gegenstück</span> ${esc(v.roh)}</p>`;
+    const ziel = v.seite ? `<a href="${esc(v.seite)}" target="_blank" rel="noopener" title="Seite im Xt-EHR-Logikmodell">${esc(v.roh)}</a>` : esc(v.roh);
+    return `<p><code>${ziel}</code> <span class="${['element-fehlt', 'modell-fehlt'].includes(v.status) ? 'warn' : 'hinweis'}">${esc(EHDS_STATUS[v.status] || v.status)}</span>`
+      + (v.format ? ` · <span class="${['ohne-version', 'ohne-url', 'klartext', 'fremder-link'].includes(v.format) ? 'warn' : 'hinweis'}">${esc(EHDS_FORMAT[v.format] || v.format)}</span>` : '')
+      + (v.url && v.format !== 'kanonisch' && v.format !== 'versioniert' ? `<br><span class="hinweis">im Modell verlinkt: <code>${esc(v.url)}</code></span>` : '')
+      + (v.kontext ? `<br><span class="warn">${codeMarke(v.kontext)}</span>` : '')
+      + (v.unsichtbar ? '<br><span class="warn">enthält ein unsichtbares Zeichen (U+200B)</span>' : '') + '</p>';
+  }).join('');
+}
+function ehdsPruefungHtml() {
+  const e = D.statistik.ehds; if (!e) return '';
+  const zeile = (a, b) => `<tr><td>${a}</td><td>${b}</td></tr>`;
+  const befunde = D.ehds_pruefung.map(b => zeile(`<a href="#" data-imsprung="${esc(b.id)}" title="Element im Modell markieren">${esc(b.im)}</a><br><span class="hinweis">${esc(b.pfad.split(' / ').slice(-3, -1).join(' / '))}</span>`,
+    `<code>${esc(b.roh)}</code><br>${codeMarke(b.grund)}`)).join('');
+  return `<h3>EHDS-Mappingprüfung</h3><p class="hinweis">${e.verweise} Verweise an ${e.knoten} Elementen, aufgelöst gegen <code>${esc(e.paket)}</code> (${e.modelle} Logikmodelle).</p>
+    <table><tbody>${zeile('Auflösung', Object.entries(e.status).map(([k, v]) => `${esc(EHDS_STATUS[k] || k)}: <b>${v}</b>`).join(' · '))}
+    ${zeile('Linkformat', Object.entries(e.format).map(([k, v]) => `${esc(EHDS_FORMAT[k] || k)}: <b>${v}</b>`).join(' · '))}
+    ${zeile('Kontext', `<b>${e.anderes_modell}</b> Verweise auf das Modell eines anderen Bausteins`)}</tbody></table>
+    <details><summary>Befunde (${D.ehds_pruefung.length}) — nicht auflösbar, anderer Baustein, Linkformat</summary><table class="fehlerliste"><tbody>${befunde}</tbody></table></details>`;
 }
 const CODESYSTEME = { 'http://snomed.info/sct': 'SNOMED CT', 'http://loinc.org': 'LOINC', 'http://unitsofmeasure.org': 'UCUM' };
 function wertelisteHtml(w) {
@@ -898,6 +941,7 @@ function terminologieHtml(n) {
 // ------------------------------------------------------------------ FHIR-Validierung (aus berichte/<projekt>.validierung.json, vom Build eingebettet)
 const STUFE = { fatal: 'fatal', error: 'Fehler', warning: 'Warnung' };
 function validierungKurz(b) {
+  if (!D.beispiele.length) return 'keine Beispiele';
   const v = b.validierung;
   if (!D.validierung || !v || !['aktuell', 'veraltet'].includes(v.status)) return v?.status === 'Paketbeispiel' ? 'nicht validiert (Beispiel aus einem FHIR-Paket)' : 'noch nicht validiert';
   const n = v.ausnahmen;
@@ -949,33 +993,35 @@ function pruefungZeigen() {
     if (TECHNISCH.test(kn.k)) continue;
     if (!IMMAPS.some(m => m.sd === kn.sd && m.k.includes('.') && deckt(m.k, kn.k))) { const k = kurzUrl(kn.sd) + ' · ' + kn.k; ohneIm.set(k, (ohneIm.get(k) || 0) + 1); }
   }
-  const imOhne = IM.filter(n => !n.maps.length && !(IMKIDS[n.id] || []).length && !n.name.endsWith('(Referenz)'));
+  const imOhne = IM.filter(n => !n.maps.length && !n.ohne_ziel && !(IMKIDS[n.id] || []).length && !n.name.endsWith('(Referenz)'));
   const st = s.mapping_status, ba = s.baum_aus;
   const liste = (stati) => D.pruefung.filter(p => stati.includes(p.status)).map(p => `<tr><td>${esc(p.im)}<br><span class="hinweis">${esc(p.pfad.split(' / ').slice(-3, -1).join(' / '))}</span></td><td><code>${esc(p.mapping)}</code><br>${esc(p.grund).replace(/`([^`]+)`/g, '<code>$1</code>')}</td></tr>`).join('');
-  const gematik = D.meta.im_art === 'gematik-baum', ig = D.meta.ig;
+  const gematik = D.meta.im_art !== 'aus-profilen', ig = D.meta.ig;   // ein Informationsmodell (gematik-baum, mio-baum)
   const zeile = (a, b) => `<tr><td>${a}</td><td>${b}</td></tr>`;
-  $('#pruefung-innen').innerHTML = `<h2>Abdeckung und ${gematik ? 'Mappingprüfung' : 'Strukturprüfung'}</h2>
+  $('#pruefung-innen').innerHTML = `<h2>Abdeckung und ${gematik ? (MIT_FHIR ? 'Mappingprüfung' : 'EHDS-Mappingprüfung') : 'Strukturprüfung'}</h2>
     <p class="hinweis">Maschinell aus den veröffentlichten Artefakten abgeleitet. Bewertungen sind Hinweise, keine Feststellungen.</p>
-    <p class="hinweis">Quellen: ${esc(ig.name)} (<code>${esc(ig.paket)}</code>, ${esc(ig.status)})${ig.url ? `, <a href="${esc(ig.url)}" target="_blank" rel="noopener">IG</a>` : ''} · Beispiel: ${esc(B.herkunft)}</p>
+    <p class="hinweis">Quellen: ${esc(ig.name)} (<code>${esc(ig.paket)}</code>, ${esc(ig.status)})${ig.url ? `, <a href="${esc(ig.url)}" target="_blank" rel="noopener">IG</a>` : ''}${D.beispiele.length ? ' · Beispiel: ' + esc(B.herkunft) : ''}</p>
     ${D.meta.im_hinweis ? `<p class="hinweis">${esc(D.meta.im_hinweis)}</p>` : ''}
     <table><tbody>
-      ${gematik ? zeile('Elemente im Informationsmodell', `${s.im_knoten}, davon ${s.im_mit_mapping} mit FHIR-Mapping`)
+      ${gematik && !MIT_FHIR ? zeile('Elemente im Informationsmodell', `${s.im_knoten}; das Modell enthält keine FHIR-Mappings`) : ''}
+      ${gematik && MIT_FHIR ? zeile('Elemente im Informationsmodell', `${s.im_knoten}, davon ${s.im_mit_mapping} mit FHIR-Mapping${s.ohne_ziel ? `, ${s.ohne_ziel} bewusst ohne Ziel` : ''}`)
         + zeile('FHIR-Mappings', `${s.mappings}: ${st.exakt} exakt · ${st.gleichwertig || 0} gleichwertig geschrieben · ${st.schreibvariante} in gemischter Notation · <b>${st.fehler} ohne Ziel · ${st.verboten} auf ein 0..0-Element</b> · ${s.anderes_profil} in ein anderes Profil als das übergeordnete Element`)
-        : zeile('Abgeleitete Struktur', `${s.im_knoten} Elemente aus den Profilen`)}
+        : (gematik ? '' : zeile('Abgeleitete Struktur', `${s.im_knoten} Elemente aus den Profilen`))}
       ${ba ? zeile('Ausmodellierte Darstellung', `${ba.knoten} Knoten · ${ba.ausmodelliert} Referenzen an Ort und Stelle aufgelöst · ${ba.zyklen} Zyklen erkannt · ${ba.aus_profil} Knoten aus FHIR-Profilen ergänzt (Must Support)`) : ''}
       ${s.wertelisten && s.wertelisten.gesamt ? zeile('Wertelisten im Modell', `${s.wertelisten.gesamt}, davon ${s.wertelisten.aufgeloest} im Paketbestand oder über eine Profilbindung aufgelöst, ${s.wertelisten.mit_link} mit Link auf die Originalseite${s.wertelisten.ohne.length ? ' · nicht auflösbar: ' + s.wertelisten.ohne.map(esc).join(', ') : ''}`) : ''}
       ${s.anforderungen || s.im_anforderungen ? zeile('Anforderungen', `${s.anforderungen} in den Verarbeitungsregeln, davon ${s.anforderungen_mit_pfad} mit erkennbarem Elementpfad; ${s.im_anforderungen} direkt im Informationsmodell`) : ''}
-      ${zeile(esc(B.titel), `${B.ressourcen.length} Ressourcen · ${ab.werte} fachliche Einzelwerte, davon ${ab.gedeckt} durch ein spezifisches Element ${gematik ? 'des Informationsmodells' : 'der abgeleiteten Struktur'} gedeckt · ${B.struktur.length} Strukturbefunde`)}
+      ${!D.beispiele.length ? zeile('Beispiele', 'keine in diesem Projekt — siehe Hinweis oben') : ''}${D.beispiele.length ? zeile(esc(B.titel), `${B.ressourcen.length} Ressourcen · ${ab.werte} fachliche Einzelwerte, davon ${ab.gedeckt} durch ein spezifisches Element ${gematik ? 'des Informationsmodells' : 'der abgeleiteten Struktur'} gedeckt · ${B.struktur.length} Strukturbefunde`) : ''}
       ${zeile(D.validierung ? `FHIR-Validierung (HL7 Validator ${esc(D.validierung.validator)})` : 'FHIR-Validierung', esc(validierungKurz(B)))}
     </tbody></table>
-    ${validierungHtml()}
+    ${D.beispiele.length ? validierungHtml() : ''}
+    ${ehdsPruefungHtml()}
     ${B.struktur.length ? '<h3>Strukturbefunde im Beispiel</h3><p class="hinweis">Belegtes Element, das sich im Profil nicht auflösen lässt.</p><table class="fehlerliste"><tbody>' + B.struktur.map(x => zeile(`<code>${esc(x.element)}</code>`, esc(x.grund))).join('') + '</tbody></table>' : ''}
     ${s.bindungsabgleich && Object.keys(s.bindungsabgleich.zaehlung || {}).length ? `<h3>Werteliste im Modell gegen Bindung im Profil</h3>
     <p class="hinweis">Je Mapping: Bindung am Element, am CodeableConcept, am Wert einer Extension oder an einem Slice darunter. ${Object.entries(s.bindungsabgleich.zaehlung).map(([k, v]) => `${esc(k)}: <b>${v}</b>`).join(' · ')}</p>
     <table class="fehlerliste"><tbody>${[...s.bindungsabgleich.slice.map(x => zeile(esc(x.im) + `<br><code>${esc(x.mapping)}</code>`, `<span class="warn">Mapping präzisieren</span> → <code>${esc(x.vorschlag)}</code> (Werteliste <code>${esc(x.modell)}</code> ist dort gebunden)`)),
       ...s.bindungsabgleich.abweichend.map(x => zeile(esc(x.im) + `<br><code>${esc(x.mapping)}</code>`, `<span class="warn">abweichend</span> Modell <code>${esc(x.modell)}</code>, Profil <code>${esc(x.profil)}</code> (${esc(x.staerke_profil)}, ${esc(x.wo)})`)),
       ...s.bindungsabgleich.ungeklaert.map(x => zeile(esc(x.im) + `<br><code>${esc(x.mapping)}</code>`, `ungeklärt: Modell <code>${esc(x.modell)}</code> nicht im Paketbestand, Profil <code>${esc(x.profil)}</code> (${esc(x.staerke_profil)}, ${esc(x.wo)})`))].join('')}</tbody></table>` : ''}
-    ${gematik ? `<h3>Fehlerhafte Mappings</h3><p class="hinweis">Pfad führt auf kein Element oder auf ein im Profil verbotenes.</p>
+    ${gematik && MIT_FHIR ? `<h3>Fehlerhafte Mappings</h3><p class="hinweis">Pfad führt auf kein Element oder auf ein im Profil verbotenes.</p>
     <table class="fehlerliste"><tbody>${liste(['fehler', 'verboten', 'unbekannt'])}</tbody></table>
     <h3>Mapping in ein anderes Profil</h3><p class="hinweis">Kann gewollt sein (Device/DeviceDefinition); zu prüfen.</p>
     <table class="fehlerliste"><tbody>${liste(['anderes-profil'])}</tbody></table>
@@ -983,9 +1029,9 @@ function pruefungZeigen() {
     <table class="fehlerliste"><tbody>${liste(['schreibvariante'])}</tbody></table></details>
     <details><summary>Gleichwertige Schreibweisen (${st.gleichwertig || 0}) — JSON-Name der Typwahl oder Typ-Slice, keine Korrektur nötig</summary>
     <table class="fehlerliste"><tbody>${liste(['gleichwertig'])}</tbody></table></details>` : ''}
-    <h3>Werte im Beispiel ohne spezifisches Element ${gematik ? 'im Informationsmodell' : 'in der abgeleiteten Struktur'}</h3><p class="hinweis">Ohne technische Angaben (url, reference, system, version, Erzähltext).</p>
-    <table><tbody>${[...ohneIm].sort().map(([k, n]) => `<tr><td><code>${esc(k)}</code></td><td>${n}×</td></tr>`).join('')}</tbody></table>
-    ${gematik ? `<h3>Blätter im Informationsmodell ohne FHIR-Mapping (${imOhne.length})</h3><p>${imOhne.map(n => esc(n.name)).join(' · ')}</p>` : ''}
+    ${D.beispiele.length ? `<h3>Werte im Beispiel ohne spezifisches Element ${gematik ? 'im Informationsmodell' : 'in der abgeleiteten Struktur'}</h3><p class="hinweis">Ohne technische Angaben (url, reference, system, version, Erzähltext).</p>
+    <table><tbody>${[...ohneIm].sort().map(([k, n]) => `<tr><td><code>${esc(k)}</code></td><td>${n}×</td></tr>`).join('')}</tbody></table>` : ''}
+    ${gematik && MIT_FHIR ? `<h3>Blätter im Informationsmodell ohne FHIR-Mapping (${imOhne.length})</h3><p>${imOhne.map(n => esc(n.name)).join(' · ')}</p>` : ''}
     <p><button class="knopf" onclick="this.closest('dialog').close()">Schließen</button></p>`;
   $('#pruefung').showModal();
 }
@@ -995,6 +1041,8 @@ function waehlen(sel) { auswahl = sel; fundZeiger = null; markieren(); urlSchrei
 document.addEventListener('click', e => {
   const sprung = e.target.closest('[data-sprung]');
   if (sprung) { e.preventDefault(); sprung.closest('dialog')?.close(); return waehlen({ t: 'node', nids: [sprung.dataset.sprung] }); }
+  const imSprung = e.target.closest('[data-imsprung]');
+  if (imSprung) { e.preventDefault(); imSprung.closest('dialog')?.close(); return waehlen({ t: 'im', id: imSprung.dataset.imsprung }); }
   const fund = e.target.closest('[data-fund]');
   if (fund) { const n = FUNDE.length; fundZeiger = ((fundZeiger ?? (+fund.dataset.fund > 0 ? -1 : 0)) + +fund.dataset.fund + n) % n; return markieren(); }
   const pfeil = e.target.closest('.pfeil');
@@ -1056,6 +1104,7 @@ if (D.meta.im_hinweis) { $('#im-hinweis').hidden = false; $('#im-hinweis').textC
 if (!D.baum_aus) { $('#varianten').hidden = true; variante = 'referenziert'; }
 $('#ui-untertitel').textContent = D.meta.darstellung === 'laborbefund' ? 'Primärsystem, Befundeingang' : 'Primärsystem, Dokument geöffnet';
 $('#beispielwahl').innerHTML = D.beispiele.map(b => `<option value="${esc(b.id)}" title="${esc(b.zweck)}">${esc(b.titel)}</option>`).join('');
+if (!D.beispiele.length) { $('#beispielwahl').hidden = true; $('label[for="beispielwahl"]').hidden = true; }
 // ------------------------------------------------------------------ Verweise per URL
 // #b=<Beispiel>&im=<Kennung im Modell>[&k=<Fundstelle im ausmodellierten Baum>]
 // #b=…&el=<Profil-id>/<Element-id>      #b=…&n=<Typ>/<id>|<JSON-Pfad>   (n mehrfach möglich)
@@ -1134,31 +1183,34 @@ const L = {   // Muster der Zeichen, wie sie in den Ansichten erscheinen
   aus: '<span class="im-zeile"><span class="art">↳</span></span>',
   zyk: '<span class="im-zeile"><span class="art zyk">↻</span></span>',
   profil: '<span class="im-zeile syn"><span class="art fhir">aus Profil</span> <span class="name">name</span></span>',
-  ohne: '<span class="warn">∅</span>', fehler: '<span class="warn">⚠</span>', bedingt: '<span class="card">0..1 | 1..1 ◇</span>',
+  ohne: '<span class="warn">∅</span>', fehler: '<span class="warn">⚠</span>', ohneZiel: '<span class="hinweis">⊘</span>', ehds: '<span class="warn">E</span>', bedingt: '<span class="card">0..1 | 1..1 ◇</span>',
   ms: '<span class="el-tab"><span class="ms">S</span></span>', im: '<span class="el-tab"><span class="im">IM</span></span>',
 };
 function legendeKurz() {
-  const g = D.meta.im_art === 'gematik-baum', e = (z, t) => `<span class="eintrag-l">${z} ${t}</span>`;
+  const g = D.meta.im_art !== 'aus-profilen', e = (z, t) => `<span class="eintrag-l">${z} ${t}</span>`;
   $('#lk-im').innerHTML = [e(L.belegt, 'im Beispiel belegt'), e(L.leer, 'nicht belegt'),
     ...(D.baum_aus ? [e(L.aus, 'ausmodelliert'), e(L.zyk, 'Zyklus'), e('<span class="art fhir" style="color:var(--leise)">aus Profil</span>', 'nicht im Modell')] : []),
-    ...(g ? [e(L.ohne, 'ohne Mapping'), e(L.fehler, 'Mapping fehlerhaft'), e('◇', 'bedingte Kardinalität')] : []),
+    ...(g && MIT_FHIR ? [e(L.ohne, 'ohne Mapping'), e(L.fehler, 'Mapping fehlerhaft')] : []), ...(g ? [e('◇', 'bedingte Kardinalität')] : []),
+    ...(IM.some(n => n.ohne_ziel) ? [e(L.ohneZiel, 'bewusst ohne Ziel')] : []), ...(D.statistik.ehds ? [e(L.ehds, 'EHDS-Mapping auffällig')] : []),
     '<a href="#" data-legende>Legende</a>'].join('');
   $('#lk-fhir').innerHTML = [e(L.ms, 'Must Support'), e(L.im, `Ziel eines Mappings ${g ? 'im Informationsmodell' : 'der Struktur'}`),
     e('<b class="mono">fett</b>', 'im Profil geändert'), '<a href="#" data-legende>Legende</a>'].join('');
 }
 function legendeZeigen() {
-  const g = D.meta.im_art === 'gematik-baum', z = (a, b) => `<tr><td>${a}</td><td>${b}</td></tr>`;
+  const g = D.meta.im_art !== 'aus-profilen', z = (a, b) => `<tr><td>${a}</td><td>${b}</td></tr>`;
   $('#legende-innen').innerHTML = `<h2>Legende</h2>
     <h3>1 ${esc(D.meta.im_titel)}</h3><table class="leg-tab"><tbody>
       ${z(L.belegt, 'Das Element ist im gewählten Beispiel belegt: Mindestens ein Wert der Instanz liegt im FHIR-Element, auf das das Element abbildet.')}
       ${z(L.leer, 'Im gewählten Beispiel nicht belegt.')}
       ${z('<span class="card">1..1</span>', g ? 'Kardinalität in der Transaktion des Informationsmodells.' : 'Kardinalität im FHIR-Profil.')}
       ${g ? z(L.bedingt, 'Bedingte Kardinalität („WENN … / SONST …“); der volle Text steht im Tooltip und in den Details.') : ''}
-      ${g ? z(L.ohne, 'Element ohne FHIR-Mapping.') : ''}
-      ${g ? z(L.fehler, 'Mapping fehlerhaft: führt auf kein Profilelement oder auf ein im Profil verbotenes (0..0). Einzelheiten in den Details und unter „Abdeckung &amp; Prüfung“.') : ''}
+      ${g && MIT_FHIR ? z(L.ohne, 'Element ohne FHIR-Mapping.') : ''}
+      ${IM.some(n => n.ohne_ziel) ? z(L.ohneZiel, 'Bewusst ohne Ziel: Die Mappingtabelle des Projekts nennt für dieses Element kein FHIR-Element und begründet das (z. B. Hilfsknoten).') : ''}
+      ${D.statistik.ehds ? z(L.ehds, 'EHDS-Mapping auffällig: Verweis auf das Xt-EHR-Logikmodell nicht auflösbar, auf das Modell eines anderen Bausteins, nur als Text oder mit einem Link, der nicht auf das Logikmodell führt. Einzelheiten in den Details und unter „Abdeckung &amp; Prüfung“.') : ''}
+      ${g && MIT_FHIR ? z(L.fehler, 'Mapping fehlerhaft: führt auf kein Profilelement oder auf ein im Profil verbotenes (0..0). Einzelheiten in den Details und unter „Abdeckung &amp; Prüfung“.') : ''}
       ${D.baum_aus ? z(L.aus, 'Ausmodelliert: Im IG steht hier nur „… (Referenz)“; die ausmodellierte Darstellung setzt das referenzierte Profil an dieser Stelle ein.') : ''}
       ${D.baum_aus ? z(L.zyk, 'Zyklus: Das Profil ist weiter oben auf demselben Weg schon ausmodelliert und wird hier nicht wiederholt.') : ''}
-      ${D.baum_aus ? z(L.profil, '<b>Nicht im Informationsmodell.</b> Das Modell nennt manche Profile nur als Ganzes, ohne Unterelemente — etwa die TI-Common-Profile für Patient:in, Behandelnde Person oder Einrichtung. Damit die Hierarchie bis zum Einzelwert reicht, ergänzt die ausmodellierte Darstellung deren Must-Support-Elemente aus dem <b>FHIR-Profil</b> (bis zur dritten Ebene), kursiv und mit diesem Etikett. Die Verknüpfungsleiste meldet für sie „kein Element im Informationsmodell“.') : ''}
+      ${D.baum_aus ? z(L.profil, '<b>Nicht im Informationsmodell.</b> Das Modell nennt manche Profile nur als Ganzes, ohne Unterelemente — etwa die TI-Common-Profile für Patient:in, Behandelnde Person oder Einrichtung —, oder ein Profil hat Must-Support-Elemente, für die das Modell keinen Knoten hat (Projekt mit Mappingtabelle). Damit die Hierarchie bis zum Einzelwert reicht, ergänzt die ausmodellierte Darstellung deren Must-Support-Elemente aus dem <b>FHIR-Profil</b> (bis zur dritten Ebene), kursiv und mit diesem Etikett. Die Verknüpfungsleiste meldet für sie „kein Element im Informationsmodell“.') : ''}
       ${!g ? z('', 'Diese Struktur ist kein veröffentlichtes Informationsmodell, sondern aus den FHIR-Profilen abgeleitet: Einstiegsprofil, Abschnitte, Einträge, Pflicht- und Must-Support-Elemente.') : ''}
     </tbody></table>
     <h3>2 FHIR</h3><table class="leg-tab"><tbody>

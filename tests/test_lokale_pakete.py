@@ -3,7 +3,7 @@
 import unittest
 
 import hilfe  # noqa: F401
-from mx import bauen, fsh, pakete
+from mx import bauen, fsh, infomodell, pakete
 from mx.grundlagen import json_laden
 from mx.konfig import alle_projekte, projekt_laden
 
@@ -53,7 +53,11 @@ class LokalePaketeTest(unittest.TestCase):
         self.assertEqual(b['struktur'], [])
 
     def test_struktur_mit_zwei_einstiegen(self):
-        wurzeln = [n for n in self.d['im'] if n['p'] is None]
+        # aus-profilen mit mehreren Einstiegen nebeneinander (das Projekt selbst zeigt inzwischen das MIO-Modell)
+        sds = pakete.definitionen(pakete.projektpakete(self.k))
+        konfig = {'informationsmodell': {'art': 'aus-profilen', 'tiefe': 3,
+                                         'einstieg': [ENTWURF + 'ps-immunization', ENTWURF + 'ps-immunization-medication']}}
+        wurzeln = [n for n in infomodell.aus_profilen(konfig, sds) if n['p'] is None]
         self.assertEqual([n['maps'][0]['sd'] for n in wurzeln], [ENTWURF + 'ps-immunization', ENTWURF + 'ps-immunization-medication'])
 
     def test_dosis_unbekannt_wird_zugeordnet(self):
