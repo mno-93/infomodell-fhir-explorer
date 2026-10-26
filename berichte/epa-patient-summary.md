@@ -1,4 +1,4 @@
-# Prüfbericht — ePA Patient Summary (mio42, CI-Build ePS-0.0.1)
+# Prüfbericht — ePA Patient Summary (CI-Build ePS-0.0.1)
 
 > Erzeugt von `python3 werkzeuge/mx.py bauen`. Nicht von Hand ändern; die CI prüft, dass der Bericht zum Stand passt.
 

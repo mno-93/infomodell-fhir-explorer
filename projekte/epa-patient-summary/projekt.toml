@@ -1,7 +1,7 @@
-# ePA Patient Summary (mio42, CI-Build ePS-0.0.1) — Informationsmodell mit EHDS-Mapping, noch ohne FHIR-Profile.
+# ePA Patient Summary (CI-Build ePS-0.0.1) — Informationsmodell mit EHDS-Mapping, noch ohne FHIR-Profile.
 # Quelle ist ausschließlich der öffentliche CI-Build des IG (Baumansicht „Informationsmodell“).
 id = "epa-patient-summary"
-titel = "ePA Patient Summary (mio42, CI-Build ePS-0.0.1)"
+titel = "ePA Patient Summary (CI-Build ePS-0.0.1)"
 beschreibung = "Informationsmodell der ePA Patient Summary aus dem öffentlichen CI-Build: Composition-Sicht, Profile und mehrfach verwendete Elemente, jedes Element mit seinem Gegenstück im EHDS-Logikmodell (Xt-EHR 1.0.0) — EHDS-Mappingprüfung statt FHIR-Mappingprüfung."
 darstellung = "dokument"
 dokumente = []
