@@ -78,6 +78,7 @@ code, .mono { font-family: var(--mono); font-size: 12px; }
 .treffer .zahl { background: var(--hl); color: var(--hl-text); border-radius: 10px; padding: 0 7px; font-weight: 600; }
 .treffer .zahl.null { background: var(--flaeche2); color: var(--leise); }
 .pane .koerper { overflow: auto; flex: 1; padding: 8px 10px; position: relative; }
+[hidden] { display: none !important; }  /* sonst überschreibt z. B. .reiter { display: flex } das Attribut */
 .reiter { display: flex; gap: 2px; }
 .reiter button { border: 1px solid var(--linie); background: var(--flaeche2); padding: 2px 9px; cursor: pointer; font-size: 12.5px; }
 .reiter button:first-child { border-radius: 6px 0 0 6px; }
