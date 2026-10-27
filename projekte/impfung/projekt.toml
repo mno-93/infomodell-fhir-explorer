@@ -137,6 +137,32 @@ fhir = "PSImmunization.note.time"
 knoten = "Impfung / Notiz / Text"
 fhir = "PSImmunization.note.text"
 
+# Referenzen auf TI-Profile: auf das ganze Profil abgebildet, damit die ausmodellierte Darstellung
+# die Must-Support-Elemente des TI-Profils an dieser Stelle zeigt (wie die Akteure im Laborbefund).
+[[informationsmodell.mappings]]
+knoten = "Impfung / Verantwortliche Einrichtung / TI Organization"
+fhir = "TIOrganization"
+
+[[informationsmodell.mappings]]
+knoten = "Impfung / Impfende Person/Einrichtung / TI Organization"
+fhir = "TIOrganization"
+
+[[informationsmodell.mappings]]
+knoten = "Impfung / Impfende Person/Einrichtung / TI Practitioner"
+fhir = "TIPractitioner"
+
+[[informationsmodell.mappings]]
+knoten = "Impfung / Impfende Person/Einrichtung / TI PractitionerRole"
+fhir = "TIPractitionerRole"
+
+[[informationsmodell.mappings]]
+knoten = "Impfung / Notiz / Autor:in / Referenz / TI Practitioner"
+fhir = "TIPractitioner"
+
+[[informationsmodell.mappings]]
+knoten = "Impfung / Notiz / Autor:in / Referenz / TI PractitionerRole"
+fhir = "TIPractitionerRole"
+
 [[beispiele]]
 id = "erstdokumentation"
 titel = "Erstdokumentation — zwei Impfungen, Mustermann"

@@ -15,9 +15,9 @@
 | Befund | Anzahl |
 |---|---:|
 | Elemente im Informationsmodell | 31 |
-| davon mit FHIR-Mapping | 17 |
-| FHIR-Mappings | 17 |
-| exakt | 14 |
+| davon mit FHIR-Mapping | 23 |
+| FHIR-Mappings | 23 |
+| exakt | 20 |
 | gleichwertige Schreibweise (JSON-Name der Typwahl, Typ-Slice) — keine Korrektur nötig | 1 |
 | Schreibvariante (gemischte Notation) — vereinheitlichen | 0 |
 | über Extension-Definition oder Datentyp aufgelöst | 2 |
@@ -55,7 +55,7 @@ Je Mapping eines Elements mit Werteliste: Bindung am Element, am zugehörigen Co
 
 ## Ausmodellierte Darstellung
 
-101 Knoten · 0 Referenzen an der Verwendungsstelle aufgelöst · 0 Zyklen erkannt · 70 Knoten aus FHIR-Profilen ergänzt
+297 Knoten · 0 Referenzen an der Verwendungsstelle aufgelöst · 0 Zyklen erkannt · 266 Knoten aus FHIR-Profilen ergänzt
 
 ## EHDS-Mappingprüfung
 

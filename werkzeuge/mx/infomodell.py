@@ -258,7 +258,7 @@ def ausmodellieren(knoten, sds, konfig, tief=False, spiegeln=False):
             gehe(w, None, [w])
     rest = [z for z in profile.values() if z not in erreicht]
     if rest:
-        g = neu(None, n='Nicht vom Einstieg aus referenziert')
+        g = neu(None, n='Nicht vom Einstieg aus erreicht')
         for z in rest:
             gehe(z, g, [z])
     return baum
