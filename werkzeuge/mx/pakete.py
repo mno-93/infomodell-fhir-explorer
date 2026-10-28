@@ -8,10 +8,14 @@ die Werkzeuge nachträglich anlegen) — damit sind ein frischer Download und ei
 Quelldateien (von IG-Seiten) liegen im Repo; die Sperrdatei hält Herkunfts-URL und SHA-256.
 Lokale Pakete (`lokale_pakete` in projekt.toml) liegen eingecheckt im Projektordner; `holen` und die Sperrdatei
 überspringen sie, Modell, Auflösung und Validierung nutzen sie wie ein Paket aus dem Cache.
+Der HL7 Validator bekommt einen eigenen Cache `.validator/.fhir/packages` (über FHIR_VALIDATOR_HOME änderbar) mit
+seinem vollständigen Paketbestand samt Abhängigkeiten; dieselbe Sperrdatei prüft ihn (siehe `validieren.py`).
 """
 import hashlib
 import io
 import os
+import re
+import shutil
 import sys
 import tarfile
 import urllib.request
@@ -24,6 +28,16 @@ REGISTRY = 'https://packages.fhir.org/'
 
 def cache():
     return Path(os.environ['FHIR_PAKETE']).expanduser() if os.environ.get('FHIR_PAKETE') else WURZEL / '.pakete'
+
+
+def validator_home():
+    """Benutzerverzeichnis des HL7 Validators (`-Duser.home`): darin `.fhir/packages` und `.fhir/fhir-settings.json`."""
+    return (Path(os.environ['FHIR_VALIDATOR_HOME']).expanduser() if os.environ.get('FHIR_VALIDATOR_HOME')
+            else WURZEL / '.validator')
+
+
+def validator_cache():
+    return validator_home() / '.fhir' / 'packages'
 
 
 def ordner(spec):
@@ -71,17 +85,23 @@ def _holen(url):
         return r.read()
 
 
-def paket_sicherstellen(spec, sperre, aktualisieren=False, pruefen=True):
-    """Paket in den Cache holen (falls nötig) und gegen die Sperrdatei prüfen."""
+def paket_sicherstellen(spec, sperre, aktualisieren=False, pruefen=True, basis=None):
+    """Paket in den Cache (`basis`, sonst `.pakete`) holen, falls nötig, und gegen die Sperrdatei prüfen."""
     pid, _, version = spec.partition('#')
-    ziel = ordner(spec)
+    ziel = basis / spec if basis else ordner(spec)
     url = sperre['pakete'].get(spec, {}).get('url') or f'{REGISTRY}{pid}/{version}'
     if not (ziel / 'package' / 'package.json').exists():
         print(f'  hole {spec}', file=sys.stderr)
         daten = _holen(url)
-        ziel.mkdir(parents=True, exist_ok=True)
+        # erst vollständig entpacken, dann umbenennen: ein abgebrochener Lauf hinterlässt kein halbes Paket
+        neu = ziel.with_name(ziel.name + '.neu')
+        for o in (neu, ziel):
+            if o.exists():
+                shutil.rmtree(o)
+        neu.mkdir(parents=True)
         with tarfile.open(fileobj=io.BytesIO(daten), mode='r:gz') as tar:
-            tar.extractall(ziel, filter='data')
+            tar.extractall(neu, filter='data')
+        neu.rename(ziel)
     if not pruefen:
         return
     ist = inhalt_hash(ziel)
@@ -91,6 +111,60 @@ def paket_sicherstellen(spec, sperre, aktualisieren=False, pruefen=True):
                          f'Cache-Ordner {ziel} löschen und neu holen.')
     if not soll or aktualisieren:
         sperre['pakete'][spec] = {'url': url, 'inhalt_sha256': ist}
+
+
+# FHIR-Kernpakete: Der Validator lädt sie nicht als Abhängigkeit nach (den Kern seiner FHIR-Version lädt er selbst)
+KERNPAKET = re.compile(r'hl7\.fhir\.r\d+b?\.core')
+FESTE_VERSION = re.compile(r'\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?')
+
+
+def abhaengigkeiten(paketordner, platzhalter=None):
+    """Abhängigkeiten aus der package.json als `<id>#<version>`, ohne FHIR-Kernpakete. Versionen müssen fest sein:
+    `current`, `dev` oder Platzhalter wie `1.5.x` löst der Validator sonst beim Paketserver auf. Ein Platzhalter gilt
+    nur mit Festlegung in `platzhalter` (`{'<id>#1.5.x': '1.5.0'}`); ohne Netz nimmt der Validator dann die
+    passende Fassung im Cache."""
+    p = json_laden(paketordner / 'package' / 'package.json')
+    aus = []
+    for pid, version in sorted(p.get('dependencies', {}).items()):
+        if KERNPAKET.fullmatch(pid):
+            continue
+        if not FESTE_VERSION.fullmatch(version):
+            fest = (platzhalter or {}).get(f'{pid}#{version}')
+            if not fest:
+                raise SystemExit(f'{p["name"]}#{p["version"]}: Abhängigkeit {pid} ohne feste Version ({version}) — '
+                                 f'Fassung festlegen (PLATZHALTER in werkzeuge/mx/validieren.py)')
+            muster = re.escape(version).replace('x', r'\d+') + r'(-.+)?'
+            if not (FESTE_VERSION.fullmatch(fest) and re.fullmatch(muster, fest)):
+                raise SystemExit(f'Festlegung {pid}#{version} → {fest} passt nicht zum Platzhalter')
+            version = fest
+        aus.append(f'{pid}#{version}')
+    return aus
+
+
+def huelle_sicherstellen(start, basis, sperre, aktualisieren=False, platzhalter=None):
+    """Pakete samt allen Abhängigkeiten in den Cache `basis` holen und gegen die Sperrdatei prüfen.
+    `start`: `<id>#<version>` oder Ordner lokaler Pakete (nur deren Abhängigkeiten). Ergebnis: sortierte Paketliste."""
+    offen, gesehen = list(start), set()
+    while offen:
+        spec = offen.pop()
+        if spec in gesehen:
+            continue
+        gesehen.add(spec)
+        if isinstance(spec, Path):
+            offen += abhaengigkeiten(spec, platzhalter)
+            continue
+        paket_sicherstellen(spec, sperre, aktualisieren, basis=basis)
+        offen += abhaengigkeiten(basis / spec, platzhalter)
+    return sorted(s for s in gesehen if not isinstance(s, Path))
+
+
+def cache_bereinigen(basis, bestand):
+    """Paketordner in `basis` entfernen, die nicht zum Bestand gehören (samt Sperrdateien des Validators)."""
+    for o in sorted(basis.iterdir()):
+        name = o.name[:-5] if o.name.endswith('.lock') else o.name
+        if '#' in name and name not in bestand:
+            print(f'  entferne {o.name} aus {basis}', file=sys.stderr)
+            shutil.rmtree(o) if o.is_dir() else o.unlink()
 
 
 def quelle_pruefen(pfad, url, sperre, aktualisieren=False):

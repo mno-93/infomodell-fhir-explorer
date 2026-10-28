@@ -234,6 +234,8 @@ Werte ohne spezifisches Element im Informationsmodell (ohne url, reference, syst
 Stand: `berichte/impfung.validierung.json`, geschrieben von `python3 -I werkzeuge/mx.py validieren impfung`; FHIR 4.0.1, Optionen `-tx n/a -locale en-US` (ohne Terminologieserver).
 
 - Pakete: `example.impfung.entwurf#0.1.0 (lokal: paket)`, `hl7.fhir.uv.extensions.r4#5.3.0`, `de.basisprofil.r4#1.6.0`, `hl7.fhir.eu.base#2.0.1`, `hl7.fhir.uv.ips#2.0.1`, `de.gematik.ti#1.5.0-ballot.2`, `de.gematik.epa#1.4.0-ballot.1`, `de.gematik.terminology#1.1.0-ballot.2`, `hl7.fhir.eu.eps#1.0.0-ballot`
+- Lädt der Validator selbst (im Paketbestand festgelegt, ohne Netz): `hl7.fhir.r4.core#4.0.1`, `hl7.fhir.xver-extensions#0.1.0`, `hl7.terminology.r4#6.2.0`, `hl7.fhir.uv.extensions.r4#5.2.0`, `hl7.terminology#7.5.0`, `hl7.fhir.uv.extensions#5.3.0`
+- Abhängigkeiten mit Platzhalter, festgelegt: `ihe.formatcode.fhir#1.5.x` → `1.5.0`
 - Ergebnis: **0 Fehler**, 13 als begründete Ausnahme, 21 Warnungen, 37 Hinweise
 
 | Beispiel | Fehler | davon begründete Ausnahme | Warnungen | Hinweise | Stand |

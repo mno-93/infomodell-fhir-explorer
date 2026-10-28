@@ -4,3 +4,4 @@ __pycache__/
 .vertraulich-muster
 .DS_Store
 .pakete/
+.validator/

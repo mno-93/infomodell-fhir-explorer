@@ -209,6 +209,10 @@ def validierung(d):
          f'Stand: `berichte/{pid}.validierung.json`, geschrieben von `python3 -I werkzeuge/mx.py validieren {pid}`; '
          f'FHIR {v["fhir"]}, Optionen `{" ".join(v["optionen"])}` (ohne Terminologieserver).', '',
          '- Pakete: ' + ', '.join(f'`{p}`' for p in v['pakete']),
+         *(['- Lädt der Validator selbst (im Paketbestand festgelegt, ohne Netz): '
+            + ', '.join(f'`{p}`' for p in v['validatorpakete'])] if v.get('validatorpakete') else []),
+         *(['- Abhängigkeiten mit Platzhalter, festgelegt: '
+            + ', '.join(f'`{p}` → `{f}`' for p, f in v['platzhalter'].items())] if v.get('platzhalter') else []),
          f'- Ergebnis: **{s["offen"]} Fehler**, {s["ausnahmen"]} als begründete Ausnahme, {s["warnungen"]} Warnungen, '
          f'{s["hinweise"]} Hinweise', '',
          '| Beispiel | Fehler | davon begründete Ausnahme | Warnungen | Hinweise | Stand |', '|---|---:|---:|---:|---:|---|']

@@ -1,6 +1,7 @@
 """Modellexplorer — Kommandozeile.
 
-  python3 werkzeuge/mx.py holen [--aktualisieren]   Pakete in den Cache holen, Pakete und Quellen gegen die Sperrdatei prüfen
+  python3 werkzeuge/mx.py holen [--aktualisieren]   Pakete in die Caches holen (Projekte, Paketbestand des Validators),
+                                                 Pakete und Quellen gegen die Sperrdatei prüfen
   python3 werkzeuge/mx.py bauen [projekt …]         Seiten nach ausgabe/, Prüfberichte nach berichte/
   python3 werkzeuge/mx.py pruefen [projekt …]       Konfiguration und Strukturbefunde prüfen (Exit-Code ≠ 0 bei Befund)
   python3 werkzeuge/mx.py validieren [projekt …]    Beispieldateien mit dem HL7 FHIR Validator prüfen (Java nötig),
@@ -27,12 +28,16 @@ def holen(args):
                     for p in k['pakete'] + k.get('terminologiepakete', []) + k.get('logikmodellpakete', [])})
     for spec in specs:
         pakete.paket_sicherstellen(spec, sperre, aktualisieren=args.aktualisieren)
+    from mx import validieren as v
+    bestand = v.bestand_sicherstellen(sperre, aktualisieren=args.aktualisieren)
+    # Sperrdatei: genau die benötigten Pakete (Projekte und Paketbestand des Validators)
+    sperre['pakete'] = {s: sperre['pakete'][s] for s in set(specs) | set(bestand)}
     for pid in alle_projekte():
         k = projekt_laden(pid)
         for q in k.get('quellen', []):
             pakete.quelle_pruefen(k['ordner'] / q['datei'], q['url'], sperre, aktualisieren=args.aktualisieren)
     pakete.sperre_schreiben(sperre)
-    print(f'{len(specs)} Pakete und alle Quellen geprüft.')
+    print(f'{len(specs)} Pakete, Paketbestand des Validators ({len(bestand)} Pakete) und alle Quellen geprüft.')
 
 
 def bauen_(args):

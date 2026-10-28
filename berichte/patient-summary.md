@@ -6,7 +6,7 @@
 
 - Implementation Guide: HL7 Europe Patient Summary (`hl7.fhir.eu.eps#1.0.0-ballot`, Ballot)
 - Darstellung des Modells: Struktur aus den Profilen — Für die EU Patient Summary ist kein Informationsmodell mit FHIR-Mappings veröffentlicht; die Xt-EHR-Logikmodelle 1.0.0 enthalten keine Mappings auf FHIR. Die Struktur folgt deshalb den Profilen: Pflicht- und Must-Support-Elemente bis zur dritten Ebene.
-- Pakete: `hl7.fhir.eu.eps#1.0.0-ballot`, `hl7.fhir.eu.base#2.0.0`, `hl7.fhir.uv.ips#2.0.0`, `hl7.fhir.eu.extensions.r4#1.3.0`, `hl7.fhir.uv.xver-r5.r4#0.1.0`, `hl7.fhir.uv.extensions.r4#5.3.0`, `de.gematik.epa.medication#1.3.5`, `de.gematik.epa#1.3.2`, `de.gematik.ti#1.3.1`, `de.basisprofil.r4#1.5.4`, `hl7.fhir.r4.core#4.0.1`
+- Pakete: `hl7.fhir.eu.eps#1.0.0-ballot`, `hl7.fhir.eu.base#2.0.1`, `hl7.fhir.uv.ips#2.0.1`, `hl7.fhir.eu.extensions.r4#1.3.1`, `hl7.fhir.uv.xver-r5.r4#0.1.0`, `hl7.fhir.uv.extensions.r4#5.3.0`, `de.gematik.epa.medication#1.3.5`, `de.gematik.epa#1.3.2`, `de.gematik.ti#1.5.0-ballot.2`, `de.basisprofil.r4#1.6.0`, `hl7.fhir.r4.core#4.0.1`
 
 ## Beispiele
 
@@ -33,7 +33,9 @@
 
 Stand: `berichte/patient-summary.validierung.json`, geschrieben von `python3 -I werkzeuge/mx.py validieren patient-summary`; FHIR 4.0.1, Optionen `-tx n/a -locale en-US -allow-example-urls true -extension https://example.org/` (ohne Terminologieserver).
 
-- Pakete: `hl7.fhir.uv.extensions.r4#5.3.0`, `de.basisprofil.r4#1.6.0`, `hl7.fhir.eu.base#2.0.1`, `de.gematik.ti#1.5.0-ballot.2`, `de.gematik.epa#1.3.2`, `de.gematik.epa.medication#1.3.5`, `de.gematik.terminology#1.1.0-ballot.2`, `hl7.fhir.eu.eps#1.0.0-ballot`
+- Pakete: `hl7.fhir.uv.extensions.r4#5.3.0`, `de.basisprofil.r4#1.6.0`, `hl7.fhir.eu.base#2.0.1`, `hl7.fhir.uv.ips#2.0.1`, `de.gematik.ti#1.5.0-ballot.2`, `de.gematik.epa#1.3.2`, `de.gematik.epa.medication#1.3.5`, `de.gematik.terminology#1.1.0-ballot.2`, `hl7.fhir.eu.eps#1.0.0-ballot`
+- Lädt der Validator selbst (im Paketbestand festgelegt, ohne Netz): `hl7.fhir.r4.core#4.0.1`, `hl7.fhir.xver-extensions#0.1.0`, `hl7.terminology.r4#6.2.0`, `hl7.fhir.uv.extensions.r4#5.2.0`, `hl7.terminology#7.5.0`, `hl7.fhir.uv.extensions#5.3.0`
+- Abhängigkeiten mit Platzhalter, festgelegt: `ihe.formatcode.fhir#1.5.x` → `1.5.0`
 - Ergebnis: **0 Fehler**, 4 als begründete Ausnahme, 162 Warnungen, 278 Hinweise
 
 | Beispiel | Fehler | davon begründete Ausnahme | Warnungen | Hinweise | Stand |

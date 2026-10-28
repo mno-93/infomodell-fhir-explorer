@@ -2,6 +2,8 @@
 lokalen Paketen des Projekts (`-ig <ordner>`).
 
 Java: $JAVA_HOME/bin/java oder `java` im Pfad. Validator: $VALIDATOR_JAR oder ~/.fhir/validator_cli.jar.
+Pakete: Der Validator läuft ohne Netz mit eigenem Benutzerverzeichnis `.validator/` (`-Duser.home`); dessen Cache
+`.fhir/packages` enthält genau den gesperrten Paketbestand (`holen` füllt und prüft ihn, siehe `bestand_sicherstellen`).
 Ohne Terminologieserver (`-tx n/a`); Meldungen, die nur mit Server auswertbar sind, stehen begründet als Ausnahme
 in der Projektkonfiguration. Ausnahmen ohne Treffer werden als Hinweis gemeldet. Exit-Code ≠ 0 bei Fehlern
 (error, fatal), die keine begründete Ausnahme sind.
@@ -21,8 +23,8 @@ import tempfile
 from pathlib import Path
 
 from .grundlagen import AUSGABE, BERICHTE, WURZEL, json_laden, json_schreiben
-from .konfig import projekt_laden
-from .pakete import bezeichnung
+from .konfig import alle_projekte, projekt_laden
+from .pakete import bezeichnung, cache_bereinigen, huelle_sicherstellen, validator_cache, validator_home
 
 EXT = 'http://hl7.org/fhir/StructureDefinition/'
 DATEI_EXT = EXT + 'operationoutcome-file'
@@ -32,10 +34,54 @@ KENNUNG_EXT = EXT + 'operationoutcome-message-id'
 JVM_OPTIONEN = ['-Duser.language=en', '-Duser.country=US']
 LOCALE = 'en-US'
 RANG = {'fatal': 0, 'error': 1, 'warning': 2}
+# Pakete, die der Validator (7.0.1, FHIR R4) von sich aus lädt: den Kern mit festen Versionen …
+KERNPAKETE = ['hl7.fhir.r4.core#4.0.1', 'hl7.fhir.xver-extensions#0.1.0', 'hl7.terminology.r4#6.2.0',
+              'hl7.fhir.uv.extensions.r4#5.2.0']
+# … und hl7.terminology und hl7.fhir.uv.extensions ohne Version, also die jeweils neueste beim Paketserver — damit
+# hinge das Ergebnis vom Tag ab. Ohne Netz nimmt er die neueste Fassung im Cache; der enthält nur diese hier.
+# Stand der Ergebnisse vom 2026-10-27 (hl7.fhir.uv.extensions 5.4.0 erschien am Abend des 2026-10-27).
+NEUESTE = ['hl7.terminology#7.5.0', 'hl7.fhir.uv.extensions#5.3.0']
+# Abhängigkeiten mit Platzhalter löst er ebenso beim Paketserver auf, ohne Netz aus dem Cache: Fassung festgelegt
+# (ihe.iti.mhd 4.2.5-comment, eine Abhängigkeit der ePA-Pakete, verlangt ihe.formatcode.fhir 1.5.x).
+PLATZHALTER = {'ihe.formatcode.fhir#1.5.x': '1.5.0'}
 # Teile von Meldungen, die von der Netzantwort abhängen (z. B. Profil unter einer Beispiel-URL nachladen):
 # vereinheitlichen, damit das Ergebnis nicht davon abhängt, was ein fremder Server gerade ausliefert
 NETZABHAENGIG = [(re.compile(r'(could not be found), and fetching it resulted in the error .*$', re.S),
                   r'\g<1>; fetching it failed (response details omitted)')]
+
+
+def startpakete(pids):
+    """Pakete, die der Validator für die Projekte lädt (Abhängigkeiten kommen in `bestand_sicherstellen` dazu):
+    eigene, `[validierung] pakete` und lokale Pakete (als Ordner)."""
+    start = [*KERNPAKETE, *NEUESTE]
+    for pid in pids:
+        k = projekt_laden(pid)
+        if k.get('validierung'):
+            start += [*k['validierung']['pakete'], *k['lokale_ordner']]
+    return start
+
+
+def bestand_sicherstellen(sperre, aktualisieren=False, pids=None):
+    """Paketbestand des Validators samt Abhängigkeiten in seinen Cache holen und gegen die Sperrdatei prüfen;
+    Paketordner außerhalb des Bestands entfernen. Ergebnis: sortierte Paketliste."""
+    basis = validator_cache()
+    basis.mkdir(parents=True, exist_ok=True)
+    bestand = huelle_sicherstellen(startpakete(pids or alle_projekte()), basis, sperre, aktualisieren, PLATZHALTER)
+    for spec in NEUESTE:
+        pid = spec.partition('#')[0]
+        andere = [b for b in bestand if b.partition('#')[0] == pid and b != spec]
+        if andere:
+            raise SystemExit(f'Paketbestand des Validators: {pid} soll nur in {spec} vorliegen (lädt der Validator '
+                             f'ohne Version), Abhängigkeiten verlangen auch {", ".join(andere)}')
+    cache_bereinigen(basis, set(bestand))
+    return bestand
+
+
+def _einstellungen():
+    """fhir-settings.json im Benutzerverzeichnis des Validators: kein Netz — Pakete nur aus dem Cache."""
+    p = validator_home() / '.fhir' / 'fhir-settings.json'
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps({'prohibitNetworkAccess': True}) + '\n', encoding='utf-8')
 
 
 def _java():
@@ -142,6 +188,7 @@ def auswerten(k, roh, version):
         'optionen': _optionen(v),
         'pakete': [f'{bezeichnung(o)} (lokal: {o.relative_to(k["ordner"]).as_posix()})' for o in k['lokale_ordner']]
                   + list(v['pakete']),
+        'validatorpakete': [*KERNPAKETE, *NEUESTE], 'platzhalter': PLATZHALTER,
         'ausnahmen': [{'id': ausnahme_kennung(a, i), 'muster': a['muster'], 'grund': a['grund'], 'treffer': treffer[i]}
                       for i, a in enumerate(ausnahmen)],
         'summe': summe, 'beispiele': beispiele,
@@ -164,9 +211,15 @@ def projekt(pid):
     if not v or not dateien:
         print(f'{pid}: nichts zu validieren')
         return 0
+    fehlt = [s for s in [*KERNPAKETE, *NEUESTE, *v['pakete']] if not (validator_cache() / s / 'package').is_dir()]
+    if fehlt:
+        raise SystemExit(f'{pid}: Paketbestand des Validators unvollständig ({", ".join(fehlt)}) — '
+                         f'zuerst `python3 -I werkzeuge/mx.py holen`')
+    _einstellungen()
     with tempfile.TemporaryDirectory() as tmp:
         aus = Path(tmp) / 'ergebnis.json'
-        befehl = [_java(), *JVM_OPTIONEN, '-jar', _jar(), *dateien, '-version', k.get('fhir', '4.0.1'),
+        befehl = [_java(), *JVM_OPTIONEN, f'-Duser.home={validator_home()}', '-jar', _jar(), *dateien,
+                  '-version', k.get('fhir', '4.0.1'),
                   *_optionen(v), '-output', str(aus)]
         for o in k['lokale_ordner']:
             befehl += ['-ig', str(o / 'package')]
@@ -222,7 +275,9 @@ def ergebnis_laden(k, pfad=None):
             continue
         veraltet = not bk.get('datei') or datei_hash(k['ordner'] / bk['datei']) != e['sha256']
         beispiele[bk['id']] = dict({x: y for x, y in e.items() if x != 'sha256'}, status='veraltet' if veraltet else 'aktuell')
-    return {x: d[x] for x in ('validator', 'fhir', 'optionen', 'pakete', 'ausnahmen', 'summe')} | {'beispiele': beispiele}
+    return ({x: d[x] for x in ('validator', 'fhir', 'optionen', 'pakete', 'ausnahmen', 'summe')}
+            | {'validatorpakete': d.get('validatorpakete', []), 'platzhalter': d.get('platzhalter', {}),
+               'beispiele': beispiele})
 
 
 if __name__ == '__main__':

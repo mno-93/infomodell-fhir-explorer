@@ -89,7 +89,7 @@ Links auf die Originalseiten nur nach dem geprüften Muster `https://www.xt-ehr.
 
 ## FHIR-Validierung
 
-`mx.py validieren` ruft den HL7 Validator je Projekt mit festen Optionen auf (`-tx n/a -locale en-US`, JVM mit `-Duser.language=en -Duser.country=US`) und schreibt `berichte/<projekt>.validierung.json` (`werkzeuge/mx/validieren.py`). Jede Meldung wird über ihre Datei dem Beispiel zugeordnet; Fehler werden gegen die begründeten Ausnahmen des Projekts geprüft. `bauen` bettet das Ergebnis ein: Prüfbericht, Dialog „Abdeckung & Prüfung“ (Ort als Sprung zum Wert, sofern er sich einem Knoten des Beispiels zuordnen lässt) und Übersichtsseite. Der Validator selbst läuft nur in `validieren`, nie im Bau.
+`mx.py validieren` ruft den HL7 Validator je Projekt mit festen Optionen auf (`-tx n/a -locale en-US`, JVM mit `-Duser.language=en -Duser.country=US`) und schreibt `berichte/<projekt>.validierung.json` (`werkzeuge/mx/validieren.py`). Jede Meldung wird über ihre Datei dem Beispiel zugeordnet; Fehler werden gegen die begründeten Ausnahmen des Projekts geprüft. `bauen` bettet das Ergebnis ein: Prüfbericht, Dialog „Abdeckung & Prüfung“ (Ort als Sprung zum Wert, sofern er sich einem Knoten des Beispiels zuordnen lässt) und Übersichtsseite. Der Validator selbst läuft nur in `validieren`, nie im Bau — ohne Netz und nur mit dem gesperrten Paketbestand in `.validator/`, den `holen` füllt; so hängt das Ergebnis nicht davon ab, welche Paketfassungen der Paketserver gerade als neueste meldet.
 
 ## Grenzen
 

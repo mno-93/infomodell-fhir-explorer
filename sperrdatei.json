@@ -8,6 +8,14 @@
    "url": "https://packages.fhir.org/de.basisprofil.r4/1.6.0",
    "inhalt_sha256": "1cb0a45d36952f76776ea4d0a8cbc4e99ac39667df1444d7b7014ac552ab59da"
   },
+  "de.fhir.medication#1.0.7": {
+   "url": "https://packages.fhir.org/de.fhir.medication/1.0.7",
+   "inhalt_sha256": "60e6b742e6b815a46d9ca9a299d0aed73057fa8001d17da62e90ae3394444012"
+  },
+  "de.fhir.medication#2.0.0-ballot": {
+   "url": "https://packages.fhir.org/de.fhir.medication/2.0.0-ballot",
+   "inhalt_sha256": "52383dd1597aaf6bc84015648ad82ec6adcf17eb9ff842f824143ad80d6ee10a"
+  },
   "de.gematik.epa#1.3.2": {
    "url": "https://packages.fhir.org/de.gematik.epa/1.3.2",
    "inhalt_sha256": "ccb65e0226f7e48d03df828da5f958a220900b82e5c5696afbb08a147b50517f"
@@ -24,9 +32,29 @@
    "url": "https://packages.fhir.org/de.gematik.epa.medication/1.3.5",
    "inhalt_sha256": "155f017f90dd02d19cef2724690d17926bb6a0a7cd77fe6dd838e62f43b2d412"
   },
+  "de.gematik.fhir.directory#1.0.1": {
+   "url": "https://packages.fhir.org/de.gematik.fhir.directory/1.0.1",
+   "inhalt_sha256": "e0b4759443065518c0fc22c951e2333b7361a566c785b6442b58fbee91a1bd6e"
+  },
+  "de.gematik.terminology#1.0.8": {
+   "url": "https://packages.fhir.org/de.gematik.terminology/1.0.8",
+   "inhalt_sha256": "c039c4d0d2311ca4d0b46e2caa7692fcb134ad7e7fd3ebf28a6ee3729b0778a9"
+  },
+  "de.gematik.terminology#1.0.9": {
+   "url": "https://packages.fhir.org/de.gematik.terminology/1.0.9",
+   "inhalt_sha256": "5f2d203f3dd4d7aea98854092963e83151c3ed09e69ed9d33ed27cd7fed9e1d8"
+  },
+  "de.gematik.terminology#1.0.9-1": {
+   "url": "https://packages.fhir.org/de.gematik.terminology/1.0.9-1",
+   "inhalt_sha256": "dcaff392e7ac6a18b935efcb7d6146d5ec429d99c511b3d34f17fb310a8ceecd"
+  },
   "de.gematik.terminology#1.1.0-ballot.2": {
    "url": "https://packages.fhir.org/de.gematik.terminology/1.1.0-ballot.2",
    "inhalt_sha256": "9568c0d5c08f09ae58873e6e714ecd210308ab8bdf1f36eec1f39f4ab69a8d7e"
+  },
+  "de.gematik.ti#1.2.0": {
+   "url": "https://packages.fhir.org/de.gematik.ti/1.2.0",
+   "inhalt_sha256": "95d159fddebfdb7400f609600df1e339f95dac8f1ee808780821c472737b9313"
   },
   "de.gematik.ti#1.3.1": {
    "url": "https://packages.fhir.org/de.gematik.ti/1.3.1",
@@ -39,6 +67,14 @@
   "de.gematik.ti#1.5.0-ballot.2": {
    "url": "https://packages.fhir.org/de.gematik.ti/1.5.0-ballot.2",
    "inhalt_sha256": "7055a6d428b80f4213430860cda2f138c029248eae1ba92ac44b861bf32d5419"
+  },
+  "dvmd.kdl.r4#2025.0.1": {
+   "url": "https://packages.fhir.org/dvmd.kdl.r4/2025.0.1",
+   "inhalt_sha256": "0af9ee9acd89825cd917a2d6151394df7778359b7cd79ee1d0c2c61d46ec5420"
+  },
+  "dvmd.kdl.r4#2026.0.0": {
+   "url": "https://packages.fhir.org/dvmd.kdl.r4/2026.0.0",
+   "inhalt_sha256": "58153ef1c90855b78a5e52250106a491b2f99fc21d9e6568d80452570baf9ef6"
   },
   "hl7.fhir.eu.base#2.0.0": {
    "url": "https://packages.fhir.org/hl7.fhir.eu.base/2.0.0",
@@ -68,9 +104,25 @@
    "url": "https://packages.fhir.org/hl7.fhir.r4.core/4.0.1",
    "inhalt_sha256": "662dd4af22bc9916df16e105856c65c225838e4403e22f701afd03b52adb4fca"
   },
+  "hl7.fhir.uv.extensions#5.3.0": {
+   "url": "https://packages.fhir.org/hl7.fhir.uv.extensions/5.3.0",
+   "inhalt_sha256": "0240cd9c00a2b32647b42f4919a2acbd6dda53759af2bfc9e38015045b0ea155"
+  },
+  "hl7.fhir.uv.extensions.r4#5.2.0": {
+   "url": "https://packages.fhir.org/hl7.fhir.uv.extensions.r4/5.2.0",
+   "inhalt_sha256": "ca1ac4b31e168ce8ff67965c64259f7f74bd9935edd9d3ee4bb680f5d20a9543"
+  },
   "hl7.fhir.uv.extensions.r4#5.3.0": {
    "url": "https://packages.fhir.org/hl7.fhir.uv.extensions.r4/5.3.0",
    "inhalt_sha256": "081c4fcf8586944a5dea387e3946fb56b6ccdc72bb42bbeb1c9e6ff590724b8c"
+  },
+  "hl7.fhir.uv.extensions.r5#5.2.0": {
+   "url": "https://packages.fhir.org/hl7.fhir.uv.extensions.r5/5.2.0",
+   "inhalt_sha256": "68e999f535293c3225014e98fbbcd188fd8f8ff00ab6b54204c7ec66d0c0406d"
+  },
+  "hl7.fhir.uv.ipa#1.1.0": {
+   "url": "https://packages.fhir.org/hl7.fhir.uv.ipa/1.1.0",
+   "inhalt_sha256": "fed40a619a3472e7a72798afa171917c81d254fba3fc1ec656087e11d8299e28"
   },
   "hl7.fhir.uv.ips#2.0.0": {
    "url": "https://packages.fhir.org/hl7.fhir.uv.ips/2.0.0",
@@ -80,17 +132,81 @@
    "url": "https://packages.fhir.org/hl7.fhir.uv.ips/2.0.1",
    "inhalt_sha256": "7e825a69d20c7d3dfa4a50fb288777ace6fe348a69f9a1aa4acfe13d4a2e696b"
   },
+  "hl7.fhir.uv.smart-app-launch#2.0.0": {
+   "url": "https://packages.fhir.org/hl7.fhir.uv.smart-app-launch/2.0.0",
+   "inhalt_sha256": "1b7bb8f981832f554adcf4f626ac72bb59f4566b78971969679bce47d956e715"
+  },
   "hl7.fhir.uv.xver-r5.r4#0.1.0": {
    "url": "https://packages.fhir.org/hl7.fhir.uv.xver-r5.r4/0.1.0",
    "inhalt_sha256": "c0ed92fbe766c07d960b3d626b94859c8c8e293b68dbffe348ad9a79d362bd35"
+  },
+  "hl7.fhir.xver-extensions#0.1.0": {
+   "url": "https://packages.fhir.org/hl7.fhir.xver-extensions/0.1.0",
+   "inhalt_sha256": "60d24302af80de7b01121d5b491f729f965b5b6382f17caa43c897c548404cbb"
+  },
+  "hl7.terminology#7.5.0": {
+   "url": "https://packages.fhir.org/hl7.terminology/7.5.0",
+   "inhalt_sha256": "44f066c6caaa6532bcc8d886591d3140b315de94b316767a5a0002a25c98f83b"
+  },
+  "hl7.terminology.r4#6.2.0": {
+   "url": "https://packages.fhir.org/hl7.terminology.r4/6.2.0",
+   "inhalt_sha256": "0daf2499957b296643813f4b3975515831298fc997166ec0f00ffa5e423a8c3e"
+  },
+  "hl7.terminology.r4#6.3.0": {
+   "url": "https://packages.fhir.org/hl7.terminology.r4/6.3.0",
+   "inhalt_sha256": "12e9bb6a8cf5985dce7093ffe95ff58bae68196b808ab3ed0d3750c509b52e37"
+  },
+  "hl7.terminology.r4#6.5.0": {
+   "url": "https://packages.fhir.org/hl7.terminology.r4/6.5.0",
+   "inhalt_sha256": "40b143a32069ec1effd312c68509b72d13a51152ac4e645f12025deb9869c159"
+  },
+  "hl7.terminology.r4#7.0.1": {
+   "url": "https://packages.fhir.org/hl7.terminology.r4/7.0.1",
+   "inhalt_sha256": "7794429dad611514a9411a0825ecc52ced2b80fa0646b118e77c2f43b7769a99"
   },
   "hl7.terminology.r4#7.1.0": {
    "url": "https://packages.fhir.org/hl7.terminology.r4/7.1.0",
    "inhalt_sha256": "121d4d892ca25e1ec9212b6c05f12daf80b0ce7ef58c60076b4852194ac033f8"
   },
+  "hl7.terminology.r4#7.2.0": {
+   "url": "https://packages.fhir.org/hl7.terminology.r4/7.2.0",
+   "inhalt_sha256": "b0a5a6f9565ad2351ed3dd1017c792ede1331413a6acc99a4e105a3b12d3b495"
+  },
   "hl7.terminology.r4#7.3.0": {
    "url": "https://packages.fhir.org/hl7.terminology.r4/7.3.0",
    "inhalt_sha256": "0a1822957f798ae7a4fa060d4dc4a1604d81832f774ba8d9f249282349cdeec9"
+  },
+  "hl7.terminology.r4#7.4.0": {
+   "url": "https://packages.fhir.org/hl7.terminology.r4/7.4.0",
+   "inhalt_sha256": "5ee867d600dde48b17b7f55ac1ec22833553a635d99685739e80978733d0cfc4"
+  },
+  "hl7.terminology.r5#7.1.0": {
+   "url": "https://packages.fhir.org/hl7.terminology.r5/7.1.0",
+   "inhalt_sha256": "5053328c8de3d69f93b0ed19b080cca1e279db193b12806c11faab5966d87baa"
+  },
+  "ihe.formatcode.fhir#1.5.0": {
+   "url": "https://packages.fhir.org/ihe.formatcode.fhir/1.5.0",
+   "inhalt_sha256": "d68d4faf965176a71429867f4b9b3b10085b115c40c5148044648c2a826a96a3"
+  },
+  "ihe.iti.balp#1.1.4": {
+   "url": "https://packages.fhir.org/ihe.iti.balp/1.1.4",
+   "inhalt_sha256": "05dd6cfa1e968dfe05e2c6f398975a155710f8d8edfe19d397e720653b36a855"
+  },
+  "ihe.iti.mhd#4.2.4": {
+   "url": "https://packages.fhir.org/ihe.iti.mhd/4.2.4",
+   "inhalt_sha256": "292dd185074db7a55561cd48cf67c76bb837caa240c28bbe290d0d4765a38d87"
+  },
+  "ihe.iti.mhd#4.2.5-comment": {
+   "url": "https://packages.fhir.org/ihe.iti.mhd/4.2.5-comment",
+   "inhalt_sha256": "60169ec1daa4c487e4bae797e39439e7abf1d4d3b7df3795609d0387f2e95489"
+  },
+  "ihe.pharm.mpd.r4#1.0.0-comment-2": {
+   "url": "https://packages.fhir.org/ihe.pharm.mpd.r4/1.0.0-comment-2",
+   "inhalt_sha256": "97357f2198bd43a66f1177c45a3a5b6d1a1227d52a22dd0cee27bc12b9bfdb1d"
+  },
+  "kbv.all.st#1.48.0": {
+   "url": "https://packages.fhir.org/kbv.all.st/1.48.0",
+   "inhalt_sha256": "9e5ccdf1c841b23b2c83e9d9eb7281260bcf308bf7bc6cd66c7731b1cbf38211"
   },
   "xtehr.eu.ehds.models#1.0.0": {
    "url": "https://packages.fhir.org/xtehr.eu.ehds.models/1.0.0",

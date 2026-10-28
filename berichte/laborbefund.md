@@ -6,7 +6,7 @@
 
 - Implementation Guide: ePA Laboratory Report Implementation Guide (`de.gematik.epa.laboratory#1.0.0-ballot.1`, öffentlicher Ballot, 15.09.2026)
 - Darstellung des Modells: Informationsmodell
-- Pakete: `de.gematik.epa.laboratory#1.0.0-ballot.1`, `de.gematik.ti#1.5.0-ballot.1`, `hl7.fhir.eu.laboratory#2.0.0`, `hl7.fhir.eu.base#2.0.0`, `hl7.fhir.eu.extensions.r4#1.3.0`, `hl7.fhir.uv.xver-r5.r4#0.1.0`, `hl7.fhir.uv.extensions.r4#5.3.0`, `de.basisprofil.r4#1.6.0`, `hl7.fhir.r4.core#4.0.1`
+- Pakete: `de.gematik.epa.laboratory#1.0.0-ballot.1`, `de.gematik.ti#1.5.0-ballot.2`, `hl7.fhir.eu.laboratory#2.0.0`, `hl7.fhir.eu.base#2.0.1`, `hl7.fhir.eu.extensions.r4#1.3.1`, `hl7.fhir.uv.xver-r5.r4#0.1.0`, `hl7.fhir.uv.extensions.r4#5.3.0`, `de.basisprofil.r4#1.6.0`, `hl7.fhir.r4.core#4.0.1`
 
 ## Mappingprüfung
 
@@ -459,6 +459,8 @@ Werte ohne spezifisches Element im Informationsmodell (ohne url, reference, syst
 Stand: `berichte/laborbefund.validierung.json`, geschrieben von `python3 -I werkzeuge/mx.py validieren laborbefund`; FHIR 4.0.1, Optionen `-tx n/a -locale en-US -allow-example-urls true -extension https://example.org/` (ohne Terminologieserver).
 
 - Pakete: `hl7.fhir.uv.extensions.r4#5.3.0`, `de.basisprofil.r4#1.6.0`, `hl7.fhir.eu.base#2.0.1`, `de.gematik.ti#1.5.0-ballot.2`, `de.gematik.epa.laboratory#1.0.0-ballot.1`, `de.gematik.terminology#1.1.0-ballot.2`
+- Lädt der Validator selbst (im Paketbestand festgelegt, ohne Netz): `hl7.fhir.r4.core#4.0.1`, `hl7.fhir.xver-extensions#0.1.0`, `hl7.terminology.r4#6.2.0`, `hl7.fhir.uv.extensions.r4#5.2.0`, `hl7.terminology#7.5.0`, `hl7.fhir.uv.extensions#5.3.0`
+- Abhängigkeiten mit Platzhalter, festgelegt: `ihe.formatcode.fhir#1.5.x` → `1.5.0`
 - Ergebnis: **0 Fehler**, 12 als begründete Ausnahme, 70 Warnungen, 36 Hinweise
 
 | Beispiel | Fehler | davon begründete Ausnahme | Warnungen | Hinweise | Stand |

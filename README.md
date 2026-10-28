@@ -24,7 +24,7 @@ Die Prüfberichte je Projekt stehen in [`berichte/`](berichte/): Mappingprüfung
 Python ab 3.12, sonst nichts. Für die Validierung zusätzlich Java (ab 17; die CI nutzt 21) und der HL7 FHIR Validator in der Version und mit der Prüfsumme aus `.github/workflows/ci.yml`; für den Bau genügt Python.
 
 ```bash
-python3 -I werkzeuge/mx.py holen      # FHIR-Pakete aus der Registry nach .pakete/, Prüfung gegen sperrdatei.json
+python3 -I werkzeuge/mx.py holen      # FHIR-Pakete aus der Registry nach .pakete/ und .validator/, Prüfung gegen sperrdatei.json
 python3 -I werkzeuge/mx.py bauen      # ausgabe/index.html, ausgabe/<projekt>.html, berichte/<projekt>.md
 python3 -I -m unittest discover -s tests
 python3 -m http.server 8790 --directory ausgabe
@@ -37,7 +37,7 @@ Weitere Befehle:
 | Befehl | Wirkung |
 |---|---|
 | `mx.py pruefen` | belegte Elemente aller Beispiele gegen die Profile auflösen; Exit-Code ≠ 0 bei Befund |
-| `mx.py validieren` | Beispieldateien mit dem HL7 FHIR Validator prüfen (Pakete und begründete Ausnahmen je Projekt); Ergebnis nach `berichte/<projekt>.validierung.json` — einchecken |
+| `mx.py validieren` | Beispieldateien mit dem HL7 FHIR Validator prüfen (Pakete und begründete Ausnahmen je Projekt; ohne Netz, nur mit dem gesperrten Paketbestand aus `holen`); Ergebnis nach `berichte/<projekt>.validierung.json` — einchecken |
 | `mx.py fsh <projekt>` | lokales Paket eines Projekts aus FSH neu erzeugen (SUSHI nötig, siehe [`docs/NEUES_PROJEKT.md`](docs/NEUES_PROJEKT.md#lokale-pakete-profile-im-entwurf)) |
 | `mx.py vertraulich` | versionierte Dateien gegen eingebaute und projektbezogene Muster prüfen |
 | `mx.py holen --aktualisieren` | Sperrdatei neu schreiben, Quellen neu laden — nur bewusst, Änderung prüfen und einchecken. Neue Pakete und Quellen nimmt schon `holen` auf, ohne die vorhandenen neu zu laden |

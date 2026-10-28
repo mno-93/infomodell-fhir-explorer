@@ -19,6 +19,17 @@
   "de.gematik.terminology#1.1.0-ballot.2",
   "hl7.fhir.eu.eps#1.0.0-ballot"
  ],
+ "validatorpakete": [
+  "hl7.fhir.r4.core#4.0.1",
+  "hl7.fhir.xver-extensions#0.1.0",
+  "hl7.terminology.r4#6.2.0",
+  "hl7.fhir.uv.extensions.r4#5.2.0",
+  "hl7.terminology#7.5.0",
+  "hl7.fhir.uv.extensions#5.3.0"
+ ],
+ "platzhalter": {
+  "ihe.formatcode.fhir#1.5.x": "1.5.0"
+ },
  "ausnahmen": [
   {
    "id": "xver-datatype-kontext",

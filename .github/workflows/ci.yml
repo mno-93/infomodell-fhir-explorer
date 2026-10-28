@@ -21,11 +21,15 @@ jobs:
       - uses: actions/checkout@v7
       - name: Python-Version
         run: python3 -c 'import sys; assert sys.version_info >= (3, 12), sys.version; print(sys.version)'
+      # Pakete der Projekte und Paketbestand des Validators; `holen` ergänzt Fehlendes und prüft alles gegen die Sperrdatei
       - name: Paket-Cache
         uses: actions/cache@v6
         with:
-          path: .pakete
-          key: fhir-pakete-${{ hashFiles('sperrdatei.json', 'projekte/*/projekt.toml') }}
+          path: |
+            .pakete
+            .validator/.fhir/packages
+          key: fhir-pakete-v2-${{ hashFiles('sperrdatei.json', 'projekte/*/projekt.toml') }}
+          restore-keys: fhir-pakete-v2-
       - name: Pakete holen und gegen die Sperrdatei prüfen
         run: python3 -I werkzeuge/mx.py holen
       - name: Vertraulichkeit
@@ -72,15 +76,22 @@ jobs:
             "https://github.com/hapifhir/org.hl7.fhir.core/releases/download/${VALIDATOR_VERSION}/validator_cli.jar"
       - name: Prüfsumme des Validators
         run: echo "${VALIDATOR_SHA256}  ${HOME}/.fhir/validator_cli.jar" | sha256sum --check --strict
-      - name: Paket-Cache des Validators
+      # Der Validator läuft ohne Netz und sieht nur den gesperrten Paketbestand in .validator/ (werkzeuge/mx/validieren.py)
+      - name: Paket-Cache
         uses: actions/cache@v6
         with:
-          path: ~/.fhir/packages
-          key: fhir-validator-pakete-${{ hashFiles('projekte/*/projekt.toml') }}
+          path: |
+            .pakete
+            .validator/.fhir/packages
+          key: fhir-pakete-v2-${{ hashFiles('sperrdatei.json', 'projekte/*/projekt.toml') }}
+          restore-keys: fhir-pakete-v2-
+      - name: Paketbestand holen und gegen die Sperrdatei prüfen
+        run: python3 -I werkzeuge/mx.py holen
       - name: Beispiele validieren
         run: python3 -I werkzeuge/mx.py validieren
       # Die Prüfberichte und die Seiten bauen auf berichte/<projekt>.validierung.json auf (ohne Java):
-      # das eingecheckte Ergebnis muss dem Lauf mit festem Validator, festen Paketen und englischen Meldungen entsprechen.
+      # das eingecheckte Ergebnis muss dem Lauf mit festem Validator, festem Paketbestand ohne Netz und englischen
+      # Meldungen entsprechen.
       - name: Validierungsergebnisse entsprechen dem eingecheckten Stand
         run: git diff --exit-code -- 'berichte/*.validierung.json'
       - name: Bericht sichern
