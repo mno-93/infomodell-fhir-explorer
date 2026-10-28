@@ -4,7 +4,7 @@ import html
 import json
 
 from . import anforderungen, beispiele, ehds, infomodell, validieren
-from .grundlagen import AUSGABE, WURZEL
+from .grundlagen import AUSGABE, KI_HINWEIS, KI_LOGO, WURZEL
 from .konfig import projekt_laden
 from .pakete import bezeichnung, definitionen, projektpakete
 from .profile import profil_aufbereiten
@@ -142,8 +142,27 @@ def _bindungsabgleich(knoten, sds):
             'ungeklaert': listen['ungeklärt'], 'slice': listen['gleich, aber am Slice']}
 
 
+# Logo im Seitenkopf, aufklappbar mit dem Hinweistext; Farben der Seite (helles und dunkles Schema)
+KI_CSS = '''.ki-hinweis { position: relative; flex: none; }
+.ki-hinweis summary { list-style: none; cursor: pointer; display: flex; border-radius: 11px; }
+.ki-hinweis summary::-webkit-details-marker { display: none; }
+.ki-hinweis summary:focus-visible { outline: 2px solid var(--akzent); outline-offset: 2px; }
+.ki-hinweis p { position: absolute; right: 0; top: calc(100% + 6px); z-index: 60; width: min(380px, 85vw); margin: 0;
+  padding: 10px 12px; background: var(--flaeche); color: var(--text); border: 1px solid var(--linie); border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.18); font-size: 12.5px; line-height: 1.45; font-weight: 400; }
+@media (max-width: 600px) { .ki-hinweis p { position: fixed; top: auto; left: 12px; right: 12px; width: auto; margin-top: 6px; } }'''
+
+
+def ki_hinweis():
+    """Logo „KI-gestützt erstellt“ (inline, die Seiten bleiben eigenständig) mit aufklappbarem Hinweis."""
+    svg = KI_LOGO.read_text(encoding='utf-8').strip()
+    return (f'<details class="ki-hinweis"><summary title="Hinweis zur KI-Nutzung">{svg}</summary>'
+            f'<p><b>Hinweis zur KI-Nutzung.</b> {html.escape(KI_HINWEIS)}</p></details>')
+
+
 def seite_schreiben(daten):
     vorlage = (WURZEL / 'web' / 'explorer.html').read_text(encoding='utf-8')
+    vorlage = vorlage.replace('/*KI-HINWEIS*/', KI_CSS).replace('<!--KI-HINWEIS-->', ki_hinweis())
     eingebettet = json.dumps(daten, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
     seite = vorlage.replace('/*DATEN*/null', eingebettet).replace('<title>Modellexplorer</title>',
                                                                   f'<title>{html.escape(daten["meta"]["titel"])} – Modellexplorer</title>')
@@ -204,7 +223,9 @@ main {{ max-width:900px; margin:0 auto; padding:24px 16px; }} h1 {{ font-size:24
 .karte h2 {{ margin:0 0 6px; font-size:18px; }} .karte h3 {{ font-size:14px; margin:10px 0 2px; }}
 a {{ color:var(--akzent); }} .leise {{ color:var(--leise); font-size:13.5px; }} code {{ font-size:12.5px; }} ul {{ margin:4px 0; padding-left:20px; }}
 .kennzahl {{ font-size:13.5px; margin:6px 0; }} .kennzahl b.gut {{ color:var(--gut); }} .kennzahl b.fehler {{ color:var(--fehler); }} .kennzahl b.warn {{ color:var(--warn); }}
-</style></head><body><main><h1>Modellexplorer</h1>
+.titelzeile {{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }}
+{KI_CSS}
+</style></head><body><main><div class="titelzeile"><h1>Modellexplorer</h1>{ki_hinweis()}</div>
 <p class="leise">Informationsmodell, FHIR-Profile, Beispielinstanzen, Anwenderansicht und Dokument — auf Elementebene verknüpft.</p>
 {"".join(zeilen)}</main></body></html>'''
     AUSGABE.mkdir(exist_ok=True)

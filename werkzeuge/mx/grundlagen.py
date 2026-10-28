@@ -10,6 +10,13 @@ AUSGABE = WURZEL / 'ausgabe'
 BERICHTE = WURZEL / 'berichte'
 SPERRDATEI = WURZEL / 'sperrdatei.json'
 
+# Hinweis zur KI-Nutzung: als Logo (web/ki-hinweis.svg) im Kopf jeder Seite und in jedem Prüfbericht
+KI_LOGO = WURZEL / 'web' / 'ki-hinweis.svg'
+KI_HINWEIS = ('Dieser Modellexplorer – Programmcode, Projektkonfiguration und Texte – ist mit Unterstützung eines '
+              'KI-Assistenten (Claude von Anthropic) entstanden. Die Darstellungen sind aus veröffentlichten '
+              'Spezifikationen abgeleitet und keine Primärquelle; sie können Fehler enthalten. Maßgeblich sind die '
+              'verlinkten Implementierungsleitfäden und FHIR-Pakete. Alle Beispieldaten sind fiktiv.')
+
 # technische Angaben ohne eigenes fachliches Gegenstück im Informationsmodell
 TECHNISCH = re.compile(r'\.(url|reference|system|version)$|\.text\.(div|status)$')
 

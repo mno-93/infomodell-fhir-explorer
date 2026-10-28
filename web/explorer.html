@@ -201,6 +201,7 @@ dialog::backdrop { background: rgba(0,0,0,.35); }
   .pane { height: 75vh; }
   .kopf .rechts { margin-left: 0; }
 }
+/*KI-HINWEIS*/
 </style>
 </head>
 <body>
@@ -215,6 +216,7 @@ dialog::backdrop { background: rgba(0,0,0,.35); }
     <button class="knopf" id="link-kopieren" title="Link auf genau diese Ansicht und Auswahl kopieren">Link kopieren</button>
     <button class="knopf" id="leeren" title="Auswahl aufheben (Esc; Esc schließt zuerst offene Fenster)">Auswahl aufheben</button>
     <span class="hinweis" id="link-status" role="status" aria-live="polite"></span>
+    <!--KI-HINWEIS-->
   </div>
   <p class="beispiel-info" id="beispiel-info"></p>
 </header>
@@ -1049,6 +1051,8 @@ function pruefungZeigen() {
 // ------------------------------------------------------------------ Ereignisse
 function waehlen(sel) { auswahl = sel; fundZeiger = null; markieren(); urlSchreiben(); }
 document.addEventListener('click', e => {
+  const ki = $('.ki-hinweis');
+  if (ki?.open && !e.target.closest('.ki-hinweis')) ki.open = false;
   const sprung = e.target.closest('[data-sprung]');
   if (sprung) { e.preventDefault(); sprung.closest('dialog')?.close(); return waehlen({ t: 'node', nids: [sprung.dataset.sprung] }); }
   const imSprung = e.target.closest('[data-imsprung]');
@@ -1067,11 +1071,12 @@ document.addEventListener('click', e => {
   const n = e.target.closest('[data-n]');
   if (n) { e.preventDefault(); return waehlen({ t: 'node', nids: n.dataset.n.split(' ') }); }
 });
-// Escape schließt von innen nach außen: Prüfdialog, dann die aufgeklappten Details, dann die Auswahl
+// Escape schließt von innen nach außen: Prüfdialog, Hinweis zur KI-Nutzung, aufgeklappte Details, dann die Auswahl
 document.addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
   const dialog = $$('dialog').find(d => d.open);
   if (dialog) { e.preventDefault(); dialog.close(); return; }
+  if ($('.ki-hinweis')?.open) { $('.ki-hinweis').open = false; return; }
   if ($('#details').open) { $('#details').open = false; obenMessen(); return; }
   waehlen(null);
 });
