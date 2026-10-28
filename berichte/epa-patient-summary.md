@@ -2,6 +2,8 @@
 
 > Erzeugt von `python3 werkzeuge/mx.py bauen`. Nicht von Hand ändern; die CI prüft, dass der Bericht zum Stand passt.
 
+> ![KI-gestützt erstellt](../web/ki-hinweis.svg) **Hinweis zur KI-Nutzung:** Dieser Modellexplorer – Programmcode, Projektkonfiguration und Texte – ist mit Unterstützung eines KI-Assistenten (Claude von Anthropic) entstanden. Die Darstellungen sind aus veröffentlichten Spezifikationen abgeleitet und keine Primärquelle; sie können Fehler enthalten. Maßgeblich sind die verlinkten Implementierungsleitfäden und FHIR-Pakete. Alle Beispieldaten sind fiktiv.
+
 ## Quellen
 
 - Implementation Guide: MIO ePA Patient Summary (CI-Build) (`ePS-0.0.1 (kein Paket in der Registry)`, in Arbeit (CI-Build))

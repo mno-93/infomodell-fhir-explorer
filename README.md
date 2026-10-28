@@ -1,5 +1,7 @@
 # Modellexplorer
 
+[![KI-gestützt erstellt](web/ki-hinweis.svg)](#hinweis-zur-ki-nutzung)
+
 Informationsmodell, FHIR-Profile, Beispielinstanzen, Anwenderansicht und Dokument — **auf Elementebene verknüpft**. Ein Klick auf ein Element in einer Darstellung zeigt in allen anderen, wo es vorkommt, und benennt, wo es fehlt.
 
 ```
@@ -98,3 +100,9 @@ Neue Beispiele und Projekte: [`docs/NEUES_PROJEKT.md`](docs/NEUES_PROJEKT.md). A
 - Die Beispiele aus dem Demo-PVS (github.com/mno-93/demo-pvs) sind **fiktiv**; Personen, Einrichtungen und Nummern sind erfunden.
 - Das Projekt `impfung` ist eine **Studie**: Entwurf eines Impfeintrags nach EU Core auf Grundlage veröffentlichter Pakete (HL7 Europe Base, EU Patient Summary, IPS, gematik-Ballot-Pakete), keine veröffentlichte Spezifikation. Seine Beispiele sind für dieses Projekt erstellt und fiktiv (Personen, PZN, Chargen, Handelsnamen).
 - Kennzeichnung in Berichten und Doku: ⚠ = unbelegt · ▸ = Bewertung · ✦ = Vorschlag.
+
+## Hinweis zur KI-Nutzung
+
+Dieser Modellexplorer – Programmcode, Projektkonfiguration und Texte – ist mit Unterstützung eines KI-Assistenten (Claude von Anthropic) entstanden. Die Darstellungen sind aus veröffentlichten Spezifikationen abgeleitet und keine Primärquelle; sie können Fehler enthalten. Maßgeblich sind die verlinkten Implementierungsleitfäden und FHIR-Pakete. Alle Beispieldaten sind fiktiv.
+
+Das Logo [`web/ki-hinweis.svg`](web/ki-hinweis.svg) steht im Kopf jeder Seite (aufklappbar mit diesem Text) und in jedem Prüfbericht; der Text kommt aus `werkzeuge/mx/grundlagen.py` (`KI_HINWEIS`).

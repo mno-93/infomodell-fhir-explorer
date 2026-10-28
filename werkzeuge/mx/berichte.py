@@ -1,7 +1,7 @@
 """Prüfbericht je Projekt als Markdown — deterministisch, damit die CI Abweichungen per `git diff` erkennt."""
 import re
 
-from .grundlagen import BERICHTE
+from .grundlagen import BERICHTE, KI_HINWEIS
 from .validieren import RANG
 
 STATUS_TEXT = {'fehler': 'ohne Ziel', 'verboten': 'auf ein 0..0-Element', 'unbekannt': 'Definition fehlt',
@@ -17,6 +17,7 @@ def bericht(d):
     st = s['mapping_status']
     z = [f'# Prüfbericht — {m["titel"]}', '',
          '> Erzeugt von `python3 werkzeuge/mx.py bauen`. Nicht von Hand ändern; die CI prüft, dass der Bericht zum Stand passt.',
+         '', f'> ![KI-gestützt erstellt](../web/ki-hinweis.svg) **Hinweis zur KI-Nutzung:** {KI_HINWEIS}',
          '', '## Quellen', '',
          f'- Implementation Guide: {m["ig"].get("name", "—")} (`{m["ig"].get("paket", "—")}`, {m["ig"].get("status", "")})',
          f'- Darstellung des Modells: {m["im_titel"]}' + (f' — {m["im_hinweis"]}' if m['im_hinweis'] else ''),
