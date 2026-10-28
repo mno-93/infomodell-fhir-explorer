@@ -1,0 +1,5217 @@
+{
+  "resourceType": "Bundle",
+  "id": "Bundle-ex1-1",
+  "meta": {
+    "profile": [
+      "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Bundle|1.0.0-update"
+    ]
+  },
+  "identifier": {
+    "system": "urn:ietf:rfc:3986",
+    "value": "urn:uuid:cfe82d99-da1a-4256-afd2-1a8d2961b122"
+  },
+  "entry": [
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Composition/Composition-ex1-1",
+      "resource": {
+        "resourceType": "Composition",
+        "id": "Composition-ex1-1",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Composition|1.0.0-update"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-Composition.version",
+            "valueString": "1"
+          },
+          {
+            "url": "http://hl7.eu/fhir/StructureDefinition/composition-basedOn-order-or-requisition",
+            "valueReference": {
+              "reference": "ServiceRequest/ServiceRequest-ex1-1"
+            }
+          },
+          {
+            "url": "http://hl7.eu/fhir/extensions/StructureDefinition/composition-diagnosticReportReference",
+            "valueReference": {
+              "reference": "DiagnosticReport/DiagnosticReport-ex1-1"
+            }
+          },
+          {
+            "url": "http://hl7.eu/fhir/StructureDefinition/information-recipient",
+            "valueReference": {
+              "reference": "Practitioner/Practitioner-ex1-2"
+            }
+          }
+        ],
+        "identifier": {
+          "system": "urn:ietf:rfc:3986",
+          "value": "urn:uuid:1995b0d9-e48f-4bf0-9db3-144aab38ec2d"
+        },
+        "type": {
+          "coding": [
+            {
+              "code": "4241000179101",
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/11000274103/version/20251115",
+              "display": "Laboratory report (record artifact)"
+            }
+          ]
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "author": [
+          {
+            "reference": "Practitioner/Practitioner-ex1-1"
+          }
+        ],
+        "attester": [
+          {
+            "mode": "legal",
+            "time": "2021-11-15T16:55:00+01:00",
+            "party": {
+              "reference": "PractitionerRole/PractitionerRole-ex1-1"
+            }
+          }
+        ],
+        "title": "Laboratory Report",
+        "status": "final",
+        "date": "2021-11-15T16:55:00+01:00"
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/DiagnosticReport/DiagnosticReport-ex1-1",
+      "resource": {
+        "resourceType": "DiagnosticReport",
+        "id": "DiagnosticReport-ex1-1",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_DiagnosticReport|1.0.0-update"
+          ]
+        },
+        "extension": [
+          {
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Order_Entry_Time",
+            "valueDateTime": "2021-11-15T14:14:00+01:00"
+          },
+          {
+            "url": "http://hl7.org/fhir/5.0/StructureDefinition/extension-DiagnosticReport.composition",
+            "valueReference": {
+              "reference": "Composition/Composition-ex1-1"
+            }
+          }
+        ],
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "RI",
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "display": "Resource Identifier"
+                }
+              ]
+            },
+            "system": "urn:ietf:rfc:3986",
+            "value": "urn:uuid:1995b0d9-e48f-4bf0-9db3-144aab38ec2d"
+          }
+        ],
+        "basedOn": [
+          {
+            "reference": "ServiceRequest/ServiceRequest-ex1-1"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "11502-2",
+              "system": "http://loinc.org",
+              "version": "2.82",
+              "display": "Laboratory report"
+            }
+          ]
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "specimen": [
+          {
+            "reference": "Specimen/Specimen-ex1-1"
+          },
+          {
+            "reference": "Specimen/Specimen-ex1-2"
+          }
+        ],
+        "result": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 1
+              }
+            ],
+            "reference": "Observation/Observation-ex1-group-chemie"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 2
+              }
+            ],
+            "reference": "Observation/Observation-ex1-group-vitamin"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 3
+              }
+            ],
+            "reference": "Observation/Observation-ex1-group-endokrin"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 4
+              }
+            ],
+            "reference": "Observation/Observation-ex1-group-blutbild"
+          }
+        ],
+        "presentedForm": [
+          {
+            "contentType": "application/pdf",
+            "data": "dGVzdA==",
+            "title": "Laborbefund Günther Hansen 15.11.2021",
+            "creation": "2021-11-15T16:55:00+01:00"
+          }
+        ],
+        "status": "final",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "conclusion": "Fortbestehender Vitamin-D-Mangel, Therapieempfehlung 1000 IE täglich für 200 Tage. Guter Testosteronspiegel, alle 11 Wochen weiter i.m. Substitution."
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Patient/Patient-ex1-1",
+      "resource": {
+        "resourceType": "Patient",
+        "id": "Patient-ex1-1",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Patient|1.0.0-update"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "display": "Krankenversichertennummer",
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          }
+        ],
+        "name": [
+          {
+            "given": [
+              "Günther"
+            ],
+            "use": "official",
+            "text": "Günther Hansen",
+            "family": "Hansen",
+            "_family": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/humanname-own-name",
+                  "valueString": "Hansen"
+                }
+              ]
+            }
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "0511 5566778"
+          }
+        ],
+        "gender": "male",
+        "birthDate": "1997-03-30"
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-group-chemie",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-group-chemie",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study_Group|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18719-5",
+                "version": "2.82",
+                "display": "Chemistry studies (set)"
+              }
+            ],
+            "text": "Klinische Chemie"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "laboruntersuchungsgruppe",
+              "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_mio42",
+              "version": "1.0.0-update",
+              "display": "Laboruntersuchungsgruppe"
+            }
+          ]
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "hasMember": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 1
+              }
+            ],
+            "reference": "Observation/Observation-ex1-harnsaeure"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 2
+              }
+            ],
+            "reference": "Observation/Observation-ex1-alat"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 3
+              }
+            ],
+            "reference": "Observation/Observation-ex1-asat"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 4
+              }
+            ],
+            "reference": "Observation/Observation-ex1-ggt"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 5
+              }
+            ],
+            "reference": "Observation/Observation-ex1-ap"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 6
+              }
+            ],
+            "reference": "Observation/Observation-ex1-creatinin"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 7
+              }
+            ],
+            "reference": "Observation/Observation-ex1-gfr"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 8
+              }
+            ],
+            "reference": "Observation/Observation-ex1-harnstoff"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 9
+              }
+            ],
+            "reference": "Observation/Observation-ex1-natrium"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 10
+              }
+            ],
+            "reference": "Observation/Observation-ex1-kalium"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 11
+              }
+            ],
+            "reference": "Observation/Observation-ex1-calcium"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 12
+              }
+            ],
+            "reference": "Observation/Observation-ex1-phosphor"
+          }
+        ],
+        "status": "final",
+        "_effectiveDateTime": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+              "valueCode": "not-permitted"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-harnsaeure",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-harnsaeure",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18719-5",
+                "version": "2.82",
+                "display": "Chemistry studies (set)"
+              }
+            ],
+            "text": "Klinische Chemie"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "3084-1",
+              "version": "2.82",
+              "display": "Urate [Mass/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "Harnsäure"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 3.4,
+              "code": "mg/dL",
+              "unit": "mg/dL"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 7,
+              "code": "mg/dL",
+              "unit": "mg/dL"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 6.5,
+          "code": "mg/dL",
+          "unit": "mg/dL"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-alat",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-alat",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18719-5",
+                "version": "2.82",
+                "display": "Chemistry studies (set)"
+              }
+            ],
+            "text": "Klinische Chemie"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "1742-6",
+              "version": "2.82",
+              "display": "Alanine aminotransferase [Enzymatic activity/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "GPT (ALAT)"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "H",
+                "display": "High"
+              }
+            ],
+            "text": "Erhöht"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 50,
+              "code": "U/L",
+              "unit": "U/L"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 66,
+          "code": "U/L",
+          "unit": "U/L"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-asat",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-asat",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18719-5",
+                "version": "2.82",
+                "display": "Chemistry studies (set)"
+              }
+            ],
+            "text": "Klinische Chemie"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "1920-8",
+              "version": "2.82",
+              "display": "Aspartate aminotransferase [Enzymatic activity/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "GOT (ASAT)"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 50,
+              "code": "U/L",
+              "unit": "U/L"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 39,
+          "code": "U/L",
+          "unit": "U/L"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-ggt",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-ggt",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18719-5",
+                "version": "2.82",
+                "display": "Chemistry studies (set)"
+              }
+            ],
+            "text": "Klinische Chemie"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2324-2",
+              "version": "2.82",
+              "display": "Gamma glutamyl transferase [Enzymatic activity/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "γGT"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "H",
+                "display": "High"
+              }
+            ],
+            "text": "Erhöht"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 60,
+              "code": "U/L",
+              "unit": "U/L"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 126,
+          "code": "U/L",
+          "unit": "U/L"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-ap",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-ap",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18719-5",
+                "version": "2.82",
+                "display": "Chemistry studies (set)"
+              }
+            ],
+            "text": "Klinische Chemie"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "6768-6",
+              "version": "2.82",
+              "display": "Alkaline phosphatase [Enzymatic activity/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "Alkalische Phosphatase"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 40,
+              "code": "U/L",
+              "unit": "U/L"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 129,
+              "code": "U/L",
+              "unit": "U/L"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 127,
+          "code": "U/L",
+          "unit": "U/L"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-creatinin",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-creatinin",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18719-5",
+                "version": "2.82",
+                "display": "Chemistry studies (set)"
+              }
+            ],
+            "text": "Klinische Chemie"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2160-0",
+              "version": "2.82",
+              "display": "Creatinine [Mass/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "Creatinin, Jaffe Methode"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "method": {
+          "text": "Jaffe-Methode"
+        },
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 1.2,
+              "code": "mg/dL",
+              "unit": "mg/dL"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 0.9,
+          "code": "mg/dL",
+          "unit": "mg/dL"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-gfr",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-gfr",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18719-5",
+                "version": "2.82",
+                "display": "Chemistry studies (set)"
+              }
+            ],
+            "text": "Klinische Chemie"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "33914-3",
+              "version": "2.82",
+              "display": "Glomerular filtration rate [Volume Rate/Area] in Serum or Plasma by Creatinine-based formula (MDRD)/1.73 sq M"
+            }
+          ],
+          "text": "GFR (rechn. nach CKD-EPI)"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "method": {
+          "text": "CKD-EPI"
+        },
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 60,
+              "code": "mL/min/{1.73_m2}",
+              "unit": "ml/min/1,73m2"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 120,
+          "code": "mL/min/{1.73_m2}",
+          "unit": "ml/min/1,73m2"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-harnstoff",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-harnstoff",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18719-5",
+                "version": "2.82",
+                "display": "Chemistry studies (set)"
+              }
+            ],
+            "text": "Klinische Chemie"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "22664-7",
+              "version": "2.82",
+              "display": "Urea [Moles/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "Harnstoff"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 10,
+              "code": "mg/dL",
+              "unit": "mg/dL"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 50,
+              "code": "mg/dL",
+              "unit": "mg/dL"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 25,
+          "code": "mg/dL",
+          "unit": "mg/dL"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-natrium",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-natrium",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18719-5",
+                "version": "2.82",
+                "display": "Chemistry studies (set)"
+              }
+            ],
+            "text": "Klinische Chemie"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2951-2",
+              "version": "2.82",
+              "display": "Sodium [Moles/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "Natrium"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 133,
+              "code": "mmol/L",
+              "unit": "mmol/L"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 150,
+              "code": "mmol/L",
+              "unit": "mmol/L"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 141,
+          "code": "mmol/L",
+          "unit": "mmol/L"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-kalium",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-kalium",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18719-5",
+                "version": "2.82",
+                "display": "Chemistry studies (set)"
+              }
+            ],
+            "text": "Klinische Chemie"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2823-3",
+              "version": "2.82",
+              "display": "Potassium [Moles/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "Kalium (Serum)"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 3.4,
+              "code": "mmol/L",
+              "unit": "mmol/L"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 5.1,
+              "code": "mmol/L",
+              "unit": "mmol/L"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 4.7,
+          "code": "mmol/L",
+          "unit": "mmol/L"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-calcium",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-calcium",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18719-5",
+                "version": "2.82",
+                "display": "Chemistry studies (set)"
+              }
+            ],
+            "text": "Klinische Chemie"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "17861-6",
+              "version": "2.82",
+              "display": "Calcium [Mass/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "Calcium"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 2,
+              "code": "mmol/L",
+              "unit": "mmol/L"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 2.6,
+              "code": "mmol/L",
+              "unit": "mmol/L"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 2.5,
+          "code": "mmol/L",
+          "unit": "mmol/L"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-phosphor",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-phosphor",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18719-5",
+                "version": "2.82",
+                "display": "Chemistry studies (set)"
+              }
+            ],
+            "text": "Klinische Chemie"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "14879-1",
+              "version": "2.82",
+              "display": "Phosphate [Moles/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "Phosphor, anorg."
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 0.8,
+              "code": "mmol/L",
+              "unit": "mmol/L"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 1.6,
+              "code": "mmol/L",
+              "unit": "mmol/L"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 1.1,
+          "code": "mmol/L",
+          "unit": "mmol/L"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-group-vitamin",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-group-vitamin",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study_Group|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "vitdiag",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Vitamindiagnostik"
+              }
+            ],
+            "text": "Vitamindiagnostik"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "laboruntersuchungsgruppe",
+              "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_mio42",
+              "version": "1.0.0-update",
+              "display": "Laboruntersuchungsgruppe"
+            }
+          ]
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "text": "Vitaminmangel, Substitution empfohlen (15.11.2021 16:00, Dr. Burkhard Bungalow)"
+          }
+        ],
+        "hasMember": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 1
+              }
+            ],
+            "reference": "Observation/Observation-ex1-vitamin-d"
+          }
+        ],
+        "status": "final",
+        "_effectiveDateTime": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+              "valueCode": "not-permitted"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-vitamin-d",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-vitamin-d",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "vitdiag",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Vitamindiagnostik"
+              }
+            ],
+            "text": "Vitamindiagnostik"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "62292-8",
+              "version": "2.82",
+              "display": "25-Hydroxyvitamin D3+25-Hydroxyvitamin D2 [Mass/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "25-OH-Vitamin D"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "L",
+                "display": "Low"
+              }
+            ],
+            "text": "Erniedrigt"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "treatment",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Treatment Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 75,
+              "code": "nmol/L",
+              "unit": "nmol/L"
+            },
+            "text": "Therapeutischer Zielbereich: >= 75 nmol/L. Vitamin-D-Status: Vitamin D-Mangel: < 50 nmol/L, Hypervitaminose: > 240 nmol/L. Circannuale 2,5-97,5 Perzentile: 13-118 nmol/L."
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 33,
+          "code": "nmol/L",
+          "unit": "nmol/L"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-group-endokrin",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-group-endokrin",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study_Group|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "endocr",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Endokrinologie"
+              }
+            ],
+            "text": "Endokrinologische Diagnostik"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "laboruntersuchungsgruppe",
+              "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_mio42",
+              "version": "1.0.0-update",
+              "display": "Laboruntersuchungsgruppe"
+            }
+          ]
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "text": "Hormonstatus im Zielbereich"
+          }
+        ],
+        "hasMember": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 1
+              }
+            ],
+            "reference": "Observation/Observation-ex1-fsh"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 2
+              }
+            ],
+            "reference": "Observation/Observation-ex1-lh"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 3
+              }
+            ],
+            "reference": "Observation/Observation-ex1-estradiol"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 4
+              }
+            ],
+            "reference": "Observation/Observation-ex1-prolaktin"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 5
+              }
+            ],
+            "reference": "Observation/Observation-ex1-testosteron"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 6
+              }
+            ],
+            "reference": "Observation/Observation-ex1-fai"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 7
+              }
+            ],
+            "reference": "Observation/Observation-ex1-shbg"
+          }
+        ],
+        "status": "final",
+        "_effectiveDateTime": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+              "valueCode": "not-permitted"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-fsh",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-fsh",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "endocr",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Endokrinologie"
+              }
+            ],
+            "text": "Endokrinologische Diagnostik"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "15067-2",
+              "version": "2.82",
+              "display": "Follitropin [Units/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "FSH, basal"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "L",
+                "display": "Low"
+              }
+            ],
+            "text": "Erniedrigt"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 1.5,
+              "code": "[iU]/L",
+              "unit": "IU/L"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 12.4,
+              "code": "[iU]/L",
+              "unit": "IU/L"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 0.8,
+          "code": "[iU]/L",
+          "unit": "IU/L"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-lh",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-lh",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "endocr",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Endokrinologie"
+              }
+            ],
+            "text": "Endokrinologische Diagnostik"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "10501-5",
+              "version": "2.82",
+              "display": "Lutropin [Units/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "LH, basal"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 0.3,
+          "code": "[iU]/L",
+          "unit": "IU/L",
+          "comparator": "<"
+        },
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "L",
+                "display": "Low"
+              }
+            ],
+            "text": "Erniedrigt"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 1.7,
+              "code": "[iU]/L",
+              "unit": "IU/L"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 8.6,
+              "code": "[iU]/L",
+              "unit": "IU/L"
+            }
+          }
+        ],
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-estradiol",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-estradiol",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "endocr",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Endokrinologie"
+              }
+            ],
+            "text": "Endokrinologische Diagnostik"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2243-4",
+              "version": "2.82",
+              "display": "Estradiol (E2) [Mass/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "17-ß-Östradiol (E2)"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "L",
+                "display": "Low"
+              }
+            ],
+            "text": "Erniedrigt"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 27.1,
+              "code": "ng/L",
+              "unit": "ng/L"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 52.2,
+              "code": "ng/L",
+              "unit": "ng/L"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 26,
+          "code": "ng/L",
+          "unit": "ng/L"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-prolaktin",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-prolaktin",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "endocr",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Endokrinologie"
+              }
+            ],
+            "text": "Endokrinologische Diagnostik"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2842-3",
+              "version": "2.82",
+              "display": "Prolactin [Mass/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "Prolaktin, 1. Basalwert"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 80,
+              "code": "m[iU]/L",
+              "unit": "mIU/L"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 450,
+              "code": "m[iU]/L",
+              "unit": "mIU/L"
+            }
+          }
+        ],
+        "extension": [
+          {
+            "extension": [
+              {
+                "url": "value",
+                "valueQuantity": {
+                  "system": "http://unitsofmeasure.org",
+                  "value": 8.6,
+                  "code": "ng/mL",
+                  "unit": "ng/mL"
+                }
+              },
+              {
+                "valueRange": {
+                  "low": {
+                    "system": "http://unitsofmeasure.org",
+                    "value": 4,
+                    "code": "ng/mL",
+                    "unit": "ng/mL"
+                  },
+                  "high": {
+                    "system": "http://unitsofmeasure.org",
+                    "value": 15.2,
+                    "code": "ng/mL",
+                    "unit": "ng/mL"
+                  }
+                },
+                "url": "referenceRange"
+              }
+            ],
+            "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Alternative_Result"
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 183,
+          "code": "m[iU]/L",
+          "unit": "mIU/L"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-testosteron",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-testosteron",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "endocr",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Endokrinologie"
+              }
+            ],
+            "text": "Endokrinologische Diagnostik"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "2986-8",
+              "version": "2.82",
+              "display": "Testosterone [Mass/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "Testosteron, gesamt"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 2.8,
+              "code": "ug/L",
+              "unit": "ug/L"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 8.8,
+              "code": "ug/L",
+              "unit": "ug/L"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 3.08,
+          "code": "ug/L",
+          "unit": "ug/L"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-fai",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-fai",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "endocr",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Endokrinologie"
+              }
+            ],
+            "text": "Endokrinologische Diagnostik"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "24125-7",
+              "version": "2.82",
+              "display": "Androgen free Index in Serum or Plasma"
+            }
+          ],
+          "text": "Freier Androgenindex"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 36,
+              "code": "1",
+              "unit": "1"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 155,
+              "code": "1",
+              "unit": "1"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 47,
+          "code": "1",
+          "unit": "1"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-shbg",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-shbg",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "endocr",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Endokrinologie"
+              }
+            ],
+            "text": "Endokrinologische Diagnostik"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "13967-5",
+              "version": "2.82",
+              "display": "Sex hormone binding globulin [Moles/volume] in Serum or Plasma"
+            }
+          ],
+          "text": "SHBG"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 18,
+              "code": "nmol/L",
+              "unit": "nmol/L"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 54,
+              "code": "nmol/L",
+              "unit": "nmol/L"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 23,
+          "code": "nmol/L",
+          "unit": "nmol/L"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-group-blutbild",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-group-blutbild",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study_Group|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18723-7",
+                "version": "2.82",
+                "display": "Hematology studies (set)"
+              }
+            ],
+            "text": "Hämatologie"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "haemato",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Hämatologie"
+              }
+            ],
+            "text": "Kleines Blutbild"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "laboruntersuchungsgruppe",
+              "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_mio42",
+              "version": "1.0.0-update",
+              "display": "Laboruntersuchungsgruppe"
+            }
+          ]
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "hasMember": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 1
+              }
+            ],
+            "reference": "Observation/Observation-ex1-leukozyten"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 2
+              }
+            ],
+            "reference": "Observation/Observation-ex1-erythrozyten"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 3
+              }
+            ],
+            "reference": "Observation/Observation-ex1-haemoglobin"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 4
+              }
+            ],
+            "reference": "Observation/Observation-ex1-haematokrit"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 5
+              }
+            ],
+            "reference": "Observation/Observation-ex1-mcv"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 6
+              }
+            ],
+            "reference": "Observation/Observation-ex1-mch"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 7
+              }
+            ],
+            "reference": "Observation/Observation-ex1-mchc"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Sorting_Number",
+                "valuePositiveInt": 8
+              }
+            ],
+            "reference": "Observation/Observation-ex1-thrombozyten"
+          }
+        ],
+        "status": "final",
+        "_effectiveDateTime": {
+          "extension": [
+            {
+              "url": "http://hl7.org/fhir/StructureDefinition/data-absent-reason",
+              "valueCode": "not-permitted"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-leukozyten",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-leukozyten",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18723-7",
+                "version": "2.82",
+                "display": "Hematology studies (set)"
+              }
+            ],
+            "text": "Hämatologie"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "haemato",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Hämatologie"
+              }
+            ],
+            "text": "Kleines Blutbild"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "6690-2",
+              "version": "2.82",
+              "display": "Leukocytes [#/volume] in Blood by Automated count"
+            }
+          ],
+          "text": "Leukozyten"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 4,
+              "code": "10*9/L",
+              "unit": "10^9/L"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 9,
+              "code": "10*9/L",
+              "unit": "10^9/L"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 6.3,
+          "code": "10*9/L",
+          "unit": "10^9/L"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-2"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-erythrozyten",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-erythrozyten",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18723-7",
+                "version": "2.82",
+                "display": "Hematology studies (set)"
+              }
+            ],
+            "text": "Hämatologie"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "haemato",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Hämatologie"
+              }
+            ],
+            "text": "Kleines Blutbild"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "789-8",
+              "version": "2.82",
+              "display": "Erythrocytes [#/volume] in Blood by Automated count"
+            }
+          ],
+          "text": "Erythrozyten"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 4.3,
+              "code": "10*12/L",
+              "unit": "10^12/L"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 5.9,
+              "code": "10*12/L",
+              "unit": "10^12/L"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 5.42,
+          "code": "10*12/L",
+          "unit": "10^12/L"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-2"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-haemoglobin",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-haemoglobin",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18723-7",
+                "version": "2.82",
+                "display": "Hematology studies (set)"
+              }
+            ],
+            "text": "Hämatologie"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "haemato",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Hämatologie"
+              }
+            ],
+            "text": "Kleines Blutbild"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "718-7",
+              "version": "2.82",
+              "display": "Hemoglobin [Mass/volume] in Blood"
+            }
+          ],
+          "text": "Hämoglobin"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "L",
+                "display": "Low"
+              }
+            ],
+            "text": "Erniedrigt"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 14,
+              "code": "g/dL",
+              "unit": "g/dL"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 18,
+              "code": "g/dL",
+              "unit": "g/dL"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 12.8,
+          "code": "g/dL",
+          "unit": "g/dL"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-2"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-haematokrit",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-haematokrit",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18723-7",
+                "version": "2.82",
+                "display": "Hematology studies (set)"
+              }
+            ],
+            "text": "Hämatologie"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "haemato",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Hämatologie"
+              }
+            ],
+            "text": "Kleines Blutbild"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "4544-3",
+              "version": "2.82",
+              "display": "Hematocrit [Volume Fraction] of Blood by Automated count"
+            }
+          ],
+          "text": "Hämatokrit"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 40,
+              "code": "%",
+              "unit": "%"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 50,
+              "code": "%",
+              "unit": "%"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 40.9,
+          "code": "%",
+          "unit": "%"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-2"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-mcv",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-mcv",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18723-7",
+                "version": "2.82",
+                "display": "Hematology studies (set)"
+              }
+            ],
+            "text": "Hämatologie"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "haemato",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Hämatologie"
+              }
+            ],
+            "text": "Kleines Blutbild"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "787-2",
+              "version": "2.82",
+              "display": "MCV [Entitic mean volume] in Red Blood Cells by Automated count"
+            }
+          ],
+          "text": "MCV"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "L",
+                "display": "Low"
+              }
+            ],
+            "text": "Erniedrigt"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 80,
+              "code": "fL",
+              "unit": "fL"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 96,
+              "code": "fL",
+              "unit": "fL"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 75.5,
+          "code": "fL",
+          "unit": "fL"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-2"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-mch",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-mch",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18723-7",
+                "version": "2.82",
+                "display": "Hematology studies (set)"
+              }
+            ],
+            "text": "Hämatologie"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "haemato",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Hämatologie"
+              }
+            ],
+            "text": "Kleines Blutbild"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "785-6",
+              "version": "2.82",
+              "display": "MCH [Entitic mass] by Automated count"
+            }
+          ],
+          "text": "MCH"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "L",
+                "display": "Low"
+              }
+            ],
+            "text": "Erniedrigt"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 28,
+              "code": "pg",
+              "unit": "pg"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 32,
+              "code": "pg",
+              "unit": "pg"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 23.6,
+          "code": "pg",
+          "unit": "pg"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-2"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-mchc",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-mchc",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18723-7",
+                "version": "2.82",
+                "display": "Hematology studies (set)"
+              }
+            ],
+            "text": "Hämatologie"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "haemato",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Hämatologie"
+              }
+            ],
+            "text": "Kleines Blutbild"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "786-4",
+              "version": "2.82",
+              "display": "MCHC [Entitic Mass/volume] in Red Blood Cells by Automated count"
+            }
+          ],
+          "text": "MCHC"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "N",
+                "display": "Normal"
+              }
+            ],
+            "text": "Normal"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 30,
+              "code": "g/dL",
+              "unit": "g/dL"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 36,
+              "code": "g/dL",
+              "unit": "g/dL"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 31.3,
+          "code": "g/dL",
+          "unit": "g/dL"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-2"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Observation/Observation-ex1-thrombozyten",
+      "resource": {
+        "resourceType": "Observation",
+        "id": "Observation-ex1-thrombozyten",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Observation_Laboratory_Study|1.0.0-update"
+          ]
+        },
+        "category": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "laboratory"
+              }
+            ],
+            "coding": [
+              {
+                "code": "laboratory",
+                "system": "http://terminology.hl7.org/CodeSystem/observation-category",
+                "version": "2.0.0",
+                "display": "Laboratory"
+              }
+            ]
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "studyType"
+              }
+            ],
+            "coding": [
+              {
+                "system": "http://loinc.org",
+                "code": "18723-7",
+                "version": "2.82",
+                "display": "Hematology studies (set)"
+              }
+            ],
+            "text": "Hämatologie"
+          },
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Diskriminator",
+                "valueString": "testProfile"
+              }
+            ],
+            "coding": [
+              {
+                "code": "haemato",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Test_Profil_Laboruntersuchungsgruppe",
+                "version": "1.0.0-update",
+                "display": "Hämatologie"
+              }
+            ],
+            "text": "Kleines Blutbild"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "system": "http://loinc.org",
+              "code": "777-3",
+              "version": "2.82",
+              "display": "Platelets [#/volume] in Blood by Automated count"
+            }
+          ],
+          "text": "Thrombozyten"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "performer": [
+          {
+            "reference": "PractitionerRole/PractitionerRole-ex1-1"
+          }
+        ],
+        "interpretation": [
+          {
+            "coding": [
+              {
+                "system": "http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation",
+                "version": "4.0.1",
+                "code": "H",
+                "display": "High"
+              }
+            ],
+            "text": "Erhöht"
+          }
+        ],
+        "referenceRange": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "normal",
+                  "system": "http://terminology.hl7.org/CodeSystem/referencerange-meaning",
+                  "display": "Normal Range"
+                }
+              ]
+            },
+            "low": {
+              "system": "http://unitsofmeasure.org",
+              "value": 150,
+              "code": "10*9/L",
+              "unit": "10^9/L"
+            },
+            "high": {
+              "system": "http://unitsofmeasure.org",
+              "value": 400,
+              "code": "10*9/L",
+              "unit": "10^9/L"
+            }
+          }
+        ],
+        "valueQuantity": {
+          "system": "http://unitsofmeasure.org",
+          "value": 517,
+          "code": "10*9/L",
+          "unit": "10^9/L"
+        },
+        "status": "final",
+        "effectiveDateTime": "2021-11-15T11:30:00+01:00",
+        "issued": "2021-11-15T16:55:00+01:00",
+        "specimen": {
+          "reference": "Specimen/Specimen-ex1-2"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Specimen/Specimen-ex1-1",
+      "resource": {
+        "resourceType": "Specimen",
+        "id": "Specimen-ex1-1",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Specimen|1.0.0-update"
+          ]
+        },
+        "identifier": [
+          {
+            "value": "20211115-127-1"
+          }
+        ],
+        "type": {
+          "coding": [
+            {
+              "code": "122590004",
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/11000274103/version/20251115",
+              "display": "Serum specimen from patient (specimen)"
+            }
+          ],
+          "text": "Serum/Plasma"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "collection": {
+          "collectedDateTime": "2021-11-15T11:30:00+01:00"
+        },
+        "status": "available",
+        "receivedTime": "2021-11-15T14:14:00+01:00"
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Specimen/Specimen-ex1-2",
+      "resource": {
+        "resourceType": "Specimen",
+        "id": "Specimen-ex1-2",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Specimen|1.0.0-update"
+          ]
+        },
+        "identifier": [
+          {
+            "value": "20211115-127-2"
+          }
+        ],
+        "type": {
+          "coding": [
+            {
+              "code": "445295009",
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/11000274103/version/20251115",
+              "display": "Blood specimen with edetic acid (specimen)"
+            }
+          ],
+          "text": "Blutprobe mit EDTA"
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "collection": {
+          "collectedDateTime": "2021-11-15T11:30:00+01:00"
+        },
+        "status": "available",
+        "receivedTime": "2021-11-15T14:14:00+01:00"
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/ServiceRequest/ServiceRequest-ex1-1",
+      "resource": {
+        "resourceType": "ServiceRequest",
+        "id": "ServiceRequest-ex1-1",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_ServiceRequest|1.0.0-update"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "code": "AE",
+                  "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Laboratory_Identificator",
+                  "version": "1.0.0-update",
+                  "display": "Auftragsnummer des Einsenders"
+                }
+              ]
+            },
+            "system": "http://testsystem.de",
+            "value": "20211115-127"
+          }
+        ],
+        "code": {
+          "coding": [
+            {
+              "code": "721965002",
+              "system": "http://snomed.info/sct",
+              "version": "http://snomed.info/sct/11000274103/version/20251115",
+              "display": "Laboratory order (record artifact)"
+            }
+          ]
+        },
+        "subject": {
+          "identifier": {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://fhir.de/CodeSystem/identifier-type-de-basis",
+                  "code": "KVZ10",
+                  "display": "Krankenversichertennummer"
+                }
+              ]
+            },
+            "system": "http://fhir.de/sid/gkv/kvid-10",
+            "value": "A123456789"
+          },
+          "reference": "Patient/Patient-ex1-1"
+        },
+        "reasonCode": [
+          {
+            "extension": [
+              {
+                "url": "https://fhir.kbv.de/StructureDefinition/KBV_EX_MIO_LAB_Reason_Type",
+                "valueString": "Anlass"
+              }
+            ],
+            "text": "Therapiekontrolle"
+          }
+        ],
+        "supportingInfo": [
+          {
+            "display": "Transidentität; Neurologische Medikation beachten"
+          }
+        ],
+        "status": "completed",
+        "intent": "order",
+        "priority": "routine",
+        "authoredOn": "2021-11-15",
+        "requester": {
+          "reference": "Practitioner/Practitioner-ex1-2"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Organization/Organization-ex1-1",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "Organization-ex1-1",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Organization|1.0.0-update"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "display": "Primary physician office number",
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "BSNR",
+                  "version": "5.0.0"
+                }
+              ]
+            },
+            "system": "https://fhir.kbv.de/NamingSystem/KBV_NS_Base_BSNR",
+            "value": "561234500"
+          }
+        ],
+        "telecom": [
+          {
+            "system": "phone",
+            "value": "0511-1234567-0"
+          },
+          {
+            "system": "fax",
+            "value": "0511-1234567-888"
+          },
+          {
+            "system": "email",
+            "value": "kontakt@Hannover-MVZ-Musterlabor.de"
+          }
+        ],
+        "address": [
+          {
+            "line": [
+              "Hauptstr. 66"
+            ],
+            "_line": [
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetName",
+                    "valueString": "Hauptstr."
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber",
+                    "valueString": "66"
+                  }
+                ]
+              }
+            ],
+            "type": "both",
+            "city": "Hannover",
+            "postalCode": "30169",
+            "country": "D"
+          }
+        ],
+        "name": "MVZ für Laboratoriumsmedizin"
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Practitioner/Practitioner-ex1-1",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "Practitioner-ex1-1",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Practitioner|1.0.0-update"
+          ]
+        },
+        "name": [
+          {
+            "given": [
+              "Burkhard"
+            ],
+            "prefix": [
+              "Dr."
+            ],
+            "_prefix": [
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/iso21090-EN-qualifier",
+                    "valueCode": "AC"
+                  }
+                ]
+              }
+            ],
+            "use": "official",
+            "text": "Dr. Burkhard Bungalow",
+            "family": "Bungalow",
+            "_family": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/humanname-own-name",
+                  "valueString": "Bungalow"
+                }
+              ]
+            }
+          }
+        ],
+        "qualification": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "code": "171001",
+                  "system": "http://ihe-d.de/CodeSystems/FacharzttitelDerAerztekammern",
+                  "display": "FA Laboratoriumsmedizin"
+                }
+              ]
+            }
+          }
+        ],
+        "gender": "male"
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Practitioner/Practitioner-ex1-2",
+      "resource": {
+        "resourceType": "Practitioner",
+        "id": "Practitioner-ex1-2",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Practitioner|1.0.0-update"
+          ]
+        },
+        "identifier": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "display": "Lifelong physician number",
+                  "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                  "code": "LANR"
+                }
+              ]
+            },
+            "system": "https://fhir.kbv.de/NamingSystem/KBV_NS_Base_ANR",
+            "value": "987654321"
+          }
+        ],
+        "name": [
+          {
+            "given": [
+              "Lena"
+            ],
+            "prefix": [
+              "Dr. med."
+            ],
+            "_prefix": [
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/iso21090-EN-qualifier",
+                    "valueCode": "AC"
+                  }
+                ]
+              }
+            ],
+            "use": "official",
+            "text": "Dr. med. Lena Meyer",
+            "family": "Meyer",
+            "_family": {
+              "extension": [
+                {
+                  "url": "http://hl7.org/fhir/StructureDefinition/humanname-own-name",
+                  "valueString": "Meyer"
+                }
+              ]
+            }
+          }
+        ],
+        "qualification": [
+          {
+            "code": {
+              "coding": [
+                {
+                  "code": "141111",
+                  "system": "http://ihe-d.de/CodeSystems/FacharzttitelDerAerztekammern",
+                  "display": "FA Innere Medizin und Endokrinologie und Diabetologie"
+                }
+              ]
+            }
+          }
+        ],
+        "address": [
+          {
+            "line": [
+              "Kopernikusstraße 42"
+            ],
+            "_line": [
+              {
+                "extension": [
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetName",
+                    "valueString": "Kopernikusstraße"
+                  },
+                  {
+                    "url": "http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber",
+                    "valueString": "42"
+                  }
+                ]
+              }
+            ],
+            "type": "both",
+            "city": "Hannover",
+            "postalCode": "30161",
+            "country": "D"
+          }
+        ],
+        "gender": "female"
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/PractitionerRole/PractitionerRole-ex1-1",
+      "resource": {
+        "resourceType": "PractitionerRole",
+        "id": "PractitionerRole-ex1-1",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_PractitionerRole|1.0.0-update"
+          ]
+        },
+        "code": [
+          {
+            "coding": [
+              {
+                "code": "AG",
+                "system": "https://fhir.kbv.de/CodeSystem/KBV_CS_Base_Role_Care",
+                "version": "1.8.0",
+                "display": "Ärztliche Geschäftsführung"
+              }
+            ]
+          }
+        ],
+        "practitioner": {
+          "reference": "Practitioner/Practitioner-ex1-1"
+        },
+        "organization": {
+          "reference": "Organization/Organization-ex1-1"
+        }
+      }
+    },
+    {
+      "fullUrl": "https://fhir.kbv.de/lab-ex1/Provenance/Provenance-ex1-1",
+      "resource": {
+        "resourceType": "Provenance",
+        "id": "Provenance-ex1-1",
+        "meta": {
+          "profile": [
+            "https://fhir.kbv.de/StructureDefinition/KBV_PR_MIO_LAB_Provenance|1.0.0-update"
+          ]
+        },
+        "target": [
+          {
+            "reference": "Observation/Observation-ex1-harnsaeure"
+          },
+          {
+            "reference": "Observation/Observation-ex1-alat"
+          },
+          {
+            "reference": "Observation/Observation-ex1-asat"
+          },
+          {
+            "reference": "Observation/Observation-ex1-ggt"
+          },
+          {
+            "reference": "Observation/Observation-ex1-ap"
+          },
+          {
+            "reference": "Observation/Observation-ex1-creatinin"
+          },
+          {
+            "reference": "Observation/Observation-ex1-gfr"
+          },
+          {
+            "reference": "Observation/Observation-ex1-harnstoff"
+          },
+          {
+            "reference": "Observation/Observation-ex1-natrium"
+          },
+          {
+            "reference": "Observation/Observation-ex1-kalium"
+          },
+          {
+            "reference": "Observation/Observation-ex1-calcium"
+          },
+          {
+            "reference": "Observation/Observation-ex1-phosphor"
+          },
+          {
+            "reference": "Observation/Observation-ex1-vitamin-d"
+          },
+          {
+            "reference": "Observation/Observation-ex1-fsh"
+          },
+          {
+            "reference": "Observation/Observation-ex1-lh"
+          },
+          {
+            "reference": "Observation/Observation-ex1-estradiol"
+          },
+          {
+            "reference": "Observation/Observation-ex1-prolaktin"
+          },
+          {
+            "reference": "Observation/Observation-ex1-testosteron"
+          },
+          {
+            "reference": "Observation/Observation-ex1-fai"
+          },
+          {
+            "reference": "Observation/Observation-ex1-shbg"
+          },
+          {
+            "reference": "Observation/Observation-ex1-leukozyten"
+          },
+          {
+            "reference": "Observation/Observation-ex1-erythrozyten"
+          },
+          {
+            "reference": "Observation/Observation-ex1-haemoglobin"
+          },
+          {
+            "reference": "Observation/Observation-ex1-haematokrit"
+          },
+          {
+            "reference": "Observation/Observation-ex1-mcv"
+          },
+          {
+            "reference": "Observation/Observation-ex1-mch"
+          },
+          {
+            "reference": "Observation/Observation-ex1-mchc"
+          },
+          {
+            "reference": "Observation/Observation-ex1-thrombozyten"
+          }
+        ],
+        "agent": [
+          {
+            "who": {
+              "reference": "Practitioner/Practitioner-ex1-1"
+            }
+          }
+        ],
+        "activity": {
+          "coding": [
+            {
+              "code": "VRF",
+              "system": "http://terminology.hl7.org/CodeSystem/v3-ParticipationType",
+              "display": "verifier",
+              "version": "6.0.0"
+            }
+          ]
+        },
+        "occurredDateTime": "2021-11-15T16:55:00+01:00",
+        "recorded": "2021-11-15T16:55:00+01:00"
+      }
+    }
+  ],
+  "type": "document",
+  "timestamp": "2021-11-15T16:55:00+01:00"
+}

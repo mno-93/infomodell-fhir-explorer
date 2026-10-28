@@ -96,6 +96,13 @@ herkunft = "Paket de.gematik.epa.laboratory#1.0.0-ballot.1, Ordner example/ (Hü
 paket = "de.gematik.epa.laboratory#1.0.0-ballot.1"
 einstieg = "Composition/13c807c0-53e7-488e-84bb-023376563cf3"
 
+[[beispiele]]
+id = "mio-lab-ex1"
+titel = "Fallbeispiel 1 nach MIO Laborbefund — Hansen, 15.11.2021"
+zweck = "Dokument nach den KBV-Profilen MIO Laborbefund 1.0.0-update zur inhaltlichen Sichtung: vier Untersuchungsgruppen (Klinische Chemie, Vitamine, Endokrinologie, Blutbild) mit 28 Werten, Auftrag, zwei Proben, Freigabe und Provenance. Validiert gegen das veröffentlichte Paket kbv.mio.laborbefund 1.0.0-update; es enthält keine Snapshots, deshalb ordnet die Darstellung über Standardprofil bzw. Basisressource zu."
+herkunft = "Fallbeispiel 1 zum MIO Laborbefund 1.0.0-update (KBV): Bundle-Bundle-ex1-1.json aus der SUSHI-Ausgabe, unverändert; zur Veröffentlichung freigegeben. Mit Claude erzeugt, fiktive Daten."
+datei = "beispiele/mio-lab-ex1.json"
+
 # HL7 FHIR Validator: nur Beispieldateien (die Paketbeispiele prüft der IG-Build)
 [validierung]
 # Paketstand wie im Demo-PVS, aus dem die Beispiele stammen (dort ohne Fehler bis auf die Ausnahmen)
@@ -106,6 +113,9 @@ pakete = [
   "de.gematik.ti#1.5.0-ballot.2",
   "de.gematik.epa.laboratory#1.0.0-ballot.1",
   "de.gematik.terminology#1.1.0-ballot.2",
+  # Fallbeispiel mio-lab-ex1 nach KBV MIO Laborbefund (veröffentlichtes Paket, nur Differentiale — der Validator
+  # erzeugt die Snapshots selbst; die Darstellung braucht Snapshots und nutzt es deshalb nicht)
+  "kbv.mio.laborbefund#1.0.0-update",
 ]
 # Demo-Erweiterungen der Beispiele (Namensraum example.org) zulassen
 erweiterungen = ["https://example.org/"]
@@ -119,3 +129,61 @@ grund = "Profilkonflikt im Ballot: Bundle-eu-lab verlangt eine DiagnosticReport-
 id = "abschnitt-ohne-terminologieserver"
 muster = "Slice 'Composition\\.section:result': a matching slice is required|Unable to find a profile match for Composition/comp-[0-9a-f]{8} among choices"
 grund = "Ohne Terminologieserver nicht auswertbar: composition-dglp ordnet den Abschnitt über eine required-Bindung an lab-studyType-eu-lab (LOINC) zu; der Validator verneint die Zugehörigkeit ohne Server. Dazu Folgefehler am Verweis auf die Composition."
+
+# Strukturprüfung: Grenze der Darstellung beim Fallbeispiel nach KBV MIO Laborbefund (Paket ohne Snapshots)
+
+[[strukturausnahmen]]
+element = "Observation · Observation.extension.extension:referenceRange.url"
+grund = "Fallbeispiel mio-lab-ex1: KBV-Extension Alternative_Result (alternatives Ergebnis mit Teil-Extensions value und referenceRange). Das Paket kbv.mio.laborbefund 1.0.0-update enthält keine Snapshots, die Darstellung kennt die Teil-Extensions deshalb nicht; der HL7 Validator prüft sie gegen das Paket (ohne Fehler)."
+
+[[strukturausnahmen]]
+element = "Observation · Observation.extension.extension:referenceRange.valueRange.high.code"
+grund = "Fallbeispiel mio-lab-ex1: KBV-Extension Alternative_Result (alternatives Ergebnis mit Teil-Extensions value und referenceRange). Das Paket kbv.mio.laborbefund 1.0.0-update enthält keine Snapshots, die Darstellung kennt die Teil-Extensions deshalb nicht; der HL7 Validator prüft sie gegen das Paket (ohne Fehler)."
+
+[[strukturausnahmen]]
+element = "Observation · Observation.extension.extension:referenceRange.valueRange.high.system"
+grund = "Fallbeispiel mio-lab-ex1: KBV-Extension Alternative_Result (alternatives Ergebnis mit Teil-Extensions value und referenceRange). Das Paket kbv.mio.laborbefund 1.0.0-update enthält keine Snapshots, die Darstellung kennt die Teil-Extensions deshalb nicht; der HL7 Validator prüft sie gegen das Paket (ohne Fehler)."
+
+[[strukturausnahmen]]
+element = "Observation · Observation.extension.extension:referenceRange.valueRange.high.unit"
+grund = "Fallbeispiel mio-lab-ex1: KBV-Extension Alternative_Result (alternatives Ergebnis mit Teil-Extensions value und referenceRange). Das Paket kbv.mio.laborbefund 1.0.0-update enthält keine Snapshots, die Darstellung kennt die Teil-Extensions deshalb nicht; der HL7 Validator prüft sie gegen das Paket (ohne Fehler)."
+
+[[strukturausnahmen]]
+element = "Observation · Observation.extension.extension:referenceRange.valueRange.high.value"
+grund = "Fallbeispiel mio-lab-ex1: KBV-Extension Alternative_Result (alternatives Ergebnis mit Teil-Extensions value und referenceRange). Das Paket kbv.mio.laborbefund 1.0.0-update enthält keine Snapshots, die Darstellung kennt die Teil-Extensions deshalb nicht; der HL7 Validator prüft sie gegen das Paket (ohne Fehler)."
+
+[[strukturausnahmen]]
+element = "Observation · Observation.extension.extension:referenceRange.valueRange.low.code"
+grund = "Fallbeispiel mio-lab-ex1: KBV-Extension Alternative_Result (alternatives Ergebnis mit Teil-Extensions value und referenceRange). Das Paket kbv.mio.laborbefund 1.0.0-update enthält keine Snapshots, die Darstellung kennt die Teil-Extensions deshalb nicht; der HL7 Validator prüft sie gegen das Paket (ohne Fehler)."
+
+[[strukturausnahmen]]
+element = "Observation · Observation.extension.extension:referenceRange.valueRange.low.system"
+grund = "Fallbeispiel mio-lab-ex1: KBV-Extension Alternative_Result (alternatives Ergebnis mit Teil-Extensions value und referenceRange). Das Paket kbv.mio.laborbefund 1.0.0-update enthält keine Snapshots, die Darstellung kennt die Teil-Extensions deshalb nicht; der HL7 Validator prüft sie gegen das Paket (ohne Fehler)."
+
+[[strukturausnahmen]]
+element = "Observation · Observation.extension.extension:referenceRange.valueRange.low.unit"
+grund = "Fallbeispiel mio-lab-ex1: KBV-Extension Alternative_Result (alternatives Ergebnis mit Teil-Extensions value und referenceRange). Das Paket kbv.mio.laborbefund 1.0.0-update enthält keine Snapshots, die Darstellung kennt die Teil-Extensions deshalb nicht; der HL7 Validator prüft sie gegen das Paket (ohne Fehler)."
+
+[[strukturausnahmen]]
+element = "Observation · Observation.extension.extension:referenceRange.valueRange.low.value"
+grund = "Fallbeispiel mio-lab-ex1: KBV-Extension Alternative_Result (alternatives Ergebnis mit Teil-Extensions value und referenceRange). Das Paket kbv.mio.laborbefund 1.0.0-update enthält keine Snapshots, die Darstellung kennt die Teil-Extensions deshalb nicht; der HL7 Validator prüft sie gegen das Paket (ohne Fehler)."
+
+[[strukturausnahmen]]
+element = "Observation · Observation.extension.extension:value.url"
+grund = "Fallbeispiel mio-lab-ex1: KBV-Extension Alternative_Result (alternatives Ergebnis mit Teil-Extensions value und referenceRange). Das Paket kbv.mio.laborbefund 1.0.0-update enthält keine Snapshots, die Darstellung kennt die Teil-Extensions deshalb nicht; der HL7 Validator prüft sie gegen das Paket (ohne Fehler)."
+
+[[strukturausnahmen]]
+element = "Observation · Observation.extension.extension:value.valueQuantity.code"
+grund = "Fallbeispiel mio-lab-ex1: KBV-Extension Alternative_Result (alternatives Ergebnis mit Teil-Extensions value und referenceRange). Das Paket kbv.mio.laborbefund 1.0.0-update enthält keine Snapshots, die Darstellung kennt die Teil-Extensions deshalb nicht; der HL7 Validator prüft sie gegen das Paket (ohne Fehler)."
+
+[[strukturausnahmen]]
+element = "Observation · Observation.extension.extension:value.valueQuantity.system"
+grund = "Fallbeispiel mio-lab-ex1: KBV-Extension Alternative_Result (alternatives Ergebnis mit Teil-Extensions value und referenceRange). Das Paket kbv.mio.laborbefund 1.0.0-update enthält keine Snapshots, die Darstellung kennt die Teil-Extensions deshalb nicht; der HL7 Validator prüft sie gegen das Paket (ohne Fehler)."
+
+[[strukturausnahmen]]
+element = "Observation · Observation.extension.extension:value.valueQuantity.unit"
+grund = "Fallbeispiel mio-lab-ex1: KBV-Extension Alternative_Result (alternatives Ergebnis mit Teil-Extensions value und referenceRange). Das Paket kbv.mio.laborbefund 1.0.0-update enthält keine Snapshots, die Darstellung kennt die Teil-Extensions deshalb nicht; der HL7 Validator prüft sie gegen das Paket (ohne Fehler)."
+
+[[strukturausnahmen]]
+element = "Observation · Observation.extension.extension:value.valueQuantity.value"
+grund = "Fallbeispiel mio-lab-ex1: KBV-Extension Alternative_Result (alternatives Ergebnis mit Teil-Extensions value und referenceRange). Das Paket kbv.mio.laborbefund 1.0.0-update enthält keine Snapshots, die Darstellung kennt die Teil-Extensions deshalb nicht; der HL7 Validator prüft sie gegen das Paket (ohne Fehler)."

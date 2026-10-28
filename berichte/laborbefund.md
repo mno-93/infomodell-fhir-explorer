@@ -155,6 +155,7 @@ Je Mapping eines Elements mit Werteliste: Bindung am Element, am zugehörigen Co
 | Schilddrüse (TSH) — Yildiz, 02.07.2026 | 11 | 90 | 60 | 0 |
 | IG-Beispiel mit Probe, Gerät und Anhang | 22 | 376 | 278 | 0 |
 | IG-Beispiel, zweite Composition | 21 | 325 | 232 | 0 |
+| Fallbeispiel 1 nach MIO Laborbefund — Hansen, 15.11.2021 | 43 | 1085 | 9 | 14 |
 
 ### Nierenfunktion und HbA1c — Hoffmann, 12.08.2026
 
@@ -456,14 +457,175 @@ Werte ohne spezifisches Element im Informationsmodell (ohne url, reference, syst
 - `ti-practitioner#Practitioner.qualification.code.coding.display` (1×)
 - `ti-practitioner#Practitioner.telecom.value` (1×)
 
+### Fallbeispiel 1 nach MIO Laborbefund — Hansen, 15.11.2021
+
+- Zweck: Dokument nach den KBV-Profilen MIO Laborbefund 1.0.0-update zur inhaltlichen Sichtung: vier Untersuchungsgruppen (Klinische Chemie, Vitamine, Endokrinologie, Blutbild) mit 28 Werten, Auftrag, zwei Proben, Freigabe und Provenance. Validiert gegen das veröffentlichte Paket kbv.mio.laborbefund 1.0.0-update; es enthält keine Snapshots, deshalb ordnet die Darstellung über Standardprofil bzw. Basisressource zu.
+- Herkunft: Fallbeispiel 1 zum MIO Laborbefund 1.0.0-update (KBV): Bundle-Bundle-ex1-1.json aus der SUSHI-Ausgabe, unverändert; zur Veröffentlichung freigegeben. Mit Claude erzeugt, fiktive Daten.
+- Datei: `beispiele/mio-lab-ex1.json`
+- Profilzuordnung ohne `meta.profile`: 38× Basisressource, 5× Standardprofil des Projekts
+
+**Strukturbefunde** (Element im Profil nicht auflösbar):
+
+- `Observation · Observation.extension.extension:value.url` — Slice `extension:value` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:value.valueQuantity.system` — Slice `extension:value` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:value.valueQuantity.value` — Slice `extension:value` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:value.valueQuantity.code` — Slice `extension:value` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:value.valueQuantity.unit` — Slice `extension:value` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.valueRange.low.system` — Slice `extension:referenceRange` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.valueRange.low.value` — Slice `extension:referenceRange` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.valueRange.low.code` — Slice `extension:referenceRange` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.valueRange.low.unit` — Slice `extension:referenceRange` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.valueRange.high.system` — Slice `extension:referenceRange` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.valueRange.high.value` — Slice `extension:referenceRange` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.valueRange.high.code` — Slice `extension:referenceRange` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.valueRange.high.unit` — Slice `extension:referenceRange` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.url` — Slice `extension:referenceRange` unter `Extension` nicht definiert
+
+Werte ohne spezifisches Element im Informationsmodell (ohne url, reference, system, version, Erzähltext):
+
+- `Composition#Composition.attester.mode` (1×)
+- `Composition#Composition.attester.time` (1×)
+- `Composition#Composition.date` (1×)
+- `Composition#Composition.extension.valueString` (1×)
+- `Composition#Composition.identifier.value` (1×)
+- `Composition#Composition.status` (1×)
+- `Composition#Composition.subject.identifier.type.coding.code` (1×)
+- `Composition#Composition.subject.identifier.type.coding.display` (1×)
+- `Composition#Composition.subject.identifier.value` (1×)
+- `Composition#Composition.title` (1×)
+- `Composition#Composition.type.coding.code` (1×)
+- `Composition#Composition.type.coding.display` (1×)
+- `DiagnosticReport#DiagnosticReport.code.coding.code` (1×)
+- `DiagnosticReport#DiagnosticReport.code.coding.display` (1×)
+- `DiagnosticReport#DiagnosticReport.conclusion` (1×)
+- `DiagnosticReport#DiagnosticReport.extension.valueDateTime` (1×)
+- `DiagnosticReport#DiagnosticReport.identifier.type.coding.code` (1×)
+- `DiagnosticReport#DiagnosticReport.identifier.type.coding.display` (1×)
+- `DiagnosticReport#DiagnosticReport.identifier.value` (1×)
+- `DiagnosticReport#DiagnosticReport.issued` (1×)
+- `DiagnosticReport#DiagnosticReport.presentedForm.contentType` (1×)
+- `DiagnosticReport#DiagnosticReport.presentedForm.creation` (1×)
+- `DiagnosticReport#DiagnosticReport.presentedForm.data` (1×)
+- `DiagnosticReport#DiagnosticReport.presentedForm.title` (1×)
+- `DiagnosticReport#DiagnosticReport.result.extension.valuePositiveInt` (4×)
+- `DiagnosticReport#DiagnosticReport.status` (1×)
+- `DiagnosticReport#DiagnosticReport.subject.identifier.type.coding.code` (1×)
+- `DiagnosticReport#DiagnosticReport.subject.identifier.type.coding.display` (1×)
+- `DiagnosticReport#DiagnosticReport.subject.identifier.value` (1×)
+- `Observation#Observation.category.coding.code` (73×)
+- `Observation#Observation.category.coding.display` (73×)
+- `Observation#Observation.category.extension.valueString` (73×)
+- `Observation#Observation.category.text` (41×)
+- `Observation#Observation.code.coding.code` (32×)
+- `Observation#Observation.code.coding.display` (32×)
+- `Observation#Observation.code.text` (28×)
+- `Observation#Observation.effectiveDateTime` (28×)
+- `Observation#Observation.effectiveDateTime.extension.valueCode` (4×)
+- `Observation#Observation.extension.extension:referenceRange.valueRange.high.code` (1×)
+- `Observation#Observation.extension.extension:referenceRange.valueRange.high.unit` (1×)
+- `Observation#Observation.extension.extension:referenceRange.valueRange.high.value` (1×)
+- `Observation#Observation.extension.extension:referenceRange.valueRange.low.code` (1×)
+- `Observation#Observation.extension.extension:referenceRange.valueRange.low.unit` (1×)
+- `Observation#Observation.extension.extension:referenceRange.valueRange.low.value` (1×)
+- `Observation#Observation.extension.extension:value.valueQuantity.code` (1×)
+- `Observation#Observation.extension.extension:value.valueQuantity.unit` (1×)
+- `Observation#Observation.extension.extension:value.valueQuantity.value` (1×)
+- `Observation#Observation.hasMember.extension.valuePositiveInt` (28×)
+- `Observation#Observation.interpretation.coding.code` (28×)
+- `Observation#Observation.interpretation.coding.display` (28×)
+- `Observation#Observation.interpretation.text` (30×)
+- `Observation#Observation.issued` (28×)
+- `Observation#Observation.method.text` (2×)
+- `Observation#Observation.referenceRange.high.code` (26×)
+- `Observation#Observation.referenceRange.high.unit` (26×)
+- `Observation#Observation.referenceRange.high.value` (26×)
+- `Observation#Observation.referenceRange.low.code` (24×)
+- `Observation#Observation.referenceRange.low.unit` (24×)
+- `Observation#Observation.referenceRange.low.value` (24×)
+- `Observation#Observation.referenceRange.text` (1×)
+- `Observation#Observation.referenceRange.type.coding.code` (28×)
+- `Observation#Observation.referenceRange.type.coding.display` (28×)
+- `Observation#Observation.status` (32×)
+- `Observation#Observation.subject.identifier.type.coding.code` (32×)
+- `Observation#Observation.subject.identifier.type.coding.display` (32×)
+- `Observation#Observation.subject.identifier.value` (32×)
+- `Observation#Observation.valueQuantity.code` (28×)
+- `Observation#Observation.valueQuantity.comparator` (1×)
+- `Observation#Observation.valueQuantity.unit` (28×)
+- `Observation#Observation.valueQuantity.value` (28×)
+- `Provenance#Provenance.activity.coding.code` (1×)
+- `Provenance#Provenance.activity.coding.display` (1×)
+- `Provenance#Provenance.occurredDateTime` (1×)
+- `Provenance#Provenance.recorded` (1×)
+- `ServiceRequest#ServiceRequest.authoredOn` (1×)
+- `ServiceRequest#ServiceRequest.code.coding.code` (1×)
+- `ServiceRequest#ServiceRequest.code.coding.display` (1×)
+- `ServiceRequest#ServiceRequest.identifier.type.coding.code` (1×)
+- `ServiceRequest#ServiceRequest.identifier.type.coding.display` (1×)
+- `ServiceRequest#ServiceRequest.identifier.value` (1×)
+- `ServiceRequest#ServiceRequest.intent` (1×)
+- `ServiceRequest#ServiceRequest.priority` (1×)
+- `ServiceRequest#ServiceRequest.reasonCode.extension.valueString` (1×)
+- `ServiceRequest#ServiceRequest.reasonCode.text` (1×)
+- `ServiceRequest#ServiceRequest.status` (1×)
+- `ServiceRequest#ServiceRequest.subject.identifier.type.coding.code` (1×)
+- `ServiceRequest#ServiceRequest.subject.identifier.type.coding.display` (1×)
+- `ServiceRequest#ServiceRequest.subject.identifier.value` (1×)
+- `ServiceRequest#ServiceRequest.supportingInfo.display` (1×)
+- `Specimen#Specimen.collection.collectedDateTime` (2×)
+- `Specimen#Specimen.identifier.value` (2×)
+- `Specimen#Specimen.receivedTime` (2×)
+- `Specimen#Specimen.status` (2×)
+- `Specimen#Specimen.subject.identifier.type.coding.code` (2×)
+- `Specimen#Specimen.subject.identifier.type.coding.display` (2×)
+- `Specimen#Specimen.subject.identifier.value` (2×)
+- `Specimen#Specimen.type.coding.code` (2×)
+- `Specimen#Specimen.type.coding.display` (2×)
+- `Specimen#Specimen.type.text` (2×)
+- `ti-organization#Organization.address.city` (1×)
+- `ti-organization#Organization.address.country` (1×)
+- `ti-organization#Organization.address.line` (1×)
+- `ti-organization#Organization.address.line.extension:houseNumber.valueString` (1×)
+- `ti-organization#Organization.address.line.extension:streetName.valueString` (1×)
+- `ti-organization#Organization.address.postalCode` (1×)
+- `ti-organization#Organization.address.type` (1×)
+- `ti-organization#Organization.name` (1×)
+- `ti-organization#Organization.telecom.value` (3×)
+- `ti-patient#Patient.birthDate` (1×)
+- `ti-patient#Patient.gender` (1×)
+- `ti-patient#Patient.name:Name.family` (1×)
+- `ti-patient#Patient.name:Name.family.extension.valueString` (1×)
+- `ti-patient#Patient.name:Name.given` (1×)
+- `ti-patient#Patient.name:Name.text` (1×)
+- `ti-patient#Patient.name:Name.use` (1×)
+- `ti-patient#Patient.telecom.value` (1×)
+- `ti-practitioner#Practitioner.address.city` (1×)
+- `ti-practitioner#Practitioner.address.country` (1×)
+- `ti-practitioner#Practitioner.address.line` (1×)
+- `ti-practitioner#Practitioner.address.line.extension.valueString` (2×)
+- `ti-practitioner#Practitioner.address.postalCode` (1×)
+- `ti-practitioner#Practitioner.address.type` (1×)
+- `ti-practitioner#Practitioner.gender` (2×)
+- `ti-practitioner#Practitioner.name.family` (2×)
+- `ti-practitioner#Practitioner.name.family.extension:nachname.valueString` (2×)
+- `ti-practitioner#Practitioner.name.given` (2×)
+- `ti-practitioner#Practitioner.name.prefix` (2×)
+- `ti-practitioner#Practitioner.name.prefix.extension:prefix-qualifier.valueCode` (2×)
+- `ti-practitioner#Practitioner.name.text` (2×)
+- `ti-practitioner#Practitioner.name.use` (2×)
+- `ti-practitioner#Practitioner.qualification.code.coding.code` (2×)
+- `ti-practitioner#Practitioner.qualification.code.coding.display` (2×)
+- `ti-practitioner-role#PractitionerRole.code.coding.code` (1×)
+- `ti-practitioner-role#PractitionerRole.code.coding.display` (1×)
+
 ## FHIR-Validierung (HL7 Validator 7.0.1)
 
 Stand: `berichte/laborbefund.validierung.json`, geschrieben von `python3 -I werkzeuge/mx.py validieren laborbefund`; FHIR 4.0.1, Optionen `-tx n/a -locale en-US -allow-example-urls true -extension https://example.org/` (ohne Terminologieserver).
 
-- Pakete: `hl7.fhir.uv.extensions.r4#5.3.0`, `de.basisprofil.r4#1.6.0`, `hl7.fhir.eu.base#2.0.1`, `de.gematik.ti#1.5.0-ballot.2`, `de.gematik.epa.laboratory#1.0.0-ballot.1`, `de.gematik.terminology#1.1.0-ballot.2`
+- Pakete: `hl7.fhir.uv.extensions.r4#5.3.0`, `de.basisprofil.r4#1.6.0`, `hl7.fhir.eu.base#2.0.1`, `de.gematik.ti#1.5.0-ballot.2`, `de.gematik.epa.laboratory#1.0.0-ballot.1`, `de.gematik.terminology#1.1.0-ballot.2`, `kbv.mio.laborbefund#1.0.0-update`
 - Lädt der Validator selbst (im Paketbestand festgelegt, ohne Netz): `hl7.fhir.r4.core#4.0.1`, `hl7.fhir.xver-extensions#0.1.0`, `hl7.terminology.r4#6.2.0`, `hl7.fhir.uv.extensions.r4#5.2.0`, `hl7.terminology#7.5.0`, `hl7.fhir.uv.extensions#5.3.0`
 - Abhängigkeiten mit Platzhalter, festgelegt: `ihe.formatcode.fhir#1.5.x` → `1.5.0`
-- Ergebnis: **0 Fehler**, 12 als begründete Ausnahme, 70 Warnungen, 36 Hinweise
+- Ergebnis: **0 Fehler**, 12 als begründete Ausnahme, 252 Warnungen, 63 Hinweise
 
 | Beispiel | Fehler | davon begründete Ausnahme | Warnungen | Hinweise | Stand |
 |---|---:|---:|---:|---:|---|
@@ -472,6 +634,7 @@ Stand: `berichte/laborbefund.validierung.json`, geschrieben von `python3 -I werk
 | Schilddrüse (TSH) — Yildiz, 02.07.2026 | 4 | 4 | 16 | 11 | aktuell |
 | IG-Beispiel mit Probe, Gerät und Anhang | – | – | – | – | nicht validiert (Beispiel aus einem FHIR-Paket) |
 | IG-Beispiel, zweite Composition | – | – | – | – | nicht validiert (Beispiel aus einem FHIR-Paket) |
+| Fallbeispiel 1 nach MIO Laborbefund — Hansen, 15.11.2021 | 0 | 0 | 182 | 27 | aktuell |
 
 **Begründete Ausnahmen** (`[[validierung.ausnahmen]]` in `projekt.toml`):
 
@@ -541,3 +704,38 @@ Gleiche Meldungen zusammengefasst; Ort als FHIRPath, Zeile in der Beispieldatei.
 - **warning**: None of the codings provided are in the value set 'IdentifierType' (http://hl7.org/fhir/ValueSet/identifier-type\|4.0.1), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = https://gematik.de/fhir/terminology/CodeSystem/laboratory-identificator#AE)<br>`Bundle.entry[3].resource/*ServiceRequest/sr-3b1c9a52*/.identifier[0].type` (Zeile 256)
 - **warning**: None of the codings provided are in the value set 'IdentifierType' (http://hl7.org/fhir/ValueSet/identifier-type\|4.0.1), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = https://gematik.de/fhir/terminology/CodeSystem/laboratory-identificator#AL)<br>`Bundle.entry[1].resource/*DiagnosticReport/dr-3b1c9a52*/.identifier[0].type` (Zeile 139)
 - **warning** (3×): Unable to validate code 'm[IU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[10].resource/*Observation/obs-3b1c9a52-0-0*/.referenceRange[0].high` (Zeile 532), `Bundle.entry[10].resource/*Observation/obs-3b1c9a52-0-0*/.referenceRange[0].low` (Zeile 526), `Bundle.entry[10].resource/*Observation/obs-3b1c9a52-0-0*/.value.ofType(Quantity)` (Zeile 507)
+
+### Fehler und Warnungen — Fallbeispiel 1 nach MIO Laborbefund — Hansen, 15.11.2021
+
+Gleiche Meldungen zusammengefasst; Ort als FHIRPath, Zeile in der Beispieldatei.
+
+- **warning** (2×): A definition for CodeSystem 'urn:ietf:bcp:13' could not be found, so the code cannot be validated<br>`Bundle.entry[1].resource/*DiagnosticReport/DiagnosticReport-ex1-1*/.presentedForm[0].contentType` (Zeile 218), `Bundle.entry[1].resource/*DiagnosticReport/DiagnosticReport-ex1-1*/.presentedForm[0].contentType.system` (Zeile 218)
+- **warning** (39×): Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)<br>`Bundle.entry[0].resource/*Composition/Composition-ex1-1*/` (Zeile 16), `Bundle.entry[10].resource/*Observation/Observation-ex1-gfr*/` (Zeile 1234), `Bundle.entry[11].resource/*Observation/Observation-ex1-harnstoff*/` (Zeile 1360) und 36 weitere
+- **warning**: Found multiple matching profiles for Composition/Composition-ex1-1 among choices: http://hl7.org/fhir/5.0/StructureDefinition/profile-Composition\|0.1.0, http://hl7.org/fhir/StructureDefinition/Composition\|4.0.1<br>`Bundle.entry[1].resource/*DiagnosticReport/DiagnosticReport-ex1-1*/.extension[1].value.ofType(Reference)` (Zeile 114)
+- **warning** (2×): No code provided, and a code should be provided from the value set 'Observation Interpretation Codes' (http://hl7.org/fhir/ValueSet/observation-interpretation\|4.0.1)<br>`Bundle.entry[16].resource/*Observation/Observation-ex1-group-vitamin*/.interpretation[0]` (Zeile 2080), `Bundle.entry[18].resource/*Observation/Observation-ex1-group-endokrin*/.interpretation[0]` (Zeile 2307)
+- **warning**: None of the codings provided are in the value set 'Identifier Type DeBasis ValueSet' (http://fhir.de/ValueSet/identifier-type-de-basis\|1.5.4), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = http://terminology.hl7.org/CodeSystem/v2-0203#BSNR)<br>`Bundle.entry[38].resource/*Organization/Organization-ex1-1*/.identifier[0].type` (Zeile 4857)
+- **warning**: None of the codings provided are in the value set 'IdentifierType' (http://hl7.org/fhir/ValueSet/identifier-type\|4.0.1), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = http://terminology.hl7.org/CodeSystem/v2-0203#BSNR)<br>`Bundle.entry[38].resource/*Organization/Organization-ex1-1*/.identifier[0].type` (Zeile 4857)
+- **warning**: None of the codings provided are in the value set 'IdentifierType' (http://hl7.org/fhir/ValueSet/identifier-type\|4.0.1), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = http://terminology.hl7.org/CodeSystem/v2-0203#RI)<br>`Bundle.entry[1].resource/*DiagnosticReport/DiagnosticReport-ex1-1*/.identifier[0].type` (Zeile 121)
+- **warning**: None of the codings provided are in the value set 'IdentifierType' (http://hl7.org/fhir/ValueSet/identifier-type\|4.0.1), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Laboratory_Identificator#AE)<br>`Bundle.entry[37].resource/*ServiceRequest/ServiceRequest-ex1-1*/.identifier[0].type` (Zeile 4780)
+- **warning** (28×): The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')<br>`Bundle.entry[10].resource/*Observation/Observation-ex1-gfr*/.interpretation[0].coding[0].version` (Zeile 1310), `Bundle.entry[11].resource/*Observation/Observation-ex1-harnstoff*/.interpretation[0].coding[0].version` (Zeile 1436), `Bundle.entry[12].resource/*Observation/Observation-ex1-natrium*/.interpretation[0].coding[0].version` (Zeile 1565) und 25 weitere
+- **warning**: The code system 'http://terminology.hl7.org/CodeSystem/v3-ParticipationType' version '7.0.0' for the versionless include in the ValueSet include is different to the one in the value ('6.0.0')<br>`Bundle.entry[42].resource/*Provenance/Provenance-ex1-1*/.activity.coding[0].version` (Zeile 5200)
+- **warning** (2×): UCUM Codes that contain human readable annotations like {1.73_m2} can be misleading (e.g. they are ignored when comparing units). Best Practice is not to depend on annotations in the UCUM code, so this usage should be checked, and the Quantity.unit 'ml/min/1,73m2' SHOULD contain the annotation (it does not)<br>`Bundle.entry[10].resource/*Observation/Observation-ex1-gfr*/.referenceRange[0].low` (Zeile 1336), `Bundle.entry[10].resource/*Observation/Observation-ex1-gfr*/.value.ofType(Quantity)` (Zeile 1344)
+- **warning** (3×): Unable to validate code '%' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[30].resource/*Observation/Observation-ex1-haematokrit*/.referenceRange[0].high` (Zeile 4064), `Bundle.entry[30].resource/*Observation/Observation-ex1-haematokrit*/.referenceRange[0].low` (Zeile 4058), `Bundle.entry[30].resource/*Observation/Observation-ex1-haematokrit*/.value.ofType(Quantity)` (Zeile 4072)
+- **warning** (3×): Unable to validate code '1' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[24].resource/*Observation/Observation-ex1-fai*/.referenceRange[0].high` (Zeile 3173), `Bundle.entry[24].resource/*Observation/Observation-ex1-fai*/.referenceRange[0].low` (Zeile 3167), `Bundle.entry[24].resource/*Observation/Observation-ex1-fai*/.value.ofType(Quantity)` (Zeile 3181)
+- **warning** (3×): Unable to validate code '10*12/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[28].resource/*Observation/Observation-ex1-erythrozyten*/.referenceRange[0].high` (Zeile 3772), `Bundle.entry[28].resource/*Observation/Observation-ex1-erythrozyten*/.referenceRange[0].low` (Zeile 3766), `Bundle.entry[28].resource/*Observation/Observation-ex1-erythrozyten*/.value.ofType(Quantity)` (Zeile 3780)
+- **warning** (6×): Unable to validate code '10*9/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[27].resource/*Observation/Observation-ex1-leukozyten*/.referenceRange[0].high` (Zeile 3626), `Bundle.entry[27].resource/*Observation/Observation-ex1-leukozyten*/.referenceRange[0].low` (Zeile 3620), `Bundle.entry[27].resource/*Observation/Observation-ex1-leukozyten*/.value.ofType(Quantity)` (Zeile 3634) und 3 weitere
+- **warning** (13×): Unable to validate code '18719-5' in system 'http://loinc.org' because the validator is running without terminology services<br>`Bundle.entry[10].resource/*Observation/Observation-ex1-gfr*/.category[1].coding[0]` (Zeile 1267), `Bundle.entry[11].resource/*Observation/Observation-ex1-harnstoff*/.category[1].coding[0]` (Zeile 1393), `Bundle.entry[12].resource/*Observation/Observation-ex1-natrium*/.category[1].coding[0]` (Zeile 1522) und 10 weitere
+- **warning** (9×): Unable to validate code '18723-7' in system 'http://loinc.org' because the validator is running without terminology services<br>`Bundle.entry[26].resource/*Observation/Observation-ex1-group-blutbild*/.category[1].coding[0]` (Zeile 3359), `Bundle.entry[27].resource/*Observation/Observation-ex1-leukozyten*/.category[1].coding[0]` (Zeile 3537), `Bundle.entry[28].resource/*Observation/Observation-ex1-erythrozyten*/.category[1].coding[0]` (Zeile 3683) und 6 weitere
+- **warning** (9×): Unable to validate code 'U/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[5].resource/*Observation/Observation-ex1-alat*/.referenceRange[0].high` (Zeile 709), `Bundle.entry[5].resource/*Observation/Observation-ex1-alat*/.value.ofType(Quantity)` (Zeile 717), `Bundle.entry[6].resource/*Observation/Observation-ex1-asat*/.referenceRange[0].high` (Zeile 832) und 6 weitere
+- **warning** (6×): Unable to validate code '[iU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[19].resource/*Observation/Observation-ex1-fsh*/.referenceRange[0].high` (Zeile 2494), `Bundle.entry[19].resource/*Observation/Observation-ex1-fsh*/.referenceRange[0].low` (Zeile 2488), `Bundle.entry[19].resource/*Observation/Observation-ex1-fsh*/.value.ofType(Quantity)` (Zeile 2502) und 3 weitere
+- **warning** (3×): Unable to validate code 'fL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[31].resource/*Observation/Observation-ex1-mcv*/.referenceRange[0].high` (Zeile 4210), `Bundle.entry[31].resource/*Observation/Observation-ex1-mcv*/.referenceRange[0].low` (Zeile 4204), `Bundle.entry[31].resource/*Observation/Observation-ex1-mcv*/.value.ofType(Quantity)` (Zeile 4218)
+- **warning** (6×): Unable to validate code 'g/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[29].resource/*Observation/Observation-ex1-haemoglobin*/.referenceRange[0].high` (Zeile 3918), `Bundle.entry[29].resource/*Observation/Observation-ex1-haemoglobin*/.referenceRange[0].low` (Zeile 3912), `Bundle.entry[29].resource/*Observation/Observation-ex1-haemoglobin*/.value.ofType(Quantity)` (Zeile 3926) und 3 weitere
+- **warning** (2×): Unable to validate code 'mL/min/{1.73_m2}' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[10].resource/*Observation/Observation-ex1-gfr*/.referenceRange[0].low` (Zeile 1336), `Bundle.entry[10].resource/*Observation/Observation-ex1-gfr*/.value.ofType(Quantity)` (Zeile 1344)
+- **warning** (3×): Unable to validate code 'm[iU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[22].resource/*Observation/Observation-ex1-prolaktin*/.referenceRange[0].high` (Zeile 2882), `Bundle.entry[22].resource/*Observation/Observation-ex1-prolaktin*/.referenceRange[0].low` (Zeile 2876), `Bundle.entry[22].resource/*Observation/Observation-ex1-prolaktin*/.value.ofType(Quantity)` (Zeile 2923)
+- **warning** (8×): Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[11].resource/*Observation/Observation-ex1-harnstoff*/.referenceRange[0].high` (Zeile 1465), `Bundle.entry[11].resource/*Observation/Observation-ex1-harnstoff*/.referenceRange[0].low` (Zeile 1459), `Bundle.entry[11].resource/*Observation/Observation-ex1-harnstoff*/.value.ofType(Quantity)` (Zeile 1473) und 5 weitere
+- **warning** (12×): Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[12].resource/*Observation/Observation-ex1-natrium*/.referenceRange[0].high` (Zeile 1594), `Bundle.entry[12].resource/*Observation/Observation-ex1-natrium*/.referenceRange[0].low` (Zeile 1588), `Bundle.entry[12].resource/*Observation/Observation-ex1-natrium*/.value.ofType(Quantity)` (Zeile 1602) und 9 weitere
+- **warning** (3×): Unable to validate code 'ng/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[21].resource/*Observation/Observation-ex1-estradiol*/.referenceRange[0].high` (Zeile 2753), `Bundle.entry[21].resource/*Observation/Observation-ex1-estradiol*/.referenceRange[0].low` (Zeile 2747), `Bundle.entry[21].resource/*Observation/Observation-ex1-estradiol*/.value.ofType(Quantity)` (Zeile 2761)
+- **warning** (3×): Unable to validate code 'ng/mL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[22].resource/*Observation/Observation-ex1-prolaktin*/.extension[0].extension[0].value.ofType(Quantity)` (Zeile 2895), `Bundle.entry[22].resource/*Observation/Observation-ex1-prolaktin*/.extension[0].extension[1].value.ofType(Range).high` (Zeile 2910), `Bundle.entry[22].resource/*Observation/Observation-ex1-prolaktin*/.extension[0].extension[1].value.ofType(Range).low` (Zeile 2904)
+- **warning** (5×): Unable to validate code 'nmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[17].resource/*Observation/Observation-ex1-vitamin-d*/.referenceRange[0].low` (Zeile 2207), `Bundle.entry[17].resource/*Observation/Observation-ex1-vitamin-d*/.value.ofType(Quantity)` (Zeile 2216), `Bundle.entry[25].resource/*Observation/Observation-ex1-shbg*/.referenceRange[0].high` (Zeile 3302) und 2 weitere
+- **warning** (3×): Unable to validate code 'pg' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[32].resource/*Observation/Observation-ex1-mch*/.referenceRange[0].high` (Zeile 4356), `Bundle.entry[32].resource/*Observation/Observation-ex1-mch*/.referenceRange[0].low` (Zeile 4350), `Bundle.entry[32].resource/*Observation/Observation-ex1-mch*/.value.ofType(Quantity)` (Zeile 4364)
+- **warning** (3×): Unable to validate code 'ug/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services<br>`Bundle.entry[23].resource/*Observation/Observation-ex1-testosteron*/.referenceRange[0].high` (Zeile 3044), `Bundle.entry[23].resource/*Observation/Observation-ex1-testosteron*/.referenceRange[0].low` (Zeile 3038), `Bundle.entry[23].resource/*Observation/Observation-ex1-testosteron*/.value.ofType(Quantity)` (Zeile 3052)

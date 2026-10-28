@@ -18,7 +18,8 @@
   "hl7.fhir.eu.base#2.0.1",
   "de.gematik.ti#1.5.0-ballot.2",
   "de.gematik.epa.laboratory#1.0.0-ballot.1",
-  "de.gematik.terminology#1.1.0-ballot.2"
+  "de.gematik.terminology#1.1.0-ballot.2",
+  "kbv.mio.laborbefund#1.0.0-update"
  ],
  "validatorpakete": [
   "hl7.fhir.r4.core#4.0.1",
@@ -48,8 +49,8 @@
  "summe": {
   "fehler": 12,
   "ausnahmen": 12,
-  "warnungen": 70,
-  "hinweise": 36,
+  "warnungen": 252,
+  "hinweise": 63,
   "offen": 0
  },
  "beispiele": [
@@ -587,6 +588,1109 @@
      "ort": "Bundle.entry[8].resource/*Specimen/sp-3b1c9a52*/",
      "zeile": 339,
      "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.eu/fhir/laboratory/StructureDefinition/Specimen-eu-lab) (Best Practice Recommendation)"
+    }
+   ]
+  },
+  {
+   "id": "mio-lab-ex1",
+   "datei": "beispiele/mio-lab-ex1.json",
+   "sha256": "d918c409bfe8adc94631bd98f36bfb35b0748f29814e0ba088030d6abf1de789",
+   "fehler": 0,
+   "ausnahmen": 0,
+   "warnungen": 182,
+   "hinweise": 27,
+   "meldungen": [
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[0].resource/*Composition/Composition-ex1-1*/",
+     "zeile": 16,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[10].resource/*Observation/Observation-ex1-gfr*/",
+     "zeile": 1234,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[10].resource/*Observation/Observation-ex1-gfr*/.category[1].coding[0]",
+     "zeile": 1267,
+     "text": "Unable to validate code '18719-5' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[10].resource/*Observation/Observation-ex1-gfr*/.interpretation[0].coding[0].version",
+     "zeile": 1310,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[10].resource/*Observation/Observation-ex1-gfr*/.referenceRange[0].low",
+     "zeile": 1336,
+     "text": "UCUM Codes that contain human readable annotations like {1.73_m2} can be misleading (e.g. they are ignored when comparing units). Best Practice is not to depend on annotations in the UCUM code, so this usage should be checked, and the Quantity.unit 'ml/min/1,73m2' SHOULD contain the annotation (it does not)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[10].resource/*Observation/Observation-ex1-gfr*/.referenceRange[0].low",
+     "zeile": 1336,
+     "text": "Unable to validate code 'mL/min/{1.73_m2}' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[10].resource/*Observation/Observation-ex1-gfr*/.value.ofType(Quantity)",
+     "zeile": 1344,
+     "text": "UCUM Codes that contain human readable annotations like {1.73_m2} can be misleading (e.g. they are ignored when comparing units). Best Practice is not to depend on annotations in the UCUM code, so this usage should be checked, and the Quantity.unit 'ml/min/1,73m2' SHOULD contain the annotation (it does not)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[10].resource/*Observation/Observation-ex1-gfr*/.value.ofType(Quantity)",
+     "zeile": 1344,
+     "text": "Unable to validate code 'mL/min/{1.73_m2}' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[11].resource/*Observation/Observation-ex1-harnstoff*/",
+     "zeile": 1360,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[11].resource/*Observation/Observation-ex1-harnstoff*/.category[1].coding[0]",
+     "zeile": 1393,
+     "text": "Unable to validate code '18719-5' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[11].resource/*Observation/Observation-ex1-harnstoff*/.interpretation[0].coding[0].version",
+     "zeile": 1436,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[11].resource/*Observation/Observation-ex1-harnstoff*/.referenceRange[0].high",
+     "zeile": 1465,
+     "text": "Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[11].resource/*Observation/Observation-ex1-harnstoff*/.referenceRange[0].low",
+     "zeile": 1459,
+     "text": "Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[11].resource/*Observation/Observation-ex1-harnstoff*/.value.ofType(Quantity)",
+     "zeile": 1473,
+     "text": "Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Observation/Observation-ex1-natrium*/",
+     "zeile": 1489,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Observation/Observation-ex1-natrium*/.category[1].coding[0]",
+     "zeile": 1522,
+     "text": "Unable to validate code '18719-5' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Observation/Observation-ex1-natrium*/.interpretation[0].coding[0].version",
+     "zeile": 1565,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Observation/Observation-ex1-natrium*/.referenceRange[0].high",
+     "zeile": 1594,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Observation/Observation-ex1-natrium*/.referenceRange[0].low",
+     "zeile": 1588,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[12].resource/*Observation/Observation-ex1-natrium*/.value.ofType(Quantity)",
+     "zeile": 1602,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*Observation/Observation-ex1-kalium*/",
+     "zeile": 1618,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*Observation/Observation-ex1-kalium*/.category[1].coding[0]",
+     "zeile": 1651,
+     "text": "Unable to validate code '18719-5' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*Observation/Observation-ex1-kalium*/.interpretation[0].coding[0].version",
+     "zeile": 1694,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*Observation/Observation-ex1-kalium*/.referenceRange[0].high",
+     "zeile": 1723,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*Observation/Observation-ex1-kalium*/.referenceRange[0].low",
+     "zeile": 1717,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[13].resource/*Observation/Observation-ex1-kalium*/.value.ofType(Quantity)",
+     "zeile": 1731,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[14].resource/*Observation/Observation-ex1-calcium*/",
+     "zeile": 1747,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[14].resource/*Observation/Observation-ex1-calcium*/.category[1].coding[0]",
+     "zeile": 1780,
+     "text": "Unable to validate code '18719-5' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[14].resource/*Observation/Observation-ex1-calcium*/.interpretation[0].coding[0].version",
+     "zeile": 1823,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[14].resource/*Observation/Observation-ex1-calcium*/.referenceRange[0].high",
+     "zeile": 1852,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[14].resource/*Observation/Observation-ex1-calcium*/.referenceRange[0].low",
+     "zeile": 1846,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[14].resource/*Observation/Observation-ex1-calcium*/.value.ofType(Quantity)",
+     "zeile": 1860,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[15].resource/*Observation/Observation-ex1-phosphor*/",
+     "zeile": 1876,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[15].resource/*Observation/Observation-ex1-phosphor*/.category[1].coding[0]",
+     "zeile": 1909,
+     "text": "Unable to validate code '18719-5' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[15].resource/*Observation/Observation-ex1-phosphor*/.interpretation[0].coding[0].version",
+     "zeile": 1952,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[15].resource/*Observation/Observation-ex1-phosphor*/.referenceRange[0].high",
+     "zeile": 1981,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[15].resource/*Observation/Observation-ex1-phosphor*/.referenceRange[0].low",
+     "zeile": 1975,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[15].resource/*Observation/Observation-ex1-phosphor*/.value.ofType(Quantity)",
+     "zeile": 1989,
+     "text": "Unable to validate code 'mmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[16].resource/*Observation/Observation-ex1-group-vitamin*/.interpretation[0]",
+     "zeile": 2080,
+     "text": "No code provided, and a code should be provided from the value set 'Observation Interpretation Codes' (http://hl7.org/fhir/ValueSet/observation-interpretation|4.0.1)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[17].resource/*Observation/Observation-ex1-vitamin-d*/",
+     "zeile": 2108,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[17].resource/*Observation/Observation-ex1-vitamin-d*/.interpretation[0].coding[0].version",
+     "zeile": 2184,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[17].resource/*Observation/Observation-ex1-vitamin-d*/.referenceRange[0].low",
+     "zeile": 2207,
+     "text": "Unable to validate code 'nmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[17].resource/*Observation/Observation-ex1-vitamin-d*/.value.ofType(Quantity)",
+     "zeile": 2216,
+     "text": "Unable to validate code 'nmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[18].resource/*Observation/Observation-ex1-group-endokrin*/.interpretation[0]",
+     "zeile": 2307,
+     "text": "No code provided, and a code should be provided from the value set 'Observation Interpretation Codes' (http://hl7.org/fhir/ValueSet/observation-interpretation|4.0.1)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[19].resource/*Observation/Observation-ex1-fsh*/",
+     "zeile": 2389,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[19].resource/*Observation/Observation-ex1-fsh*/.interpretation[0].coding[0].version",
+     "zeile": 2465,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[19].resource/*Observation/Observation-ex1-fsh*/.referenceRange[0].high",
+     "zeile": 2494,
+     "text": "Unable to validate code '[iU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[19].resource/*Observation/Observation-ex1-fsh*/.referenceRange[0].low",
+     "zeile": 2488,
+     "text": "Unable to validate code '[iU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[19].resource/*Observation/Observation-ex1-fsh*/.value.ofType(Quantity)",
+     "zeile": 2502,
+     "text": "Unable to validate code '[iU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/DiagnosticReport-ex1-1*/",
+     "zeile": 99,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/DiagnosticReport-ex1-1*/.extension[1].value.ofType(Reference)",
+     "zeile": 114,
+     "text": "Found multiple matching profiles for Composition/Composition-ex1-1 among choices: http://hl7.org/fhir/5.0/StructureDefinition/profile-Composition|0.1.0, http://hl7.org/fhir/StructureDefinition/Composition|4.0.1"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/DiagnosticReport-ex1-1*/.identifier[0].type",
+     "zeile": 121,
+     "text": "None of the codings provided are in the value set 'IdentifierType' (http://hl7.org/fhir/ValueSet/identifier-type|4.0.1), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = http://terminology.hl7.org/CodeSystem/v2-0203#RI)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/DiagnosticReport-ex1-1*/.presentedForm[0].contentType",
+     "zeile": 218,
+     "text": "A definition for CodeSystem 'urn:ietf:bcp:13' could not be found, so the code cannot be validated"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[1].resource/*DiagnosticReport/DiagnosticReport-ex1-1*/.presentedForm[0].contentType.system",
+     "zeile": 218,
+     "text": "A definition for CodeSystem 'urn:ietf:bcp:13' could not be found, so the code cannot be validated"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[20].resource/*Observation/Observation-ex1-lh*/",
+     "zeile": 2518,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[20].resource/*Observation/Observation-ex1-lh*/.interpretation[0].coding[0].version",
+     "zeile": 2601,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[20].resource/*Observation/Observation-ex1-lh*/.referenceRange[0].high",
+     "zeile": 2630,
+     "text": "Unable to validate code '[iU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[20].resource/*Observation/Observation-ex1-lh*/.referenceRange[0].low",
+     "zeile": 2624,
+     "text": "Unable to validate code '[iU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[20].resource/*Observation/Observation-ex1-lh*/.value.ofType(Quantity)",
+     "zeile": 2593,
+     "text": "Unable to validate code '[iU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[21].resource/*Observation/Observation-ex1-estradiol*/",
+     "zeile": 2648,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[21].resource/*Observation/Observation-ex1-estradiol*/.interpretation[0].coding[0].version",
+     "zeile": 2724,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[21].resource/*Observation/Observation-ex1-estradiol*/.referenceRange[0].high",
+     "zeile": 2753,
+     "text": "Unable to validate code 'ng/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[21].resource/*Observation/Observation-ex1-estradiol*/.referenceRange[0].low",
+     "zeile": 2747,
+     "text": "Unable to validate code 'ng/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[21].resource/*Observation/Observation-ex1-estradiol*/.value.ofType(Quantity)",
+     "zeile": 2761,
+     "text": "Unable to validate code 'ng/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[22].resource/*Observation/Observation-ex1-prolaktin*/",
+     "zeile": 2777,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[22].resource/*Observation/Observation-ex1-prolaktin*/.extension[0].extension[0].value.ofType(Quantity)",
+     "zeile": 2895,
+     "text": "Unable to validate code 'ng/mL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[22].resource/*Observation/Observation-ex1-prolaktin*/.extension[0].extension[1].value.ofType(Range).high",
+     "zeile": 2910,
+     "text": "Unable to validate code 'ng/mL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[22].resource/*Observation/Observation-ex1-prolaktin*/.extension[0].extension[1].value.ofType(Range).low",
+     "zeile": 2904,
+     "text": "Unable to validate code 'ng/mL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[22].resource/*Observation/Observation-ex1-prolaktin*/.interpretation[0].coding[0].version",
+     "zeile": 2853,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[22].resource/*Observation/Observation-ex1-prolaktin*/.referenceRange[0].high",
+     "zeile": 2882,
+     "text": "Unable to validate code 'm[iU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[22].resource/*Observation/Observation-ex1-prolaktin*/.referenceRange[0].low",
+     "zeile": 2876,
+     "text": "Unable to validate code 'm[iU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[22].resource/*Observation/Observation-ex1-prolaktin*/.value.ofType(Quantity)",
+     "zeile": 2923,
+     "text": "Unable to validate code 'm[iU]/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[23].resource/*Observation/Observation-ex1-testosteron*/",
+     "zeile": 2939,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[23].resource/*Observation/Observation-ex1-testosteron*/.interpretation[0].coding[0].version",
+     "zeile": 3015,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[23].resource/*Observation/Observation-ex1-testosteron*/.referenceRange[0].high",
+     "zeile": 3044,
+     "text": "Unable to validate code 'ug/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[23].resource/*Observation/Observation-ex1-testosteron*/.referenceRange[0].low",
+     "zeile": 3038,
+     "text": "Unable to validate code 'ug/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[23].resource/*Observation/Observation-ex1-testosteron*/.value.ofType(Quantity)",
+     "zeile": 3052,
+     "text": "Unable to validate code 'ug/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[24].resource/*Observation/Observation-ex1-fai*/",
+     "zeile": 3068,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[24].resource/*Observation/Observation-ex1-fai*/.interpretation[0].coding[0].version",
+     "zeile": 3144,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[24].resource/*Observation/Observation-ex1-fai*/.referenceRange[0].high",
+     "zeile": 3173,
+     "text": "Unable to validate code '1' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[24].resource/*Observation/Observation-ex1-fai*/.referenceRange[0].low",
+     "zeile": 3167,
+     "text": "Unable to validate code '1' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[24].resource/*Observation/Observation-ex1-fai*/.value.ofType(Quantity)",
+     "zeile": 3181,
+     "text": "Unable to validate code '1' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[25].resource/*Observation/Observation-ex1-shbg*/",
+     "zeile": 3197,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[25].resource/*Observation/Observation-ex1-shbg*/.interpretation[0].coding[0].version",
+     "zeile": 3273,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[25].resource/*Observation/Observation-ex1-shbg*/.referenceRange[0].high",
+     "zeile": 3302,
+     "text": "Unable to validate code 'nmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[25].resource/*Observation/Observation-ex1-shbg*/.referenceRange[0].low",
+     "zeile": 3296,
+     "text": "Unable to validate code 'nmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[25].resource/*Observation/Observation-ex1-shbg*/.value.ofType(Quantity)",
+     "zeile": 3310,
+     "text": "Unable to validate code 'nmol/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[26].resource/*Observation/Observation-ex1-group-blutbild*/.category[1].coding[0]",
+     "zeile": 3359,
+     "text": "Unable to validate code '18723-7' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[27].resource/*Observation/Observation-ex1-leukozyten*/",
+     "zeile": 3504,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[27].resource/*Observation/Observation-ex1-leukozyten*/.category[1].coding[0]",
+     "zeile": 3537,
+     "text": "Unable to validate code '18723-7' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[27].resource/*Observation/Observation-ex1-leukozyten*/.interpretation[0].coding[0].version",
+     "zeile": 3597,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[27].resource/*Observation/Observation-ex1-leukozyten*/.referenceRange[0].high",
+     "zeile": 3626,
+     "text": "Unable to validate code '10*9/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[27].resource/*Observation/Observation-ex1-leukozyten*/.referenceRange[0].low",
+     "zeile": 3620,
+     "text": "Unable to validate code '10*9/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[27].resource/*Observation/Observation-ex1-leukozyten*/.value.ofType(Quantity)",
+     "zeile": 3634,
+     "text": "Unable to validate code '10*9/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[28].resource/*Observation/Observation-ex1-erythrozyten*/",
+     "zeile": 3650,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[28].resource/*Observation/Observation-ex1-erythrozyten*/.category[1].coding[0]",
+     "zeile": 3683,
+     "text": "Unable to validate code '18723-7' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[28].resource/*Observation/Observation-ex1-erythrozyten*/.interpretation[0].coding[0].version",
+     "zeile": 3743,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[28].resource/*Observation/Observation-ex1-erythrozyten*/.referenceRange[0].high",
+     "zeile": 3772,
+     "text": "Unable to validate code '10*12/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[28].resource/*Observation/Observation-ex1-erythrozyten*/.referenceRange[0].low",
+     "zeile": 3766,
+     "text": "Unable to validate code '10*12/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[28].resource/*Observation/Observation-ex1-erythrozyten*/.value.ofType(Quantity)",
+     "zeile": 3780,
+     "text": "Unable to validate code '10*12/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[29].resource/*Observation/Observation-ex1-haemoglobin*/",
+     "zeile": 3796,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[29].resource/*Observation/Observation-ex1-haemoglobin*/.category[1].coding[0]",
+     "zeile": 3829,
+     "text": "Unable to validate code '18723-7' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[29].resource/*Observation/Observation-ex1-haemoglobin*/.interpretation[0].coding[0].version",
+     "zeile": 3889,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[29].resource/*Observation/Observation-ex1-haemoglobin*/.referenceRange[0].high",
+     "zeile": 3918,
+     "text": "Unable to validate code 'g/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[29].resource/*Observation/Observation-ex1-haemoglobin*/.referenceRange[0].low",
+     "zeile": 3912,
+     "text": "Unable to validate code 'g/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[29].resource/*Observation/Observation-ex1-haemoglobin*/.value.ofType(Quantity)",
+     "zeile": 3926,
+     "text": "Unable to validate code 'g/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[2].resource/*Patient/Patient-ex1-1*/",
+     "zeile": 231,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[30].resource/*Observation/Observation-ex1-haematokrit*/",
+     "zeile": 3942,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[30].resource/*Observation/Observation-ex1-haematokrit*/.category[1].coding[0]",
+     "zeile": 3975,
+     "text": "Unable to validate code '18723-7' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[30].resource/*Observation/Observation-ex1-haematokrit*/.interpretation[0].coding[0].version",
+     "zeile": 4035,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[30].resource/*Observation/Observation-ex1-haematokrit*/.referenceRange[0].high",
+     "zeile": 4064,
+     "text": "Unable to validate code '%' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[30].resource/*Observation/Observation-ex1-haematokrit*/.referenceRange[0].low",
+     "zeile": 4058,
+     "text": "Unable to validate code '%' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[30].resource/*Observation/Observation-ex1-haematokrit*/.value.ofType(Quantity)",
+     "zeile": 4072,
+     "text": "Unable to validate code '%' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[31].resource/*Observation/Observation-ex1-mcv*/",
+     "zeile": 4088,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[31].resource/*Observation/Observation-ex1-mcv*/.category[1].coding[0]",
+     "zeile": 4121,
+     "text": "Unable to validate code '18723-7' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[31].resource/*Observation/Observation-ex1-mcv*/.interpretation[0].coding[0].version",
+     "zeile": 4181,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[31].resource/*Observation/Observation-ex1-mcv*/.referenceRange[0].high",
+     "zeile": 4210,
+     "text": "Unable to validate code 'fL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[31].resource/*Observation/Observation-ex1-mcv*/.referenceRange[0].low",
+     "zeile": 4204,
+     "text": "Unable to validate code 'fL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[31].resource/*Observation/Observation-ex1-mcv*/.value.ofType(Quantity)",
+     "zeile": 4218,
+     "text": "Unable to validate code 'fL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[32].resource/*Observation/Observation-ex1-mch*/",
+     "zeile": 4234,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[32].resource/*Observation/Observation-ex1-mch*/.category[1].coding[0]",
+     "zeile": 4267,
+     "text": "Unable to validate code '18723-7' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[32].resource/*Observation/Observation-ex1-mch*/.interpretation[0].coding[0].version",
+     "zeile": 4327,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[32].resource/*Observation/Observation-ex1-mch*/.referenceRange[0].high",
+     "zeile": 4356,
+     "text": "Unable to validate code 'pg' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[32].resource/*Observation/Observation-ex1-mch*/.referenceRange[0].low",
+     "zeile": 4350,
+     "text": "Unable to validate code 'pg' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[32].resource/*Observation/Observation-ex1-mch*/.value.ofType(Quantity)",
+     "zeile": 4364,
+     "text": "Unable to validate code 'pg' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[33].resource/*Observation/Observation-ex1-mchc*/",
+     "zeile": 4380,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[33].resource/*Observation/Observation-ex1-mchc*/.category[1].coding[0]",
+     "zeile": 4413,
+     "text": "Unable to validate code '18723-7' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[33].resource/*Observation/Observation-ex1-mchc*/.interpretation[0].coding[0].version",
+     "zeile": 4473,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[33].resource/*Observation/Observation-ex1-mchc*/.referenceRange[0].high",
+     "zeile": 4502,
+     "text": "Unable to validate code 'g/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[33].resource/*Observation/Observation-ex1-mchc*/.referenceRange[0].low",
+     "zeile": 4496,
+     "text": "Unable to validate code 'g/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[33].resource/*Observation/Observation-ex1-mchc*/.value.ofType(Quantity)",
+     "zeile": 4510,
+     "text": "Unable to validate code 'g/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[34].resource/*Observation/Observation-ex1-thrombozyten*/",
+     "zeile": 4526,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[34].resource/*Observation/Observation-ex1-thrombozyten*/.category[1].coding[0]",
+     "zeile": 4559,
+     "text": "Unable to validate code '18723-7' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[34].resource/*Observation/Observation-ex1-thrombozyten*/.interpretation[0].coding[0].version",
+     "zeile": 4619,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[34].resource/*Observation/Observation-ex1-thrombozyten*/.referenceRange[0].high",
+     "zeile": 4648,
+     "text": "Unable to validate code '10*9/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[34].resource/*Observation/Observation-ex1-thrombozyten*/.referenceRange[0].low",
+     "zeile": 4642,
+     "text": "Unable to validate code '10*9/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[34].resource/*Observation/Observation-ex1-thrombozyten*/.value.ofType(Quantity)",
+     "zeile": 4656,
+     "text": "Unable to validate code '10*9/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[35].resource/*Specimen/Specimen-ex1-1*/",
+     "zeile": 4672,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[36].resource/*Specimen/Specimen-ex1-2*/",
+     "zeile": 4721,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[37].resource/*ServiceRequest/ServiceRequest-ex1-1*/",
+     "zeile": 4770,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[37].resource/*ServiceRequest/ServiceRequest-ex1-1*/.identifier[0].type",
+     "zeile": 4780,
+     "text": "None of the codings provided are in the value set 'IdentifierType' (http://hl7.org/fhir/ValueSet/identifier-type|4.0.1), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = https://fhir.kbv.de/CodeSystem/KBV_CS_MIO_LAB_Laboratory_Identificator#AE)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[38].resource/*Organization/Organization-ex1-1*/",
+     "zeile": 4847,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[38].resource/*Organization/Organization-ex1-1*/.identifier[0].type",
+     "zeile": 4857,
+     "text": "None of the codings provided are in the value set 'Identifier Type DeBasis ValueSet' (http://fhir.de/ValueSet/identifier-type-de-basis|1.5.4), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = http://terminology.hl7.org/CodeSystem/v2-0203#BSNR)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[38].resource/*Organization/Organization-ex1-1*/.identifier[0].type",
+     "zeile": 4857,
+     "text": "None of the codings provided are in the value set 'IdentifierType' (http://hl7.org/fhir/ValueSet/identifier-type|4.0.1), and a coding should come from this value set unless it has no suitable code (note that the validator cannot judge what is suitable) (codes = http://terminology.hl7.org/CodeSystem/v2-0203#BSNR)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[39].resource/*Practitioner/Practitioner-ex1-1*/",
+     "zeile": 4915,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[3].resource/*Observation/Observation-ex1-group-chemie*/.category[1].coding[0]",
+     "zeile": 317,
+     "text": "Unable to validate code '18719-5' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[40].resource/*Practitioner/Practitioner-ex1-2*/",
+     "zeile": 4972,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[41].resource/*PractitionerRole/PractitionerRole-ex1-1*/",
+     "zeile": 5069,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[42].resource/*Provenance/Provenance-ex1-1*/",
+     "zeile": 5099,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[42].resource/*Provenance/Provenance-ex1-1*/.activity.coding[0].version",
+     "zeile": 5200,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ParticipationType' version '7.0.0' for the versionless include in the ValueSet include is different to the one in the value ('6.0.0')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Observation/Observation-ex1-harnsaeure*/",
+     "zeile": 481,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Observation/Observation-ex1-harnsaeure*/.category[1].coding[0]",
+     "zeile": 514,
+     "text": "Unable to validate code '18719-5' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Observation/Observation-ex1-harnsaeure*/.interpretation[0].coding[0].version",
+     "zeile": 557,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Observation/Observation-ex1-harnsaeure*/.referenceRange[0].high",
+     "zeile": 586,
+     "text": "Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Observation/Observation-ex1-harnsaeure*/.referenceRange[0].low",
+     "zeile": 580,
+     "text": "Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[4].resource/*Observation/Observation-ex1-harnsaeure*/.value.ofType(Quantity)",
+     "zeile": 594,
+     "text": "Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[5].resource/*Observation/Observation-ex1-alat*/",
+     "zeile": 610,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[5].resource/*Observation/Observation-ex1-alat*/.category[1].coding[0]",
+     "zeile": 643,
+     "text": "Unable to validate code '18719-5' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[5].resource/*Observation/Observation-ex1-alat*/.interpretation[0].coding[0].version",
+     "zeile": 686,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[5].resource/*Observation/Observation-ex1-alat*/.referenceRange[0].high",
+     "zeile": 709,
+     "text": "Unable to validate code 'U/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[5].resource/*Observation/Observation-ex1-alat*/.value.ofType(Quantity)",
+     "zeile": 717,
+     "text": "Unable to validate code 'U/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[6].resource/*Observation/Observation-ex1-asat*/",
+     "zeile": 733,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[6].resource/*Observation/Observation-ex1-asat*/.category[1].coding[0]",
+     "zeile": 766,
+     "text": "Unable to validate code '18719-5' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[6].resource/*Observation/Observation-ex1-asat*/.interpretation[0].coding[0].version",
+     "zeile": 809,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[6].resource/*Observation/Observation-ex1-asat*/.referenceRange[0].high",
+     "zeile": 832,
+     "text": "Unable to validate code 'U/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[6].resource/*Observation/Observation-ex1-asat*/.value.ofType(Quantity)",
+     "zeile": 840,
+     "text": "Unable to validate code 'U/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[7].resource/*Observation/Observation-ex1-ggt*/",
+     "zeile": 856,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[7].resource/*Observation/Observation-ex1-ggt*/.category[1].coding[0]",
+     "zeile": 889,
+     "text": "Unable to validate code '18719-5' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[7].resource/*Observation/Observation-ex1-ggt*/.interpretation[0].coding[0].version",
+     "zeile": 932,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[7].resource/*Observation/Observation-ex1-ggt*/.referenceRange[0].high",
+     "zeile": 955,
+     "text": "Unable to validate code 'U/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[7].resource/*Observation/Observation-ex1-ggt*/.value.ofType(Quantity)",
+     "zeile": 963,
+     "text": "Unable to validate code 'U/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[8].resource/*Observation/Observation-ex1-ap*/",
+     "zeile": 979,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[8].resource/*Observation/Observation-ex1-ap*/.category[1].coding[0]",
+     "zeile": 1012,
+     "text": "Unable to validate code '18719-5' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[8].resource/*Observation/Observation-ex1-ap*/.interpretation[0].coding[0].version",
+     "zeile": 1055,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[8].resource/*Observation/Observation-ex1-ap*/.referenceRange[0].high",
+     "zeile": 1084,
+     "text": "Unable to validate code 'U/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[8].resource/*Observation/Observation-ex1-ap*/.referenceRange[0].low",
+     "zeile": 1078,
+     "text": "Unable to validate code 'U/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[8].resource/*Observation/Observation-ex1-ap*/.value.ofType(Quantity)",
+     "zeile": 1092,
+     "text": "Unable to validate code 'U/L' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[9].resource/*Observation/Observation-ex1-creatinin*/",
+     "zeile": 1108,
+     "text": "Constraint failed: dom-6: 'A resource should have narrative for robust management' (defined in http://hl7.org/fhir/StructureDefinition/DomainResource) (Best Practice Recommendation)"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[9].resource/*Observation/Observation-ex1-creatinin*/.category[1].coding[0]",
+     "zeile": 1141,
+     "text": "Unable to validate code '18719-5' in system 'http://loinc.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[9].resource/*Observation/Observation-ex1-creatinin*/.interpretation[0].coding[0].version",
+     "zeile": 1184,
+     "text": "The code system 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation' version '4.0.0' for the versionless include in the ValueSet include is different to the one in the value ('4.0.1')"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[9].resource/*Observation/Observation-ex1-creatinin*/.referenceRange[0].high",
+     "zeile": 1210,
+     "text": "Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
+    },
+    {
+     "stufe": "warning",
+     "ort": "Bundle.entry[9].resource/*Observation/Observation-ex1-creatinin*/.value.ofType(Quantity)",
+     "zeile": 1218,
+     "text": "Unable to validate code 'mg/dL' in system 'http://unitsofmeasure.org' because the validator is running without terminology services"
     }
    ]
   }

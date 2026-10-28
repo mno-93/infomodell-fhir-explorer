@@ -652,7 +652,8 @@ function bewertung(o) {
 function gruppenTitel(g) {
   const e = idx(g.res.extension, x => /test-profile/.test(x.url));
   if (e >= 0) return codingText(g, `extension[${e}].valueCodeableConcept`);
-  return codingText(g, 'code');
+  const k = (g.res.category || []).map((c, i) => c.text ? i : -1).filter(i => i >= 0).pop();   // MIO: Gruppe nur über category benannt
+  return k !== undefined ? F(g, `category[${k}].text`) : codingText(g, 'code');
 }
 function ergebnisZeilen(mitLoinc) {
   const { comp, dr } = befundTeile();
