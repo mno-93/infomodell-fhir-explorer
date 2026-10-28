@@ -17,31 +17,24 @@
 | Befund | Anzahl |
 |---|---:|
 | Elemente im Informationsmodell | 31 |
-| davon mit FHIR-Mapping | 23 |
-| FHIR-Mappings | 23 |
-| exakt | 20 |
-| gleichwertige Schreibweise (JSON-Name der Typwahl, Typ-Slice) — keine Korrektur nötig | 1 |
+| davon mit FHIR-Mapping | 29 |
+| FHIR-Mappings | 29 |
+| exakt | 23 |
+| gleichwertige Schreibweise (JSON-Name der Typwahl, Typ-Slice) — keine Korrektur nötig | 3 |
 | Schreibvariante (gemischte Notation) — vereinheitlichen | 0 |
-| über Extension-Definition oder Datentyp aufgelöst | 2 |
+| über Extension-Definition oder Datentyp aufgelöst | 3 |
 | **ohne Ziel** | **0** |
 | **auf ein 0..0-Element** | **0** |
 | Definition nicht im Paketbestand | 0 |
 | in ein anderes Profil als das übergeordnete Element | 0 |
-| bewusst ohne Ziel (Mappingtabelle) | 3 |
 
-### Bewusst ohne Ziel (3)
-
-| Element im Modell | Grund |
-|---|---|
-| Code aus einem Code-System <br>*Zielerkrankung - Code/Bezeichnung / Code-Auswahl* | Der Entwurf sieht für die Zielerkrankung nur SNOMED CT vor. |
-| Code aus einem Code-System <br>*Impfstoff - Code/Bezeichnung / Code-Auswahl* | Der Entwurf sieht für den Impfstoff nur SNOMED CT vor (Slice snomed). |
-| Datentyp <br>*Impfung / Verabreichtes Produkt* | Hilfsknoten des Modells für den Datentyp (CodeableReference), kein eigenes Element. |
-
-### Gleichwertige Schreibweisen (keine Korrektur nötig) (1)
+### Gleichwertige Schreibweisen (keine Korrektur nötig) (3)
 
 | Element im Modell | Mapping | Befund |
 |---|---|---|
 | Impfdatum <br>*Impfung* | `PSImmunization.occurrenceDateTime` | JSON-Name `occurrenceDateTime` für die Typwahl `occurrence[x]` — gleichwertig |
+| Referenz <br>*Notiz / Autor:in* | `PSImmunization.note.authorReference` | JSON-Name `authorReference` für die Typwahl `author[x]` — gleichwertig |
+| Freitext <br>*Notiz / Autor:in* | `PSImmunization.note.authorString` | JSON-Name `authorString` für die Typwahl `author[x]` — gleichwertig |
 
 ## Wertelisten
 

@@ -75,7 +75,8 @@ fhir = "PSImmunization.protocolApplied.targetDisease.coding"
 
 [[informationsmodell.mappings]]
 knoten = "Impfung / Zielerkrankung - Code/Bezeichnung / Code-Auswahl / Code aus einem Code-System"
-ohne_ziel = "Der Entwurf sieht für die Zielerkrankung nur SNOMED CT vor."
+# weitere Codes (z. B. ICD-11 wie im WHO-Impfnachweis) sind im Profil zulässig: targetDisease.coding ist nicht gesliced
+fhir = "PSImmunization.protocolApplied.targetDisease.coding"
 
 [[informationsmodell.mappings]]
 knoten = "Impfung / Zielerkrankung - Code/Bezeichnung / Bezeichnung"
@@ -91,7 +92,8 @@ fhir = "PSImmunization.vaccineCode.coding:snomed"
 
 [[informationsmodell.mappings]]
 knoten = "Impfung / Impfstoff - Code/Bezeichnung / Code-Auswahl / Code aus einem Code-System"
-ohne_ziel = "Der Entwurf sieht für den Impfstoff nur SNOMED CT vor (Slice snomed)."
+# weitere Codes (z. B. ATC) neben dem Slice snomed: vaccineCode.coding ist offen gesliced
+fhir = "PSImmunization.vaccineCode.coding"
 
 [[informationsmodell.mappings]]
 knoten = "Impfung / Impfstoff - Code/Bezeichnung / Bezeichnung"
@@ -103,7 +105,12 @@ fhir = "PSImmunization.extension:administeredProduct"
 
 [[informationsmodell.mappings]]
 knoten = "Impfung / Verabreichtes Produkt / Datentyp"
-ohne_ziel = "Hilfsknoten des Modells für den Datentyp (CodeableReference), kein eigenes Element."
+# Teil-Extension _datatype der R5-Querversions-Extension (Wert „CodeableReference“)
+fhir = "PSImmunization.extension:administeredProduct.extension:_datatype.value[x]"
+
+[[informationsmodell.mappings]]
+knoten = "Impfung / Verabreichtes Produkt / Referenz"
+fhir = "PSImmunization.extension:administeredProduct.extension:reference.value[x]"
 
 [[informationsmodell.mappings]]
 knoten = "Impfung / Verabreichtes Produkt / Referenz / Arzneimittel (ePA Medication Service)"
@@ -128,6 +135,14 @@ fhir = "PSImmunization.note"
 [[informationsmodell.mappings]]
 knoten = "Impfung / Notiz / Autor:in"
 fhir = "PSImmunization.note.author[x]"
+
+[[informationsmodell.mappings]]
+knoten = "Impfung / Notiz / Autor:in / Freitext"
+fhir = "PSImmunization.note.authorString"
+
+[[informationsmodell.mappings]]
+knoten = "Impfung / Notiz / Autor:in / Referenz"
+fhir = "PSImmunization.note.authorReference"
 
 [[informationsmodell.mappings]]
 knoten = "Impfung / Notiz / Zeitpunkt der Erstellung"

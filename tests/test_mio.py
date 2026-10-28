@@ -146,7 +146,20 @@ class MappingtabelleTest(unittest.TestCase):
         s = self.d['statistik']
         self.assertEqual(s['mappings'], len([e for e in self.k['informationsmodell']['mappings'] if e.get('fhir')]))
         self.assertEqual(s['mapping_status']['fehler'] + s['mapping_status']['verboten'] + s['mapping_status']['unbekannt'], 0)
-        self.assertEqual(s['ohne_ziel'], 3)
+        self.assertEqual(s['ohne_ziel'], 0)   # jedes Blatt des Teilbaums hat ein Ziel im Entwurf
+
+    def test_teilelemente_zugeordnet(self):
+        """Codes außerhalb von SNOMED CT, Datentyp und Referenz des Produkts, Autor:in der Notiz als Text oder Verweis."""
+        ziele = lambda name, eltern: [m['k'] for n in self.nach_name[name] for m in n['maps']
+                                      if self.d['im'][[x['id'] for x in self.d['im']].index(n['p'])]['name'] == eltern]
+        self.assertEqual(sorted(ziele('Code aus einem Code-System', 'Code-Auswahl')),
+                         ['Immunization.protocolApplied.targetDisease.coding', 'Immunization.vaccineCode.coding'])
+        self.assertEqual(ziele('Datentyp', 'Verabreichtes Produkt'),
+                         ['Immunization.extension:administeredProduct.extension:_datatype.value[x]'])
+        self.assertEqual(ziele('Referenz', 'Verabreichtes Produkt'),
+                         ['Immunization.extension:administeredProduct.extension:reference.value[x]'])
+        self.assertEqual(ziele('Freitext', 'Autor:in'), ['Immunization.note.authorString'])
+        self.assertEqual(ziele('Referenz', 'Autor:in'), ['Immunization.note.authorReference'])
 
     def test_kette_modell_profil_instanz(self):
         snomed = next(n for n in self.nach_name['SNOMED-CT-Code'] if any('vaccineCode' in m['k'] for m in n['maps']))

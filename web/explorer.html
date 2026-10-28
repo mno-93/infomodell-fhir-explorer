@@ -164,7 +164,9 @@ table { border-collapse: collapse; width: 100%; }
 .erg td, .erg th { padding: 4px 6px; border-bottom: 1px solid var(--linie); text-align: left; font-size: 13px; vertical-align: top; }
 .erg th { font-size: 11.5px; color: var(--leise); font-weight: 600; text-transform: uppercase; letter-spacing: .03em; }
 .erg tr.bereich td { background: var(--flaeche2); font-weight: 650; }
-.erg tr.gruppe td { font-weight: 600; color: var(--akzent); padding-top: 8px; }
+.erg tr.gruppe td { font-weight: 650; font-size: 13.5px; color: var(--akzent); background: var(--akzent-weich); border-top: 2px solid var(--akzent); padding: 6px 6px 4px; }
+.erg tr.zusatz td { padding: 0 6px 5px 18px; font-size: 12px; }
+.erg tr:has(+ tr.zusatz) td { border-bottom: none; }
 .erg td.wert { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
 .erg .loinc { color: var(--leise); font-family: var(--mono); font-size: 11px; }
 .flag { font-weight: 700; } .flag.H, .flag.HH { color: var(--fehler); } .flag.L, .flag.LL { color: #2563eb; } .flag.N { color: var(--gut); font-weight: 500; }
@@ -178,6 +180,9 @@ table { border-collapse: collapse; width: 100%; }
 .papier .klein { font-size: 10.5px; color: #555; }
 .papier table td, .papier table th { border-bottom: 1px solid #ccc; padding: 3px 4px; text-align: left; font-size: 12px; }
 .papier table th { font-family: system-ui, sans-serif; font-size: 10.5px; color: #444; }
+.papier tr.gruppe td { font-family: system-ui, sans-serif; font-weight: 700; font-size: 11.5px; padding-top: 10px; border-bottom: 1.5px solid #555; }
+.papier tr.zusatz td { font-size: 11px; color: #444; padding: 0 4px 4px 16px; }
+.papier tr:has(+ tr.zusatz) td { border-bottom: none; }
 .papier .fuss { margin-top: 18px; border-top: 1px solid #999; padding-top: 6px; font-size: 10.5px; color: #444; }
 .papier .hl, .papier .hl2 { color: #3a2a00 !important; }
 .papier .hl { background: #ffd969 !important; } .papier .hl2 { background: #fff3c4 !important; }
@@ -617,9 +622,75 @@ function befundTeile() {
   const pat = verweis(comp?.res.subject) || B.ressourcen.find(r => r.res.resourceType === 'Patient');
   const empf = comp && ext(comp, 'information-recipient') >= 0 ? verweis(comp.res.extension[ext(comp, 'information-recipient')].valueReference) : null;
   const sr = verweis(dr?.res.basedOn?.[0]);
-  const sp = verweis(dr?.res.specimen?.[0]);
+  // alle Proben: die des Befunds, dazu solche, auf die nur einzelne Ergebnisse verweisen
+  const sps = [...(dr?.res.specimen || []), ...B.ressourcen.filter(r => r.res.resourceType === 'Observation' && r.res.specimen).map(r => r.res.specimen)]
+    .map(verweis).filter((s, i, a) => s && a.findIndex(t => t?.key === s.key) === i);
+  const sp = sps[0];
   const labor = verweis(dr?.res.performer?.[0]);
-  return { comp, dr, pat, empf, sr, sp, labor, ext };
+  return { comp, dr, pat, empf, sr, sp, sps, labor, ext };
+}
+function menge(r, jp) {
+  const q = wert(r.key, jp); if (!q) return '';
+  return `${q.comparator ? F(r, jp + '.comparator') + ' ' : ''}${F(r, jp + '.value', zahl)} ${F(r, jp + '.unit') || F(r, jp + '.code')}`.trim();
+}
+function probeText(s) {   // Material, Entnahme, Dauer, Nüchternstatus, Eingang, Probennummer
+  const c = s.res.collection || {}, teile = [codingText(s, 'type') || '–'];
+  if (c.collectedDateTime) teile.push('entnommen ' + F(s, 'collection.collectedDateTime', datum));
+  else if (c.collectedPeriod?.start) teile.push('entnommen ab ' + F(s, 'collection.collectedPeriod.start', datum));
+  if (c.duration) teile.push('Sammeldauer ' + menge(s, 'collection.duration'));
+  if (c.fastingStatusCodeableConcept) teile.push('Nüchternstatus ' + codingText(s, 'collection.fastingStatusCodeableConcept'));
+  else if (c.fastingStatusDuration) teile.push('nüchtern ' + menge(s, 'collection.fastingStatusDuration'));
+  if (s.res.receivedTime) teile.push('Eingang ' + F(s, 'receivedTime', datum));
+  if (s.res.identifier?.[0]?.value) teile.push('Nr. ' + F(s, 'identifier[0].value'));
+  return teile.join(', ');
+}
+function probenListe(sps) {
+  if (!sps.length) return '–';
+  return sps.map((s, i) => `<span data-n="${esc(s.key + '|')}">${sps.length > 1 ? `<b>Probe ${i + 1}:</b> ` : ''}${probeText(s)}</span>`).join('<br>');
+}
+// Status und Sicherheit klinischer Einträge auf Deutsch (FHIR-Codes clinical-, verification- und allergy-Status, Kritikalität)
+const KLINISCH_DE = { active: 'aktiv', recurrence: 'wiederaufgetreten', relapse: 'Rückfall', inactive: 'inaktiv', remission: 'in Remission',
+  resolved: 'abgeklungen', unconfirmed: 'unbestätigt', provisional: 'vorläufig', differential: 'Differenzialdiagnose', confirmed: 'bestätigt',
+  refuted: 'ausgeschlossen', 'entered-in-error': 'fehlerhaft erfasst', low: 'gering', high: 'hoch', 'unable-to-assess': 'nicht beurteilbar' };
+function statusText(r, jp) {   // Code übersetzen, sonst Text bzw. Anzeige der Codierung
+  const w = wert(r.key, jp);
+  if (typeof w === 'string') return F(r, jp, k => KLINISCH_DE[k] || k);
+  const i = idx(w?.coding, c => KLINISCH_DE[c.code]);
+  return i >= 0 ? F(r, `${jp}.coding[${i}].code`, k => KLINISCH_DE[k]) : codingText(r, jp);
+}
+function diagnoseText(c) {   // Diagnose mit Zusätzen am Code (Sicherheit, Seite); Verifikationsstatus nur ohne Zusatz zur Sicherheit
+  const x = c.res, t = [codingText(c, 'code')];
+  let zusatz = false;
+  (x.code?.coding || []).forEach((cd, i) => (cd.extension || []).forEach((e, j) => {
+    if (e.valueCoding) { zusatz = true; t.push(F(c, `code.coding[${i}].extension[${j}].valueCoding.display`) || F(c, `code.coding[${i}].extension[${j}].valueCoding.code`)); }
+  }));
+  if (x.verificationStatus && !zusatz) t.push(statusText(c, 'verificationStatus'));
+  return t.filter(Boolean).join(', ');
+}
+const PRIORITAET = { routine: 'Routine', urgent: 'dringend', asap: 'schnellstmöglich', stat: 'Notfall' };
+function fragestellung(sr) {   // Anforderungsgrund, Verdachtsdiagnose, Auftragsdetails
+  if (!sr) return [];
+  const x = sr.res, z = [];
+  (x.reasonCode || []).forEach((rc, i) => {   // Art des Grundes (z. B. Anlass, Veranlassungsgrund) als Präfix
+    const a = idx(rc.extension, e => e.valueString);
+    z.push((a >= 0 ? F(sr, `reasonCode[${i}].extension[${a}].valueString`) + ': ' : '') + codingText(sr, `reasonCode[${i}]`));
+  });
+  (x.reasonReference || []).forEach(rf => { const c = verweis(rf); if (c) z.push(c.res.resourceType === 'Condition' ? diagnoseText(c) : codingText(c, 'code')); });
+  (x.orderDetail || []).forEach((_, i) => z.push(codingText(sr, `orderDetail[${i}]`)));
+  return z.filter(Boolean);
+}
+function auftragseingang(dr) { const i = idx(dr?.res.extension, e => /order-entry-time|Order_Entry_Time/i.test(e.url)); return i >= 0 ? F(dr, `extension[${i}].valueDateTime`, datum) : ''; }
+function befundZusaetze(dr) {   // Zusatzstatus, Anmerkungen und Anhänge zum Gesamtbefund
+  if (!dr) return [];
+  const x = dr.res, z = [];
+  (x.extension || []).forEach((e, i) => {
+    if (/secondary-status/i.test(e.url) && e.valueCoding) z.push('Zusatzstatus: ' + (F(dr, `extension[${i}].valueCoding.display`) || F(dr, `extension[${i}].valueCoding.code`)));
+    if (e.valueAnnotation?.text) z.push('Anmerkung: ' + F(dr, `extension[${i}].valueAnnotation.text`));
+  });
+  const anh = [...(x.presentedForm || []).map((p, i) => p.title ? F(dr, `presentedForm[${i}].title`) : ''),
+    ...(x.media || []).map((m, i) => m.comment ? F(dr, `media[${i}].comment`) : '')].filter(Boolean);
+  if (anh.length) z.push('Anhänge: ' + anh.join(', '));
+  return z;
 }
 const FLAG = { H: '↑ hoch', HH: '↑↑ kritisch hoch', L: '↓ niedrig', LL: '↓↓ kritisch niedrig', N: 'normal', A: 'auffällig', AA: 'kritisch' };
 function messwert(o) {
@@ -655,19 +726,58 @@ function gruppenTitel(g) {
   const k = (g.res.category || []).map((c, i) => c.text ? i : -1).filter(i => i >= 0).pop();   // MIO: Gruppe nur über category benannt
   return k !== undefined ? F(g, `category[${k}].text`) : codingText(g, 'code');
 }
+// Bewertungstexte, die nur den Code wiederholen (dann genügt die Markierung)
+const FLAG_TEXTE = { N: ['normal'], H: ['hoch', 'erhöht', 'high'], L: ['niedrig', 'erniedrigt', 'low'], HH: ['kritisch hoch'], LL: ['kritisch niedrig'], A: ['auffällig', 'abnormal'] };
+function referenzText(o) {   // Text des Referenzbereichs, wenn er mehr sagt als die Zahlen (Zielbereich, Einteilung)
+  const rr = o.res.referenceRange?.[0]; if (!rr?.text || (!rr.low && !rr.high)) return '';
+  const norm = s => String(s).toLowerCase().replace(/\s+/g, '').replace(/[–—]/g, '-').replace(/\./g, ',');
+  const zahlen = norm([rr.low?.value, rr.high?.value].filter(v => v !== undefined).map(zahl).join('-'));
+  const t = norm(rr.text).replace(/^(<|>|≤|≥|<=|>=)/, '');
+  return t.startsWith(zahlen) ? '' : F(o, 'referenceRange[0].text');
+}
+function zusatzZeilen(o, istGruppe = false) {   // unter einem Ergebnis bzw. einer Gruppe: alles Fachliche, das nicht in die Spalten passt
+  const x = o.res, z = [];
+  (x.interpretation || []).forEach((ip, i) => {
+    const flag = idx(ip.coding, c => /ObservationInterpretation/.test(c.system || ''));
+    if (i === 0 && flag < 0 && !istGruppe) return;   // steht schon als Bewertung in der Spalte
+    if (!ip.text && flag < 0 && !ip.coding?.length) return;
+    if (i === 0 && flag >= 0 && (!ip.text || (FLAG_TEXTE[ip.coding[flag].code] || []).includes(ip.text.trim().toLowerCase()))) return;
+    z.push('Bewertung: ' + (ip.text ? F(o, `interpretation[${i}].text`) : codingText(o, `interpretation[${i}]`)));
+  });
+  const rt = referenzText(o); if (rt) z.push('Referenz: ' + rt);
+  (x.referenceRange || []).slice(1).forEach((rr, j) => {
+    const i = j + 1, art = rr.type ? codingText(o, `referenceRange[${i}].type`) : (rr.appliesTo ? codingText(o, `referenceRange[${i}].appliesTo[0]`) : '');
+    const zahlen = [rr.low ? menge(o, `referenceRange[${i}].low`) : '', rr.high ? menge(o, `referenceRange[${i}].high`) : ''].filter(Boolean).join(' – ');
+    z.push(`Weiterer Referenzbereich${art ? ' (' + art + ')' : ''}: ${[zahlen, rr.text ? F(o, `referenceRange[${i}].text`) : ''].filter(Boolean).join(', ')}`);
+  });
+  (x.extension || []).forEach((e, i) => {
+    if (/alternative/i.test(e.url)) {   // Ergebnis in Alternativeinheit (dgLP alternativeResult, KBV Alternative_Result)
+      const t = (e.extension || []).map((u, j) => u.valueQuantity ? menge(o, `extension[${i}].extension[${j}].valueQuantity`)
+        : u.valueRange ? `Referenz ${[u.valueRange.low ? menge(o, `extension[${i}].extension[${j}].valueRange.low`) : '', u.valueRange.high ? menge(o, `extension[${i}].extension[${j}].valueRange.high`) : ''].filter(Boolean).join(' – ')}` : '').filter(Boolean);
+      if (t.length) z.push('Alternativ: ' + t.join(', '));
+    }
+    if (e.valueAttachment) z.push('Anhang: ' + F(o, `extension[${i}].valueAttachment.title`, x => x, 'ohne Titel'));
+  });
+  if (x.method) { const m = codingText(o, 'method'), name = (x.code?.text || '').toLowerCase(), mt = (x.method.text || '').toLowerCase();
+    if (m && !(mt && name.includes(mt.replace(/-/g, ' ').replace(/methode$/, '').trim()))) z.push('Methode: ' + m); }
+  (x.note || []).forEach((n, i) => z.push(F(o, `note[${i}].text`)));
+  return z.filter(Boolean).map(t => `<tr class="zusatz"><td colspan="5" class="hinweis">${t}</td></tr>`);
+}
 function ergebnisZeilen(mitLoinc) {
-  const { comp, dr } = befundTeile();
+  const { comp, dr, sps } = befundTeile();
   const zeilen = [];
+  const probeNr = o => { if (sps.length < 2) return 0; const k = verweis(o.res.specimen)?.key; return k ? sps.findIndex(s => s.key === k) + 1 : 0; };
   const einzel = (o) => {
-    const loinc = idx(o.res.code?.coding, c => c.system === 'http://loinc.org');
-    zeilen.push(`<tr data-n="${esc(o.key + '|')}"><td>${codingText(o, 'code') || '–'}${mitLoinc && loinc >= 0 ? `<div class="loinc">LOINC ${F(o, `code.coding[${loinc}].code`)}</div>` : ''}</td>`
+    const loinc = idx(o.res.code?.coding, c => c.system === 'http://loinc.org'), p = probeNr(o);
+    const unter = [mitLoinc && loinc >= 0 ? `LOINC ${F(o, `code.coding[${loinc}].code`)}` : '', p ? `<span data-n="${esc(o.key + '|specimen')}">Probe ${p}</span>` : ''].filter(Boolean);
+    zeilen.push(`<tr data-n="${esc(o.key + '|')}"><td>${codingText(o, 'code') || '–'}${unter.length ? `<div class="loinc">${unter.join(' · ')}</div>` : ''}</td>`
       + `<td class="wert">${messwert(o)}</td><td>${einheit(o)}</td><td>${referenz(o)}</td><td>${bewertung(o)}</td></tr>`);
-    (o.res.note || []).forEach((n, i) => zeilen.push(`<tr><td colspan="5" class="hinweis">${F(o, `note[${i}].text`)}</td></tr>`));
+    zeilen.push(...zusatzZeilen(o));
   };
   const gruppe = (g) => {
     if (!g) return;
     if (g.res.hasMember?.length) {
-      zeilen.push(`<tr class="gruppe" data-n="${esc(g.key + '|')}"><td colspan="5">${gruppenTitel(g)}</td></tr>`);
+      zeilen.push(`<tr class="gruppe" data-n="${esc(g.key + '|')}"><td colspan="5">${gruppenTitel(g)}</td></tr>`, ...zusatzZeilen(g, true));
       g.res.hasMember.forEach(m => { const o = verweis(m); if (o) einzel(o); });
     } else einzel(g);
   };
@@ -683,8 +793,8 @@ const STATUS = { final: 'Endbefund', partial: 'Teilbefund', preliminary: 'vorlä
 function kennung(r, code) { const i = idx(r?.res.identifier, x => x.type?.coding?.some(c => c.code === code)); return i >= 0 ? F(r, `identifier[${i}].value`) : ''; }
 function kvnr(p) { const i = idx(p?.res.identifier, x => /kvid-10/.test(x.system || '')); return i >= 0 ? F(p, `identifier[${i}].value`) : ''; }
 function uiZeichnen() {
-  const { comp, dr, pat, empf, sr, sp, labor } = befundTeile();
-  const st = dr?.res.status;
+  const { comp, dr, pat, empf, sr, sps, labor } = befundTeile();
+  const st = dr?.res.status, fragen = fragestellung(sr), eingang = auftragseingang(dr), zusaetze = befundZusaetze(dr);
   const ext = dr ? idx(dr.res.extension, e => /critical-result/.test(e.url)) : -1;
   $('#ui-koerper').innerHTML = `<div class="pvs">
     <div class="titel"><h3>Laborbefund</h3>${st ? `<span class="etikett" data-n="${esc(dr.key + '|status')}">${esc(STATUS[st] || st)}</span>` : ''}
@@ -693,12 +803,14 @@ function uiZeichnen() {
       <dt>Patient:in</dt><dd>${personName(pat) || '–'}${pat?.res.birthDate ? ', geb. ' + F(pat, 'birthDate', datum) : ''}</dd>
       <dt>KVNR</dt><dd>${kvnr(pat) || F(comp, 'subject.identifier.value') || '–'}</dd>
       <dt>Labor</dt><dd>${personName(labor) || '–'}</dd>
-      <dt>Auftrag</dt><dd>${kennung(dr, 'AL') || '–'}${sr ? ' · Einsender-Nr. ' + (kennung(sr, 'AE') || F(sr, 'identifier[0].value') || '–') : ''}</dd>
-      <dt>Probe</dt><dd>${sp ? (codingText(sp, 'type') || '–') + (sp.res.collection?.collectedDateTime ? ', entnommen ' + F(sp, 'collection.collectedDateTime', datum) : '') : '–'}</dd>
+      <dt>Auftrag</dt><dd>${kennung(dr, 'AL') || '–'}${sr ? ' · Einsender-Nr. ' + (kennung(sr, 'AE') || F(sr, 'identifier[0].value') || '–') : ''}${eingang ? ' · Eingang ' + eingang : ''}${sr?.res.priority ? ' · ' + F(sr, 'priority', p => PRIORITAET[p] || p) : ''}</dd>
+      ${fragen.length ? `<dt>Fragestellung</dt><dd>${fragen.join('; ')}</dd>` : ''}
+      <dt>${sps.length > 1 ? 'Proben' : 'Probe'}</dt><dd>${probenListe(sps)}</dd>
       <dt>Befunddatum</dt><dd>${F(dr, 'issued', datum) || F(comp, 'date', datum) || '–'}</dd>
     </dl>
     <table class="erg"><thead><tr><th>Untersuchung</th><th>Ergebnis</th><th>Einheit</th><th>Referenz</th><th>Bewertung</th></tr></thead><tbody>${ergebnisZeilen(true)}</tbody></table>
     ${dr?.res.conclusion ? `<div class="notiz"><b>Beurteilung:</b> ${F(dr, 'conclusion')}</div>` : ''}
+    ${zusaetze.map(z => `<div class="notiz">${z}</div>`).join('')}
   </div>`;
 }
 // ------------------------------------------------------------------ Anwenderansicht für Dokumente (Composition mit Abschnitten)
@@ -715,21 +827,44 @@ function impfungTeile(r) {
     if (x.contained[ci].batch?.lotNumber) teile.push('Charge ' + F(r, `contained[${ci}].batch.lotNumber`));
   } else if (x.lotNumber) teile.push('Charge ' + F(r, 'lotNumber'));
   if (x.primarySource === false) teile.push(`<span data-n="${esc(r.key + '|primarySource')}">nachgetragen</span>` + (x.reportOrigin ? ' aus ' + codingText(r, 'reportOrigin') : ''));
+  const gegen = (pa?.targetDisease || []).map((td, i) => {   // Zielerkrankungen; SNOMED-Anzeige ohne semantischen Zusatz
+    const jp = `protocolApplied[0].targetDisease[${i}]`;
+    if (td.text) return F(r, jp + '.text');
+    const j = idx(td.coding, c => c.display);
+    return j >= 0 ? F(r, `${jp}.coding[${j}].display`, t => t.replace(/\s\((disorder|finding|organism)\)$/, '')) : codingText(r, jp);
+  }).filter(Boolean);
+  if (gegen.length) teile.unshift('gegen ' + gegen.join(', '));
+  if (pa?.series) teile.push('Serie ' + F(r, 'protocolApplied[0].series'));
+  (x.performer || []).forEach((p, i) => { const a = verweis(p.actor); const n = a ? personName(a) : F(r, `performer[${i}].actor.display`); if (n) teile.push('durch ' + n); });
   return teile;
 }
-const DATUMSFELDER = ['onsetDateTime', 'recordedDate', 'occurrenceDateTime', 'performedDateTime', 'effectiveDateTime', 'authoredOn', 'dateAsserted', 'issued'];
+const DATUMSFELDER = ['onsetDateTime', 'recordedDate', 'occurrenceDateTime', 'performedDateTime', 'effectiveDateTime', 'timingDateTime', 'authoredOn', 'dateAsserted', 'issued'];
+const ALLERGIE_ART = { allergy: 'Allergie', intolerance: 'Unverträglichkeit' };
+const ALLERGIE_KATEGORIE = { medication: 'Arzneimittel', food: 'Nahrungsmittel', environment: 'Umwelt', biologic: 'Biologika' };
+const SCHWERE = { mild: 'leicht', moderate: 'mittel', severe: 'schwer' };
 function eintragZeile(r) {
   if (!r) return '<div class="eintrag leer-abschnitt">Verweis nicht auflösbar</div>';
-  const x = r.res, teile = [];
+  const x = r.res, teile = [], unter = [];
   const feld = ['code', 'vaccineCode', 'medicationCodeableConcept', 'type'].find(f => x[f]);
-  let titel = feld ? codingText(r, feld) : '';
+  let titel = feld ? (x.resourceType === 'Condition' ? diagnoseText(r) : codingText(r, feld)) : '';
   if (!titel && x.medicationReference) { const m = verweis(x.medicationReference); titel = m ? codingText(m, 'code') : F(r, 'medicationReference.display'); }
   if (!titel && x.device) { const d = verweis(x.device); titel = d ? (codingText(d, 'type') || F(d, 'deviceName[0].name')) : ''; }
-  if (x.resourceType === 'Observation') { const w = messwert(r); if (w && w !== '–') teile.push(`${w} ${einheit(r)}`.trim()); const bw = bewertung(r); if (bw) teile.push(bw); }
-  if (x.clinicalStatus) teile.push(codingText(r, 'clinicalStatus'));
-  if (x.verificationStatus) teile.push(codingText(r, 'verificationStatus'));
-  if (x.criticality) teile.push('Kritikalität ' + F(r, 'criticality'));
-  if (x.reaction?.[0]?.manifestation?.[0]) teile.push('Reaktion ' + codingText(r, 'reaction[0].manifestation[0]'));
+  if (x.resourceType === 'Observation') {
+    const w = messwert(r); if (w && w !== '–') teile.push(`${w} ${einheit(r)}`.trim());
+    const bw = bewertung(r); if (bw) teile.push(bw);
+    const rf = referenz(r); if (rf) teile.push('Referenz ' + rf);
+  }
+  if (x.resourceType === 'AllergyIntolerance') {
+    if (x.type) teile.push(F(r, 'type', t => ALLERGIE_ART[t] || t));
+    (x.category || []).forEach((_, i) => teile.push(F(r, `category[${i}]`, k => ALLERGIE_KATEGORIE[k] || k)));
+  }
+  if (x.clinicalStatus) teile.push(statusText(r, 'clinicalStatus'));
+  if (x.verificationStatus && x.resourceType !== 'Condition') teile.push(statusText(r, 'verificationStatus'));
+  if (x.criticality) teile.push('Kritikalität ' + statusText(r, 'criticality'));
+  (x.reaction || []).forEach((re, i) => {
+    const m = (re.manifestation || []).map((_, j) => codingText(r, `reaction[${i}].manifestation[${j}]`)).filter(Boolean);
+    if (m.length || re.severity) teile.push('Reaktion ' + m.join(', ') + (re.severity ? ` (${F(r, `reaction[${i}].severity`, s => SCHWERE[s] || s)})` : ''));
+  });
   const dosis = x.dosageInstruction?.[0]?.text ? 'dosageInstruction[0].text' : (x.dosage?.[0]?.text ? 'dosage[0].text' : null);
   if (dosis) teile.push(F(r, dosis));
   if (x.protocolApplied?.[0]?.doseNumberPositiveInt) teile.push('Dosis ' + F(r, 'protocolApplied[0].doseNumberPositiveInt'));
@@ -737,8 +872,12 @@ function eintragZeile(r) {
   const df = DATUMSFELDER.find(f => x[f]);
   if (df) teile.push(F(r, df, datum));
   else if (x.effectivePeriod?.start) teile.push('seit ' + F(r, 'effectivePeriod.start', datum));
+  else if (x.timingPeriod?.start) teile.push('seit ' + F(r, 'timingPeriod.start', datum));
   if (!df && x.status && !x.clinicalStatus) teile.push(F(r, 'status'));
-  return `<div class="eintrag" data-n="${esc(r.key + '|')}"><span class="art">${esc(x.resourceType)}</span> ${titel || '–'}${teile.filter(Boolean).length ? ' · ' + teile.filter(Boolean).join(' · ') : ''}</div>`;
+  (x.reasonCode || []).forEach((_, i) => unter.push('Grund: ' + codingText(r, `reasonCode[${i}]`)));
+  (x.note || []).forEach((_, i) => unter.push('Notiz: ' + F(r, `note[${i}].text`)));
+  return `<div class="eintrag" data-n="${esc(r.key + '|')}"><span class="art">${esc(x.resourceType)}</span> ${titel || '–'}${teile.filter(Boolean).length ? ' · ' + teile.filter(Boolean).join(' · ') : ''}`
+    + unter.filter(Boolean).map(u => `<div class="hinweis">${u}</div>`).join('') + '</div>';
 }
 function dokumentAnsichtZeichnen() {
   if (!D.beispiele.length) { $('#ui-koerper').innerHTML = '<p class="hinweis">Keine Beispiele in diesem Projekt.</p>'; return; }
@@ -747,6 +886,7 @@ function dokumentAnsichtZeichnen() {
   const pat = verweis(comp.res.subject), autor = verweis(comp.res.author?.[0]);
   const kopf = `<div class="titel"><h3>${F(comp, 'title') || 'Dokument'}</h3><span class="etikett" data-n="${esc(comp.key + '|status')}">${esc(comp.res.status || '')}</span></div>
     <dl class="kv"><dt>Patient:in</dt><dd>${personName(pat) || '–'}${pat?.res.birthDate ? ', geb. ' + F(pat, 'birthDate', datum) : ''}</dd>
+    <dt>KVNR</dt><dd>${kvnr(pat) || F(pat, 'identifier[0].value') || '–'}</dd>
     <dt>Erstellt</dt><dd>${F(comp, 'date', datum) || '–'}</dd><dt>Autor</dt><dd>${autor ? (personName(autor) || codingText(autor, 'type') || F(autor, 'deviceName[0].name') || esc(autor.res.resourceType)) : F(comp, 'author[0].display') || '–'}</dd></dl>`;
   const abschnitte = (comp.res.section || []).map((s, i) => {
     const kopfzeile = `<div class="abschnitt" data-n="${esc(comp.key + '|section[' + i + ']')}">${F(comp, `section[${i}].title`) || codingText(comp, `section[${i}].code`)}</div>`;
@@ -757,7 +897,8 @@ function dokumentAnsichtZeichnen() {
   $('#ui-koerper').innerHTML = `<div class="pvs">${kopf}${abschnitte}</div>`;
 }
 function druckZeichnen() {
-  const { comp, dr, pat, empf, sr, sp, labor, ext } = befundTeile();
+  const { comp, dr, pat, empf, sr, sps, labor, ext } = befundTeile();
+  const fragen = fragestellung(sr), eingang = auftragseingang(dr), zusaetze = befundZusaetze(dr);
   const v = comp ? ext(comp, 'Composition.version') : -1;
   const att = comp?.res.attester?.findIndex(a => a.mode === 'legal') ?? -1;
   const org = labor?.res.resourceType === 'PractitionerRole' ? verweis(labor.res.organization) : labor;
@@ -768,9 +909,11 @@ function druckZeichnen() {
       <div class="klein" style="text-align:right">${F(comp, 'title') || 'Laborbefund'}<br>${F(comp, 'date', datum)}</div></div>
     <div class="brief"><div class="anschrift"><div class="klein">An</div>${empf ? personName(empf) : '–'}<br>${adresse(empfOrg)}</div>
       <div class="anschrift" style="text-align:right">Patient:in: ${personName(pat) || '–'}<br>${pat?.res.birthDate ? 'geb. ' + F(pat, 'birthDate', datum) + '<br>' : ''}KVNR ${kvnr(pat) || F(comp, 'subject.identifier.value') || '–'}</div></div>
-    <p class="klein">Auftragsnummer Labor ${kennung(dr, 'AL') || '–'}${sr ? ' · Auftragsnummer Einsender ' + (kennung(sr, 'AE') || F(sr, 'identifier[0].value') || '–') : ''}${sp ? ' · Probe ' + (codingText(sp, 'type') || '') : ''}</p>
+    <p class="klein">Auftragsnummer Labor ${kennung(dr, 'AL') || '–'}${sr ? ' · Auftragsnummer Einsender ' + (kennung(sr, 'AE') || F(sr, 'identifier[0].value') || '–') : ''}${eingang ? ' · Auftragseingang ' + eingang : ''}${sr?.res.priority ? ' · ' + F(sr, 'priority', p => PRIORITAET[p] || p) : ''}<br>
+      ${fragen.length ? 'Fragestellung: ' + fragen.join('; ') + '<br>' : ''}${sps.length > 1 ? 'Proben' : 'Probe'}: ${probenListe(sps)}</p>
     <table><thead><tr><th>Untersuchung</th><th>Ergebnis</th><th>Einheit</th><th>Referenzbereich</th><th></th></tr></thead><tbody>${ergebnisZeilen(false)}</tbody></table>
     ${dr?.res.conclusion ? `<p><b>Beurteilung:</b> ${F(dr, 'conclusion')}</p>` : ''}
+    ${zusaetze.map(z => `<p class="klein">${z}</p>`).join('')}
     <div class="fuss">${att >= 0 ? `Medizinisch freigegeben am ${F(comp, `attester[${att}].time`, datum)} durch ${personName(verweis(comp.res.attester[att].party)) || '–'} (${F(comp, `attester[${att}].mode`)})<br>` : 'Ohne Freigabevermerk<br>'}
       Dokument-ID ${F(comp, 'identifier.value') || '–'} · Version ${v >= 0 ? F(comp, `extension[${v}].valueString`) : '–'} · Status ${F(comp, 'status') || '–'}</div>
   </article>`;
