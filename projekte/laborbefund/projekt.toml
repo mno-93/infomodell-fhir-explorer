@@ -99,8 +99,8 @@ einstieg = "Composition/13c807c0-53e7-488e-84bb-023376563cf3"
 [[beispiele]]
 id = "mio-lab-ex1"
 titel = "Fallbeispiel 1 nach MIO Laborbefund — Hansen, 15.11.2021"
-zweck = "Instanzen nach den KBV-Profilen MIO Laborbefund 1.0.0-update zur inhaltlichen Sichtung: Thrombozyten erhöht, 25-OH-Vitamin D unter dem Zielbereich. Ohne DiagnosticReport, PractitionerRole und Specimen; die KBV-Profile liegen nicht im Paketbestand, zugeordnet wird über Standardprofil bzw. Basisressource."
-herkunft = "github.com/mio42-GmbH/MIO-Laborbefund, Branch feature/fallbeispiel_1, fsh-generated/resources/*ex1* (SUSHI-Ausgabe), unverändert in einem Bundle vom Typ collection zusammengefasst. Mit Claude erzeugt, fiktive Daten."
+zweck = "Dokument nach den KBV-Profilen MIO Laborbefund 1.0.0-update zur inhaltlichen Sichtung: vier Untersuchungsgruppen (Klinische Chemie, Vitamine, Endokrinologie, Blutbild) mit 28 Werten, Auftrag, zwei Proben, Freigabe und Provenance. Die KBV-Profile liegen nicht im Paketbestand; zugeordnet wird über Standardprofil bzw. Basisressource."
+herkunft = "github.com/mio42-GmbH/MIO-Laborbefund, Branch feature/fallbeispiel_1, fsh-generated/resources/Bundle-Bundle-ex1-1.json (SUSHI-Ausgabe), unverändert; Einzelressourcen und FSH-Quellen (input/fsh/instances/ex1) inhaltlich abgeglichen. Mit Claude erzeugt, fiktive Daten."
 datei = "beispiele/mio-lab-ex1.json"
 
 # HL7 FHIR Validator: nur Beispieldateien (die Paketbeispiele prüft der IG-Build)

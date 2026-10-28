@@ -153,7 +153,7 @@ Je Mapping eines Elements mit Werteliste: Bindung am Element, am zugehörigen Co
 | Schilddrüse (TSH) — Yildiz, 02.07.2026 | 11 | 90 | 60 | 0 |
 | IG-Beispiel mit Probe, Gerät und Anhang | 22 | 376 | 278 | 0 |
 | IG-Beispiel, zweite Composition | 21 | 325 | 232 | 0 |
-| Fallbeispiel 1 nach MIO Laborbefund — Hansen, 15.11.2021 | 5 | 97 | 6 | 0 |
+| Fallbeispiel 1 nach MIO Laborbefund — Hansen, 15.11.2021 | 43 | 1085 | 9 | 14 |
 
 ### Nierenfunktion und HbA1c — Hoffmann, 12.08.2026
 
@@ -457,41 +457,129 @@ Werte ohne spezifisches Element im Informationsmodell (ohne url, reference, syst
 
 ### Fallbeispiel 1 nach MIO Laborbefund — Hansen, 15.11.2021
 
-- Zweck: Instanzen nach den KBV-Profilen MIO Laborbefund 1.0.0-update zur inhaltlichen Sichtung: Thrombozyten erhöht, 25-OH-Vitamin D unter dem Zielbereich. Ohne DiagnosticReport, PractitionerRole und Specimen; die KBV-Profile liegen nicht im Paketbestand, zugeordnet wird über Standardprofil bzw. Basisressource.
-- Herkunft: github.com/mio42-GmbH/MIO-Laborbefund, Branch feature/fallbeispiel_1, fsh-generated/resources/*ex1* (SUSHI-Ausgabe), unverändert in einem Bundle vom Typ collection zusammengefasst. Mit Claude erzeugt, fiktive Daten.
+- Zweck: Dokument nach den KBV-Profilen MIO Laborbefund 1.0.0-update zur inhaltlichen Sichtung: vier Untersuchungsgruppen (Klinische Chemie, Vitamine, Endokrinologie, Blutbild) mit 28 Werten, Auftrag, zwei Proben, Freigabe und Provenance. Die KBV-Profile liegen nicht im Paketbestand; zugeordnet wird über Standardprofil bzw. Basisressource.
+- Herkunft: github.com/mio42-GmbH/MIO-Laborbefund, Branch feature/fallbeispiel_1, fsh-generated/resources/Bundle-Bundle-ex1-1.json (SUSHI-Ausgabe), unverändert; Einzelressourcen und FSH-Quellen (input/fsh/instances/ex1) inhaltlich abgeglichen. Mit Claude erzeugt, fiktive Daten.
 - Datei: `beispiele/mio-lab-ex1.json`
-- Profilzuordnung ohne `meta.profile`: 2× Basisressource, 3× Standardprofil des Projekts
+- Profilzuordnung ohne `meta.profile`: 38× Basisressource, 5× Standardprofil des Projekts
+
+**Strukturbefunde** (Element im Profil nicht auflösbar):
+
+- `Observation · Observation.extension.extension:value.url` — Slice `extension:value` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:value.valueQuantity.system` — Slice `extension:value` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:value.valueQuantity.value` — Slice `extension:value` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:value.valueQuantity.code` — Slice `extension:value` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:value.valueQuantity.unit` — Slice `extension:value` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.valueRange.low.system` — Slice `extension:referenceRange` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.valueRange.low.value` — Slice `extension:referenceRange` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.valueRange.low.code` — Slice `extension:referenceRange` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.valueRange.low.unit` — Slice `extension:referenceRange` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.valueRange.high.system` — Slice `extension:referenceRange` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.valueRange.high.value` — Slice `extension:referenceRange` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.valueRange.high.code` — Slice `extension:referenceRange` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.valueRange.high.unit` — Slice `extension:referenceRange` unter `Extension` nicht definiert
+- `Observation · Observation.extension.extension:referenceRange.url` — Slice `extension:referenceRange` unter `Extension` nicht definiert
 
 Werte ohne spezifisches Element im Informationsmodell (ohne url, reference, system, version, Erzähltext):
 
-- `Observation#Observation.category.coding.code` (5×)
-- `Observation#Observation.category.coding.display` (5×)
-- `Observation#Observation.category.extension.valueString` (5×)
-- `Observation#Observation.category.text` (3×)
-- `Observation#Observation.code.coding.code` (2×)
-- `Observation#Observation.code.coding.display` (2×)
-- `Observation#Observation.code.text` (2×)
-- `Observation#Observation.effectiveDateTime` (2×)
-- `Observation#Observation.interpretation.coding.code` (2×)
-- `Observation#Observation.interpretation.coding.display` (2×)
-- `Observation#Observation.interpretation.text` (2×)
-- `Observation#Observation.issued` (2×)
-- `Observation#Observation.referenceRange.high.code` (1×)
-- `Observation#Observation.referenceRange.high.unit` (1×)
-- `Observation#Observation.referenceRange.high.value` (1×)
-- `Observation#Observation.referenceRange.low.code` (2×)
-- `Observation#Observation.referenceRange.low.unit` (2×)
-- `Observation#Observation.referenceRange.low.value` (2×)
+- `Composition#Composition.attester.mode` (1×)
+- `Composition#Composition.attester.time` (1×)
+- `Composition#Composition.date` (1×)
+- `Composition#Composition.extension.valueString` (1×)
+- `Composition#Composition.identifier.value` (1×)
+- `Composition#Composition.status` (1×)
+- `Composition#Composition.subject.identifier.type.coding.code` (1×)
+- `Composition#Composition.subject.identifier.type.coding.display` (1×)
+- `Composition#Composition.subject.identifier.value` (1×)
+- `Composition#Composition.title` (1×)
+- `Composition#Composition.type.coding.code` (1×)
+- `Composition#Composition.type.coding.display` (1×)
+- `DiagnosticReport#DiagnosticReport.code.coding.code` (1×)
+- `DiagnosticReport#DiagnosticReport.code.coding.display` (1×)
+- `DiagnosticReport#DiagnosticReport.conclusion` (1×)
+- `DiagnosticReport#DiagnosticReport.extension.valueDateTime` (1×)
+- `DiagnosticReport#DiagnosticReport.identifier.type.coding.code` (1×)
+- `DiagnosticReport#DiagnosticReport.identifier.type.coding.display` (1×)
+- `DiagnosticReport#DiagnosticReport.identifier.value` (1×)
+- `DiagnosticReport#DiagnosticReport.issued` (1×)
+- `DiagnosticReport#DiagnosticReport.presentedForm.contentType` (1×)
+- `DiagnosticReport#DiagnosticReport.presentedForm.creation` (1×)
+- `DiagnosticReport#DiagnosticReport.presentedForm.data` (1×)
+- `DiagnosticReport#DiagnosticReport.presentedForm.title` (1×)
+- `DiagnosticReport#DiagnosticReport.result.extension.valuePositiveInt` (4×)
+- `DiagnosticReport#DiagnosticReport.status` (1×)
+- `DiagnosticReport#DiagnosticReport.subject.identifier.type.coding.code` (1×)
+- `DiagnosticReport#DiagnosticReport.subject.identifier.type.coding.display` (1×)
+- `DiagnosticReport#DiagnosticReport.subject.identifier.value` (1×)
+- `Observation#Observation.category.coding.code` (73×)
+- `Observation#Observation.category.coding.display` (73×)
+- `Observation#Observation.category.extension.valueString` (73×)
+- `Observation#Observation.category.text` (41×)
+- `Observation#Observation.code.coding.code` (32×)
+- `Observation#Observation.code.coding.display` (32×)
+- `Observation#Observation.code.text` (28×)
+- `Observation#Observation.effectiveDateTime` (28×)
+- `Observation#Observation.effectiveDateTime.extension.valueCode` (4×)
+- `Observation#Observation.extension.extension:referenceRange.valueRange.high.code` (1×)
+- `Observation#Observation.extension.extension:referenceRange.valueRange.high.unit` (1×)
+- `Observation#Observation.extension.extension:referenceRange.valueRange.high.value` (1×)
+- `Observation#Observation.extension.extension:referenceRange.valueRange.low.code` (1×)
+- `Observation#Observation.extension.extension:referenceRange.valueRange.low.unit` (1×)
+- `Observation#Observation.extension.extension:referenceRange.valueRange.low.value` (1×)
+- `Observation#Observation.extension.extension:value.valueQuantity.code` (1×)
+- `Observation#Observation.extension.extension:value.valueQuantity.unit` (1×)
+- `Observation#Observation.extension.extension:value.valueQuantity.value` (1×)
+- `Observation#Observation.hasMember.extension.valuePositiveInt` (28×)
+- `Observation#Observation.interpretation.coding.code` (28×)
+- `Observation#Observation.interpretation.coding.display` (28×)
+- `Observation#Observation.interpretation.text` (30×)
+- `Observation#Observation.issued` (28×)
+- `Observation#Observation.method.text` (2×)
+- `Observation#Observation.referenceRange.high.code` (26×)
+- `Observation#Observation.referenceRange.high.unit` (26×)
+- `Observation#Observation.referenceRange.high.value` (26×)
+- `Observation#Observation.referenceRange.low.code` (24×)
+- `Observation#Observation.referenceRange.low.unit` (24×)
+- `Observation#Observation.referenceRange.low.value` (24×)
 - `Observation#Observation.referenceRange.text` (1×)
-- `Observation#Observation.referenceRange.type.coding.code` (2×)
-- `Observation#Observation.referenceRange.type.coding.display` (2×)
-- `Observation#Observation.status` (2×)
-- `Observation#Observation.subject.identifier.type.coding.code` (2×)
-- `Observation#Observation.subject.identifier.type.coding.display` (2×)
-- `Observation#Observation.subject.identifier.value` (2×)
-- `Observation#Observation.valueQuantity.code` (2×)
-- `Observation#Observation.valueQuantity.unit` (2×)
-- `Observation#Observation.valueQuantity.value` (2×)
+- `Observation#Observation.referenceRange.type.coding.code` (28×)
+- `Observation#Observation.referenceRange.type.coding.display` (28×)
+- `Observation#Observation.status` (32×)
+- `Observation#Observation.subject.identifier.type.coding.code` (32×)
+- `Observation#Observation.subject.identifier.type.coding.display` (32×)
+- `Observation#Observation.subject.identifier.value` (32×)
+- `Observation#Observation.valueQuantity.code` (28×)
+- `Observation#Observation.valueQuantity.comparator` (1×)
+- `Observation#Observation.valueQuantity.unit` (28×)
+- `Observation#Observation.valueQuantity.value` (28×)
+- `Provenance#Provenance.activity.coding.code` (1×)
+- `Provenance#Provenance.activity.coding.display` (1×)
+- `Provenance#Provenance.occurredDateTime` (1×)
+- `Provenance#Provenance.recorded` (1×)
+- `ServiceRequest#ServiceRequest.authoredOn` (1×)
+- `ServiceRequest#ServiceRequest.code.coding.code` (1×)
+- `ServiceRequest#ServiceRequest.code.coding.display` (1×)
+- `ServiceRequest#ServiceRequest.identifier.type.coding.code` (1×)
+- `ServiceRequest#ServiceRequest.identifier.type.coding.display` (1×)
+- `ServiceRequest#ServiceRequest.identifier.value` (1×)
+- `ServiceRequest#ServiceRequest.intent` (1×)
+- `ServiceRequest#ServiceRequest.priority` (1×)
+- `ServiceRequest#ServiceRequest.reasonCode.extension.valueString` (1×)
+- `ServiceRequest#ServiceRequest.reasonCode.text` (1×)
+- `ServiceRequest#ServiceRequest.status` (1×)
+- `ServiceRequest#ServiceRequest.subject.identifier.type.coding.code` (1×)
+- `ServiceRequest#ServiceRequest.subject.identifier.type.coding.display` (1×)
+- `ServiceRequest#ServiceRequest.subject.identifier.value` (1×)
+- `ServiceRequest#ServiceRequest.supportingInfo.display` (1×)
+- `Specimen#Specimen.collection.collectedDateTime` (2×)
+- `Specimen#Specimen.identifier.value` (2×)
+- `Specimen#Specimen.receivedTime` (2×)
+- `Specimen#Specimen.status` (2×)
+- `Specimen#Specimen.subject.identifier.type.coding.code` (2×)
+- `Specimen#Specimen.subject.identifier.type.coding.display` (2×)
+- `Specimen#Specimen.subject.identifier.value` (2×)
+- `Specimen#Specimen.type.coding.code` (2×)
+- `Specimen#Specimen.type.coding.display` (2×)
+- `Specimen#Specimen.type.text` (2×)
 - `ti-organization#Organization.address.city` (1×)
 - `ti-organization#Organization.address.country` (1×)
 - `ti-organization#Organization.address.line` (1×)
@@ -509,16 +597,24 @@ Werte ohne spezifisches Element im Informationsmodell (ohne url, reference, syst
 - `ti-patient#Patient.name:Name.text` (1×)
 - `ti-patient#Patient.name:Name.use` (1×)
 - `ti-patient#Patient.telecom.value` (1×)
-- `ti-practitioner#Practitioner.gender` (1×)
-- `ti-practitioner#Practitioner.name.family` (1×)
-- `ti-practitioner#Practitioner.name.family.extension:nachname.valueString` (1×)
-- `ti-practitioner#Practitioner.name.given` (1×)
-- `ti-practitioner#Practitioner.name.prefix` (1×)
-- `ti-practitioner#Practitioner.name.prefix.extension:prefix-qualifier.valueCode` (1×)
-- `ti-practitioner#Practitioner.name.text` (1×)
-- `ti-practitioner#Practitioner.name.use` (1×)
-- `ti-practitioner#Practitioner.qualification.code.coding.code` (1×)
-- `ti-practitioner#Practitioner.qualification.code.coding.display` (1×)
+- `ti-practitioner#Practitioner.address.city` (1×)
+- `ti-practitioner#Practitioner.address.country` (1×)
+- `ti-practitioner#Practitioner.address.line` (1×)
+- `ti-practitioner#Practitioner.address.line.extension.valueString` (2×)
+- `ti-practitioner#Practitioner.address.postalCode` (1×)
+- `ti-practitioner#Practitioner.address.type` (1×)
+- `ti-practitioner#Practitioner.gender` (2×)
+- `ti-practitioner#Practitioner.name.family` (2×)
+- `ti-practitioner#Practitioner.name.family.extension:nachname.valueString` (2×)
+- `ti-practitioner#Practitioner.name.given` (2×)
+- `ti-practitioner#Practitioner.name.prefix` (2×)
+- `ti-practitioner#Practitioner.name.prefix.extension:prefix-qualifier.valueCode` (2×)
+- `ti-practitioner#Practitioner.name.text` (2×)
+- `ti-practitioner#Practitioner.name.use` (2×)
+- `ti-practitioner#Practitioner.qualification.code.coding.code` (2×)
+- `ti-practitioner#Practitioner.qualification.code.coding.display` (2×)
+- `ti-practitioner-role#PractitionerRole.code.coding.code` (1×)
+- `ti-practitioner-role#PractitionerRole.code.coding.display` (1×)
 
 ## FHIR-Validierung (HL7 Validator 7.0.1)
 
