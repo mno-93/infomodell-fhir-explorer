@@ -96,6 +96,13 @@ herkunft = "Paket de.gematik.epa.laboratory#1.0.0-ballot.1, Ordner example/ (Hü
 paket = "de.gematik.epa.laboratory#1.0.0-ballot.1"
 einstieg = "Composition/13c807c0-53e7-488e-84bb-023376563cf3"
 
+[[beispiele]]
+id = "mio-lab-ex1"
+titel = "Fallbeispiel 1 nach MIO Laborbefund — Hansen, 15.11.2021"
+zweck = "Instanzen nach den KBV-Profilen MIO Laborbefund 1.0.0-update zur inhaltlichen Sichtung: Thrombozyten erhöht, 25-OH-Vitamin D unter dem Zielbereich. Ohne DiagnosticReport, PractitionerRole und Specimen; die KBV-Profile liegen nicht im Paketbestand, zugeordnet wird über Standardprofil bzw. Basisressource."
+herkunft = "github.com/mio42-GmbH/MIO-Laborbefund, Branch feature/fallbeispiel_1, fsh-generated/resources/*ex1* (SUSHI-Ausgabe), unverändert in einem Bundle vom Typ collection zusammengefasst. Mit Claude erzeugt, fiktive Daten."
+datei = "beispiele/mio-lab-ex1.json"
+
 # HL7 FHIR Validator: nur Beispieldateien (die Paketbeispiele prüft der IG-Build)
 [validierung]
 # Paketstand wie im Demo-PVS, aus dem die Beispiele stammen (dort ohne Fehler bis auf die Ausnahmen)

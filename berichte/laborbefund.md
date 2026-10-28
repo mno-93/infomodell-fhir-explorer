@@ -153,6 +153,7 @@ Je Mapping eines Elements mit Werteliste: Bindung am Element, am zugehörigen Co
 | Schilddrüse (TSH) — Yildiz, 02.07.2026 | 11 | 90 | 60 | 0 |
 | IG-Beispiel mit Probe, Gerät und Anhang | 22 | 376 | 278 | 0 |
 | IG-Beispiel, zweite Composition | 21 | 325 | 232 | 0 |
+| Fallbeispiel 1 nach MIO Laborbefund — Hansen, 15.11.2021 | 5 | 97 | 6 | 0 |
 
 ### Nierenfunktion und HbA1c — Hoffmann, 12.08.2026
 
@@ -454,6 +455,71 @@ Werte ohne spezifisches Element im Informationsmodell (ohne url, reference, syst
 - `ti-practitioner#Practitioner.qualification.code.coding.display` (1×)
 - `ti-practitioner#Practitioner.telecom.value` (1×)
 
+### Fallbeispiel 1 nach MIO Laborbefund — Hansen, 15.11.2021
+
+- Zweck: Instanzen nach den KBV-Profilen MIO Laborbefund 1.0.0-update zur inhaltlichen Sichtung: Thrombozyten erhöht, 25-OH-Vitamin D unter dem Zielbereich. Ohne DiagnosticReport, PractitionerRole und Specimen; die KBV-Profile liegen nicht im Paketbestand, zugeordnet wird über Standardprofil bzw. Basisressource.
+- Herkunft: github.com/mio42-GmbH/MIO-Laborbefund, Branch feature/fallbeispiel_1, fsh-generated/resources/*ex1* (SUSHI-Ausgabe), unverändert in einem Bundle vom Typ collection zusammengefasst. Mit Claude erzeugt, fiktive Daten.
+- Datei: `beispiele/mio-lab-ex1.json`
+- Profilzuordnung ohne `meta.profile`: 2× Basisressource, 3× Standardprofil des Projekts
+
+Werte ohne spezifisches Element im Informationsmodell (ohne url, reference, system, version, Erzähltext):
+
+- `Observation#Observation.category.coding.code` (5×)
+- `Observation#Observation.category.coding.display` (5×)
+- `Observation#Observation.category.extension.valueString` (5×)
+- `Observation#Observation.category.text` (3×)
+- `Observation#Observation.code.coding.code` (2×)
+- `Observation#Observation.code.coding.display` (2×)
+- `Observation#Observation.code.text` (2×)
+- `Observation#Observation.effectiveDateTime` (2×)
+- `Observation#Observation.interpretation.coding.code` (2×)
+- `Observation#Observation.interpretation.coding.display` (2×)
+- `Observation#Observation.interpretation.text` (2×)
+- `Observation#Observation.issued` (2×)
+- `Observation#Observation.referenceRange.high.code` (1×)
+- `Observation#Observation.referenceRange.high.unit` (1×)
+- `Observation#Observation.referenceRange.high.value` (1×)
+- `Observation#Observation.referenceRange.low.code` (2×)
+- `Observation#Observation.referenceRange.low.unit` (2×)
+- `Observation#Observation.referenceRange.low.value` (2×)
+- `Observation#Observation.referenceRange.text` (1×)
+- `Observation#Observation.referenceRange.type.coding.code` (2×)
+- `Observation#Observation.referenceRange.type.coding.display` (2×)
+- `Observation#Observation.status` (2×)
+- `Observation#Observation.subject.identifier.type.coding.code` (2×)
+- `Observation#Observation.subject.identifier.type.coding.display` (2×)
+- `Observation#Observation.subject.identifier.value` (2×)
+- `Observation#Observation.valueQuantity.code` (2×)
+- `Observation#Observation.valueQuantity.unit` (2×)
+- `Observation#Observation.valueQuantity.value` (2×)
+- `ti-organization#Organization.address.city` (1×)
+- `ti-organization#Organization.address.country` (1×)
+- `ti-organization#Organization.address.line` (1×)
+- `ti-organization#Organization.address.line.extension:houseNumber.valueString` (1×)
+- `ti-organization#Organization.address.line.extension:streetName.valueString` (1×)
+- `ti-organization#Organization.address.postalCode` (1×)
+- `ti-organization#Organization.address.type` (1×)
+- `ti-organization#Organization.name` (1×)
+- `ti-organization#Organization.telecom.value` (3×)
+- `ti-patient#Patient.birthDate` (1×)
+- `ti-patient#Patient.gender` (1×)
+- `ti-patient#Patient.name:Name.family` (1×)
+- `ti-patient#Patient.name:Name.family.extension.valueString` (1×)
+- `ti-patient#Patient.name:Name.given` (1×)
+- `ti-patient#Patient.name:Name.text` (1×)
+- `ti-patient#Patient.name:Name.use` (1×)
+- `ti-patient#Patient.telecom.value` (1×)
+- `ti-practitioner#Practitioner.gender` (1×)
+- `ti-practitioner#Practitioner.name.family` (1×)
+- `ti-practitioner#Practitioner.name.family.extension:nachname.valueString` (1×)
+- `ti-practitioner#Practitioner.name.given` (1×)
+- `ti-practitioner#Practitioner.name.prefix` (1×)
+- `ti-practitioner#Practitioner.name.prefix.extension:prefix-qualifier.valueCode` (1×)
+- `ti-practitioner#Practitioner.name.text` (1×)
+- `ti-practitioner#Practitioner.name.use` (1×)
+- `ti-practitioner#Practitioner.qualification.code.coding.code` (1×)
+- `ti-practitioner#Practitioner.qualification.code.coding.display` (1×)
+
 ## FHIR-Validierung (HL7 Validator 7.0.1)
 
 Stand: `berichte/laborbefund.validierung.json`, geschrieben von `python3 -I werkzeuge/mx.py validieren laborbefund`; FHIR 4.0.1, Optionen `-tx n/a -locale en-US -allow-example-urls true -extension https://example.org/` (ohne Terminologieserver).
@@ -470,6 +536,7 @@ Stand: `berichte/laborbefund.validierung.json`, geschrieben von `python3 -I werk
 | Schilddrüse (TSH) — Yildiz, 02.07.2026 | 4 | 4 | 16 | 11 | aktuell |
 | IG-Beispiel mit Probe, Gerät und Anhang | – | – | – | – | nicht validiert (Beispiel aus einem FHIR-Paket) |
 | IG-Beispiel, zweite Composition | – | – | – | – | nicht validiert (Beispiel aus einem FHIR-Paket) |
+| Fallbeispiel 1 nach MIO Laborbefund — Hansen, 15.11.2021 | – | – | – | – | noch nicht validiert |
 
 **Begründete Ausnahmen** (`[[validierung.ausnahmen]]` in `projekt.toml`):
 

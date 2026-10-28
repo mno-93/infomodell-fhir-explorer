@@ -673,7 +673,12 @@ function ergebnisZeilen(mitLoinc) {
       zeilen.push(`<tr class="bereich"><td colspan="5">${F(comp, `section[${si}].title`) || codingText(comp, `section[${si}].code`)}</td></tr>`);
       (s.entry || []).forEach(e => gruppe(verweis(e)));
     });
-  } else (dr?.res.result || []).forEach(e => gruppe(verweis(e)));
+  } else if (dr) (dr.res.result || []).forEach(e => gruppe(verweis(e)));
+  else {   // ohne Composition und DiagnosticReport: alle Observations, die keine Gruppe als Mitglied führt
+    const obs = B.ressourcen.filter(r => r.res.resourceType === 'Observation');
+    const mitglieder = new Set(obs.flatMap(o => (o.res.hasMember || []).map(m => verweis(m)?.key)));
+    obs.filter(o => !mitglieder.has(o.key)).forEach(gruppe);
+  }
   return zeilen.join('');
 }
 const STATUS = { final: 'Endbefund', partial: 'Teilbefund', preliminary: 'vorläufig', amended: 'geändert', corrected: 'korrigiert', registered: 'registriert' };
@@ -692,7 +697,7 @@ function uiZeichnen() {
       <dt>Labor</dt><dd>${personName(labor) || '–'}</dd>
       <dt>Auftrag</dt><dd>${kennung(dr, 'AL') || '–'}${sr ? ' · Einsender-Nr. ' + (kennung(sr, 'AE') || F(sr, 'identifier[0].value') || '–') : ''}</dd>
       <dt>Probe</dt><dd>${sp ? (codingText(sp, 'type') || '–') + (sp.res.collection?.collectedDateTime ? ', entnommen ' + F(sp, 'collection.collectedDateTime', datum) : '') : '–'}</dd>
-      <dt>Befunddatum</dt><dd>${F(dr, 'issued', datum) || F(comp, 'date', datum) || '–'}</dd>
+      <dt>Befunddatum</dt><dd>${F(dr, 'issued', datum) || F(comp, 'date', datum) || (!dr && !comp ? F(B.ressourcen.find(r => r.res.resourceType === 'Observation'), 'issued', datum) : '') || '–'}</dd>
     </dl>
     <table class="erg"><thead><tr><th>Untersuchung</th><th>Ergebnis</th><th>Einheit</th><th>Referenz</th><th>Bewertung</th></tr></thead><tbody>${ergebnisZeilen(true)}</tbody></table>
     ${dr?.res.conclusion ? `<div class="notiz"><b>Beurteilung:</b> ${F(dr, 'conclusion')}</div>` : ''}
