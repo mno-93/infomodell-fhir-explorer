@@ -14,7 +14,7 @@ Informationsmodell ──FHIR-Mapping──▶ Profilelement ──Zuordnung─�
 
 | Projekt | Grundlage | Informationsmodell | Beispiele |
 |---|---|---|---|
-| `laborbefund` | gematik `de.gematik.epa.laboratory` 1.0.0-ballot.1 | veröffentlicht, mit FHIR-Mappings; zusätzlich ausmodellierte Sicht | 3 aus dem Demo-PVS, 2 aus dem IG-Paket |
+| `laborbefund` | gematik `de.gematik.epa.laboratory` 1.0.0-ballot.1 | veröffentlicht, mit FHIR-Mappings; zusätzlich ausmodellierte Sicht | 3 aus dem Demo-PVS, 2 aus dem IG-Paket, 1 Fallbeispiel nach KBV MIO Laborbefund 1.0.0-update (zur medizinischen Sichtung; validiert gegen das KBV-Paket) |
 | `patient-summary` | HL7 Europe `hl7.fhir.eu.eps` 1.0.0-ballot | keins mit Mappings veröffentlicht — Struktur aus den Profilen abgeleitet | 2 aus dem Demo-PVS |
 | `impfung` | Entwurf eines Impfeintrags nach EU Core (HL7 Europe Base 2.0.1) mit den EPS-Pflichtangaben; Profile als FSH im Projekt, nicht veröffentlicht | Teilbaum „Impfung“ des Modells der ePA Patient Summary; FHIR-Mappings aus einer Mappingtabelle des Projekts | 2 fiktive, für das Projekt erstellt (Erstdokumentation, Nachtrag aus dem Impfpass) |
 | `epa-patient-summary` | MIO ePA Patient Summary, öffentlicher CI-Build ePS-0.0.1 (noch ohne FHIR-Profile) | veröffentlicht im CI-Build, ohne FHIR-Mappings, mit EHDS-Mapping auf die Xt-EHR-Logikmodelle 1.0.0 — geprüft wird dieses | keine (Begründung im Projekt) |

@@ -68,6 +68,10 @@
    "url": "https://packages.fhir.org/de.gematik.ti/1.5.0-ballot.2",
    "inhalt_sha256": "7055a6d428b80f4213430860cda2f138c029248eae1ba92ac44b861bf32d5419"
   },
+  "de.ihe-d.terminology#3.0.1": {
+   "url": "https://packages.fhir.org/de.ihe-d.terminology/3.0.1",
+   "inhalt_sha256": "d03904055b7aef5867ec035a9014dd4c556ff8e9e08d37415a2011992ce328bc"
+  },
   "dvmd.kdl.r4#2025.0.1": {
    "url": "https://packages.fhir.org/dvmd.kdl.r4/2025.0.1",
    "inhalt_sha256": "0af9ee9acd89825cd917a2d6151394df7778359b7cd79ee1d0c2c61d46ec5420"
@@ -204,9 +208,21 @@
    "url": "https://packages.fhir.org/ihe.pharm.mpd.r4/1.0.0-comment-2",
    "inhalt_sha256": "97357f2198bd43a66f1177c45a3a5b6d1a1227d52a22dd0cee27bc12b9bfdb1d"
   },
+  "kbv.all.st#1.24.0": {
+   "url": "https://packages.fhir.org/kbv.all.st/1.24.0",
+   "inhalt_sha256": "dfaab47421af32a8a989326256c196033c9717c5f86996fbf4401d95c2e93483"
+  },
   "kbv.all.st#1.48.0": {
    "url": "https://packages.fhir.org/kbv.all.st/1.48.0",
    "inhalt_sha256": "9e5ccdf1c841b23b2c83e9d9eb7281260bcf308bf7bc6cd66c7731b1cbf38211"
+  },
+  "kbv.basis#1.8.0": {
+   "url": "https://packages.fhir.org/kbv.basis/1.8.0",
+   "inhalt_sha256": "efd5919785f5b2bddfcf12db401fde61e8875f853b35a3877d600db2cfe8ef88"
+  },
+  "kbv.mio.laborbefund#1.0.0-update": {
+   "url": "https://packages.fhir.org/kbv.mio.laborbefund/1.0.0-update",
+   "inhalt_sha256": "8b5bc065bef634e93534df47855f64c1eba81f0f1862f781278938e54a26494a"
   },
   "xtehr.eu.ehds.models#1.0.0": {
    "url": "https://packages.fhir.org/xtehr.eu.ehds.models/1.0.0",
