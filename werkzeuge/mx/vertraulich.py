@@ -2,8 +2,9 @@
 
 Eingebaute Muster (verraten nichts über das Projekt): lokale Pfade, Ordner außerhalb des Repositorys,
 Schlüssel und Token. Projektbezogene Muster gehören selbst nicht ins Repository: Umgebungsvariable
-VERTRAULICH_MUSTER (im Workflow aus einer Repository-Variable) oder die von Git ignorierte Datei
-`.vertraulich-muster` — ein regulärer Ausdruck je Zeile, ohne Groß-/Kleinschreibung, # für Kommentare.
+VERTRAULICH_MUSTER (im Workflow aus einem Repository-Secret, damit der Wert nicht im Log steht; leer = Fehler)
+oder die von Git ignorierte Datei `.vertraulich-muster` — ein regulärer Ausdruck je Zeile, ohne Groß-/Kleinschreibung,
+# für Kommentare.
 Geprüft werden alle Dateien, die Git verfolgt oder die zum Commit vorgemerkt sind.
 """
 import os
@@ -28,6 +29,9 @@ def _projektmuster():
     if text is None:
         datei = WURZEL / '.vertraulich-muster'
         text = datei.read_text(encoding='utf-8') if datei.exists() else ''
+    elif not text.strip():
+        # gesetzt, aber leer: in der CI fehlt das Secret — nicht stillschweigend ohne Projektmuster prüfen
+        raise SystemExit('VERTRAULICH_MUSTER ist leer — Secret VERTRAULICH_MUSTER im Repository anlegen')
     return [('Projektmuster', re.compile(z.strip(), re.I)) for z in text.splitlines() if z.strip() and not z.strip().startswith('#')]
 
 

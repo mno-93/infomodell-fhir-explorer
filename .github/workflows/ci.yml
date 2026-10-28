@@ -32,9 +32,10 @@ jobs:
           restore-keys: fhir-pakete-v2-
       - name: Pakete holen und gegen die Sperrdatei prüfen
         run: python3 -I werkzeuge/mx.py holen
+      # Projektmuster als Secret: GitHub zeigt den Wert im Log nur maskiert (eine Variable stünde im Klartext im env-Block)
       - name: Vertraulichkeit
         env:
-          VERTRAULICH_MUSTER: ${{ vars.VERTRAULICH_MUSTER }}
+          VERTRAULICH_MUSTER: ${{ secrets.VERTRAULICH_MUSTER }}
         run: python3 -I werkzeuge/mx.py vertraulich
       - name: Tests
         run: python3 -I -m unittest discover -s tests -v
