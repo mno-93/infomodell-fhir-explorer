@@ -1,0 +1,26 @@
+{
+ "projekt": "patient-summary",
+ "beispiele": {
+  "hoffmann": [
+   {
+    "element": "MedicationRequest · identifier.value",
+    "anzahl": 5,
+    "werte": [
+     "emp-h-med-1",
+     "emp-h-med-3",
+     "emp-h-med-4"
+    ]
+   }
+  ],
+  "yildiz": [
+   {
+    "element": "MedicationRequest · identifier.value",
+    "anzahl": 2,
+    "werte": [
+     "emp-y-1",
+     "emp-k-mvazzci2-52"
+    ]
+   }
+  ]
+ }
+}

@@ -224,6 +224,15 @@ Werte ohne spezifisches Element im Informationsmodell (ohne url, reference, syst
 - `ps-immunization-medication#Medication.code.text` (1×)
 - `ps-immunization-medication#Medication.extension:isVaccine.valueBoolean` (1×)
 
+## Anzeige für Anwender:innen
+
+Stand: `berichte/impfung.anzeige.json`, geschrieben von `python3 -I werkzeuge/mx.py anzeige impfung`. Gezählt werden inhaltliche Werte der Beispiele, die weder die Anwenderansicht noch eine Dokumentfassung zeigt; auf der Seite stehen sie unter „Weitere Angaben aus der Instanz“. Technisch und nicht gezählt: Kennungen und Metadaten, Systeme, Versionen, URLs, Erzähltext, UUID-Kennungen, Verweise mit Ziel im Beispiel.
+
+| Beispiel | nicht angezeigte Werte | in Elementen |
+|---|---:|---:|
+| Erstdokumentation — zwei Impfungen, Mustermann | 0 | 0 |
+| Nachtrag aus einem Papier-Impfpass — Mustermann | 0 | 0 |
+
 ## FHIR-Validierung (HL7 Validator 7.0.1)
 
 Stand: `berichte/impfung.validierung.json`, geschrieben von `python3 -I werkzeuge/mx.py validieren impfung`; FHIR 4.0.1, Optionen `-tx n/a -locale en-US` (ohne Terminologieserver).

@@ -40,6 +40,7 @@ Weitere Befehle:
 |---|---|
 | `mx.py pruefen` | belegte Elemente aller Beispiele gegen die Profile auflösen; Exit-Code ≠ 0 bei Befund |
 | `mx.py validieren` | Beispieldateien mit dem HL7 FHIR Validator prüfen (Pakete und begründete Ausnahmen je Projekt; ohne Netz, nur mit dem gesperrten Paketbestand aus `holen`); Ergebnis nach `berichte/<projekt>.validierung.json` — einchecken |
+| `mx.py anzeige` | gebaute Seiten im Browser ohne Fenster (Chrome, Chromium oder Edge) ausführen: welche Werte der Beispiele weder Anwenderansicht noch Dokument zeigen; Ergebnis nach `berichte/<projekt>.anzeige.json` — einchecken. Auf der Seite stehen diese Werte unter „Weitere Angaben aus der Instanz“ |
 | `mx.py fsh <projekt>` | lokales Paket eines Projekts aus FSH neu erzeugen (SUSHI nötig, siehe [`docs/NEUES_PROJEKT.md`](docs/NEUES_PROJEKT.md#lokale-pakete-profile-im-entwurf)) |
 | `mx.py vertraulich` | versionierte Dateien gegen eingebaute und projektbezogene Muster prüfen |
 | `mx.py holen --aktualisieren` | Sperrdatei neu schreiben, Quellen neu laden — nur bewusst, Änderung prüfen und einchecken. Neue Pakete und Quellen nimmt schon `holen` auf, ohne die vorhandenen neu zu laden |

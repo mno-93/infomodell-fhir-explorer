@@ -618,6 +618,232 @@ Werte ohne spezifisches Element im Informationsmodell (ohne url, reference, syst
 - `ti-practitioner-role#PractitionerRole.code.coding.code` (1×)
 - `ti-practitioner-role#PractitionerRole.code.coding.display` (1×)
 
+## Anzeige für Anwender:innen
+
+Stand: `berichte/laborbefund.anzeige.json`, geschrieben von `python3 -I werkzeuge/mx.py anzeige laborbefund`. Gezählt werden inhaltliche Werte der Beispiele, die weder die Anwenderansicht noch eine Dokumentfassung zeigt; auf der Seite stehen sie unter „Weitere Angaben aus der Instanz“. Technisch und nicht gezählt: Kennungen und Metadaten, Systeme, Versionen, URLs, Erzähltext, UUID-Kennungen, Verweise mit Ziel im Beispiel.
+
+| Beispiel | nicht angezeigte Werte | in Elementen |
+|---|---:|---:|
+| Nierenfunktion und HbA1c — Hoffmann, 12.08.2026 | 0 | 0 |
+| Vorbefund — Hoffmann, 18.03.2026 | 0 | 0 |
+| Schilddrüse (TSH) — Yildiz, 02.07.2026 | 0 | 0 |
+| IG-Beispiel mit Probe, Gerät und Anhang | 152 | 94 |
+| IG-Beispiel, zweite Composition | 150 | 87 |
+| Fallbeispiel 1 nach MIO Laborbefund — Hansen, 15.11.2021 | 22 | 17 |
+
+### Nicht angezeigt — IG-Beispiel mit Probe, Gerät und Anhang
+
+| Element | Anzahl | Werte (Auswahl) |
+|---|---:|---|
+| `BodyStructure · extension.extension.extension.valueCodeableConcept.coding.code` | 1 | 260330005 |
+| `BodyStructure · extension.extension.extension.valueCodeableConcept.coding.display` | 1 | 3 o'clock position |
+| `BodyStructure · extension.extension.extension.valueCodeableConcept.text` | 1 | test |
+| `BodyStructure · extension.extension.valueCodeableConcept.coding.code` | 3 | 90432007 · 7771000 · 46053002 |
+| `BodyStructure · extension.extension.valueCodeableConcept.coding.display` | 3 | Structure of mucous membrane of nasopharynx · Left · Distal |
+| `BodyStructure · extension.extension.valueCodeableConcept.text` | 3 | test |
+| `BodyStructure · morphology.coding.code` | 1 | 75910000 |
+| `BodyStructure · morphology.coding.display` | 1 | Congenital hypersegmentation |
+| `BodyStructure · morphology.text` | 1 | test |
+| `Condition · clinicalStatus.coding.code` | 1 | active |
+| `Condition · clinicalStatus.coding.display` | 1 | Active |
+| `Condition · verificationStatus.coding.code` | 1 | provisional |
+| `Condition · verificationStatus.coding.display` | 1 | Provisional |
+| `Device · deviceName.name` | 2 | Test-Name · Test Model |
+| `Device · deviceName.type` | 2 | manufacturer-name · model-name |
+| `Device · distinctIdentifier` | 3 | example |
+| `Device · expirationDate` | 3 | 01.04.2026 16:55 · 15.11.2021 16:55 |
+| `Device · identifier.type.coding.code` | 3 | UDI |
+| `Device · identifier.type.coding.display` | 3 | Universal Device Identifier |
+| `Device · identifier.value` | 3 | 123456 · 345675 |
+| `Device · lotNumber` | 3 | 12345 |
+| `Device · manufactureDate` | 3 | 01.04.2024 16:55 · 15.11.2021 16:55 |
+| `Device · modelNumber` | 3 | 123456789 · 56789 |
+| `Device · note.text` | 3 | test |
+| `Device · serialNumber` | 3 | 9654537 · 987654 · 12345 |
+| `Device · type.coding.code` | 3 | 8407004 · 434711009 · 30234008 |
+| `Device · type.coding.display` | 3 | Bile collection bag · Specimen container · Medical laboratory analyzer |
+| `Device · type.text` | 3 | Medizinisches Laboranalysegerät · Probenbehälter |
+| `Device · udiCarrier.deviceIdentifier` | 3 | example |
+| `Device · version.value` | 2 | v1 |
+| `DeviceDefinition · manufacturerString` | 3 | Herstellende Einrichtung |
+| `DeviceDefinition · type.coding.code` | 3 | 371882005 · 434711009 · 30234008 |
+| `DeviceDefinition · type.coding.display` | 3 | Device used · Specimen container · Medical laboratory analyzer |
+| `DocumentReference · category.coding.code` | 1 | ADM |
+| `DocumentReference · category.coding.display` | 1 | Administratives Dokument |
+| `DocumentReference · category.text` | 1 | test |
+| `DocumentReference · content.attachment.contentType` | 1 | application/pdf |
+| `DocumentReference · content.attachment.creation` | 1 | 06.05.2022 |
+| `DocumentReference · content.attachment.data` | 1 | dGVzdA== |
+| `DocumentReference · content.attachment.title` | 1 | Anhang |
+| `DocumentReference · status` | 1 | current |
+| `DocumentReference · type.coding.code` | 1 | PATI |
+| `DocumentReference · type.coding.display` | 1 | Patienteninformationen |
+| `DocumentReference · type.text` | 1 | test |
+| `Observation · extension.valueBoolean` | 3 | ja |
+| `Observation · extension.valueCodeableConcept.coding.code` | 1 | haemato |
+| `Observation · extension.valueCodeableConcept.coding.display` | 1 | Hämatologie |
+| `Observation · extension.valueCodeableConcept.text` | 1 | Hämatologie |
+| `Observation · extension.valueDecimal` | 1 | 2 |
+| `Observation · identifier.type.coding.code` | 2 | OBI · UDI |
+| `Observation · identifier.type.coding.display` | 2 | Observation Instance Identifier · Universal Device Identifier |
+| `Observation · identifier.value` | 2 | 123456 |
+| `Organization · contact.address.city` | 1 | Berlin |
+| `Organization · contact.address.country` | 1 | D |
+| `Organization · contact.address.line` | 2 | Muster-Allee 42 · Neukölln |
+| `Organization · contact.address.postalCode` | 1 | 9132 |
+| `Organization · contact.address.type` | 1 | both |
+| `Organization · contact.name.family` | 1 | Ehrlich |
+| `Organization · contact.name.given` | 1 | Marianne |
+| `Organization · contact.name.text` | 1 | Frau Marianne Ehrlich |
+| `Organization · contact.name.use` | 1 | official |
+| `Organization · contact.purpose.coding.code` | 1 | PATINF |
+| `Organization · contact.purpose.coding.display` | 1 | Patient |
+| `Organization · contact.telecom.value` | 1 | 0173777 |
+| `Organization · identifier.type.coding.code` | 4 | XX · BSNR · KZVA |
+| `Organization · identifier.value` | 4 | 123456789 · 9-2.58.00000040 |
+| `Organization · telecom.value` | 1 | 0173555 |
+| `Organization · type.coding.code` | 1 | 1.2.276.0.76.4.54 |
+| `Organization · type.coding.display` | 1 | Öffentliche Apotheke |
+| `Patient · name._family.extension.valueString` | 1 | Blohm |
+| `Patient · name.family` | 1 | Blohm |
+| `Patient · name.use` | 1 | maiden |
+| `Practitioner · gender` | 1 | other |
+| `Practitioner · identifier.type.coding.code` | 2 | LANR · PRN |
+| `Practitioner · identifier.type.coding.display` | 2 | Lifelong physician number · Provider number |
+| `Practitioner · identifier.value` | 2 | 123456789 · 1-1.58.00000056 |
+| `Practitioner · qualification.code.coding.code` | 1 | 26369006 |
+| `Practitioner · qualification.code.coding.display` | 1 | Public health nurse |
+| `Practitioner · telecom.value` | 1 | 12123455 |
+| `ServiceRequest · identifier.type.coding.code` | 1 | NI |
+| `ServiceRequest · identifier.type.coding.display` | 1 | Nachforderungsidentifikation |
+| `ServiceRequest · identifier.value` | 1 | 20211115-127 |
+| `Specimen · collection.collectedDateTime` | 1 | 03.05.2023 |
+| `Specimen · container.specimenQuantity.code` | 1 | ms |
+| `Specimen · container.specimenQuantity.unit` | 1 | ms |
+| `Specimen · container.specimenQuantity.value` | 1 | 20 |
+| `Specimen · identifier.value` | 1 | Test Specimen identifier |
+| `Specimen · receivedTime` | 1 | 15.11.2021 16:55 |
+| `Specimen · status` | 1 | available |
+| `Specimen · type.coding.code` | 1 | 119376003 |
+| `Specimen · type.coding.display` | 1 | Tissue specimen |
+| `Substance · code.coding.code` | 1 | 69519002 |
+| `Substance · code.coding.display` | 1 | Edetic acid |
+| `Substance · code.text` | 1 | test |
+
+### Nicht angezeigt — IG-Beispiel, zweite Composition
+
+| Element | Anzahl | Werte (Auswahl) |
+|---|---:|---|
+| `BodyStructure · extension.extension.extension.valueCodeableConcept.coding.code` | 1 | 260330005 |
+| `BodyStructure · extension.extension.extension.valueCodeableConcept.coding.display` | 1 | 3 o'clock position |
+| `BodyStructure · extension.extension.extension.valueCodeableConcept.text` | 1 | test |
+| `BodyStructure · extension.extension.valueCodeableConcept.coding.code` | 3 | 90432007 · 7771000 · 46053002 |
+| `BodyStructure · extension.extension.valueCodeableConcept.coding.display` | 3 | Structure of mucous membrane of nasopharynx · Left · Distal |
+| `BodyStructure · extension.extension.valueCodeableConcept.text` | 3 | test |
+| `BodyStructure · morphology.coding.code` | 1 | 75910000 |
+| `BodyStructure · morphology.coding.display` | 1 | Congenital hypersegmentation |
+| `BodyStructure · morphology.text` | 1 | test |
+| `Device · deviceName.name` | 2 | Test-Name · Test Model |
+| `Device · deviceName.type` | 2 | manufacturer-name · model-name |
+| `Device · distinctIdentifier` | 3 | example |
+| `Device · expirationDate` | 3 | 15.11.2021 16:55 · 01.04.2026 16:55 |
+| `Device · identifier.type.coding.code` | 3 | UDI |
+| `Device · identifier.type.coding.display` | 3 | Universal Device Identifier |
+| `Device · identifier.value` | 3 | 345675 · 123456 |
+| `Device · lotNumber` | 3 | 12345 |
+| `Device · manufactureDate` | 3 | 15.11.2021 16:55 · 01.04.2024 16:55 |
+| `Device · modelNumber` | 3 | 123456789 · 56789 |
+| `Device · note.text` | 3 | test |
+| `Device · serialNumber` | 3 | 12345 · 9654537 · 987654 |
+| `Device · type.coding.code` | 3 | 30234008 · 8407004 · 434711009 |
+| `Device · type.coding.display` | 3 | Medical laboratory analyzer · Bile collection bag · Specimen container |
+| `Device · type.text` | 3 | Medizinisches Laboranalysegerät · Probenbehälter |
+| `Device · udiCarrier.deviceIdentifier` | 3 | example |
+| `Device · version.value` | 2 | v1 |
+| `DeviceDefinition · manufacturerString` | 3 | Herstellende Einrichtung |
+| `DeviceDefinition · type.coding.code` | 3 | 30234008 · 371882005 · 434711009 |
+| `DeviceDefinition · type.coding.display` | 3 | Medical laboratory analyzer · Device used · Specimen container |
+| `Observation · _effectiveDateTime.extension.valueCode` | 1 | not-permitted |
+| `Observation · category.coding.code` | 2 | laboratory |
+| `Observation · category.coding.display` | 2 | Laboratory |
+| `Observation · code.coding.code` | 2 | laboruntersuchungsgruppe · 98981-4 |
+| `Observation · code.coding.display` | 2 | Laboruntersuchungsgruppe · Urate [Mass/volume] in Blood |
+| `Observation · effectiveDateTime` | 1 | 15.11.2021 11:30 |
+| `Observation · extension.valueBoolean` | 3 | ja |
+| `Observation · extension.valueCodeableConcept.coding.code` | 1 | haemato |
+| `Observation · extension.valueCodeableConcept.coding.display` | 1 | Hämatologie |
+| `Observation · extension.valueCodeableConcept.text` | 1 | Hämatologie |
+| `Observation · extension.valueDecimal` | 1 | 2 |
+| `Observation · identifier.type.coding.code` | 2 | OBI · UDI |
+| `Observation · identifier.type.coding.display` | 2 | Observation Instance Identifier · Universal Device Identifier |
+| `Observation · identifier.value` | 2 | 123456 |
+| `Observation · issued` | 1 | 15.11.2021 11:30 |
+| `Observation · status` | 2 | final |
+| `Observation · valueQuantity.code` | 1 | mg/dL |
+| `Observation · valueQuantity.unit` | 1 | mg/dL |
+| `Observation · valueQuantity.value` | 1 | 6,5 |
+| `Organization · contact.address.city` | 1 | Berlin |
+| `Organization · contact.address.country` | 1 | D |
+| `Organization · contact.address.line` | 2 | Muster-Allee 42 · Neukölln |
+| `Organization · contact.address.postalCode` | 1 | 9132 |
+| `Organization · contact.address.type` | 1 | both |
+| `Organization · contact.name.family` | 1 | Ehrlich |
+| `Organization · contact.name.given` | 1 | Marianne |
+| `Organization · contact.name.text` | 1 | Frau Marianne Ehrlich |
+| `Organization · contact.name.use` | 1 | official |
+| `Organization · contact.purpose.coding.code` | 1 | PATINF |
+| `Organization · contact.purpose.coding.display` | 1 | Patient |
+| `Organization · contact.telecom.value` | 1 | 0173777 |
+| `Organization · identifier.type.coding.code` | 4 | XX · BSNR · KZVA |
+| `Organization · identifier.value` | 4 | 123456789 · 9-2.58.00000040 |
+| `Organization · telecom.value` | 1 | 0173555 |
+| `Organization · type.coding.code` | 1 | 1.2.276.0.76.4.54 |
+| `Organization · type.coding.display` | 1 | Öffentliche Apotheke |
+| `Patient · name._family.extension.valueString` | 1 | Blohm |
+| `Patient · name.family` | 1 | Blohm |
+| `Patient · name.use` | 1 | maiden |
+| `Practitioner · gender` | 1 | other |
+| `Practitioner · identifier.type.coding.code` | 2 | LANR · PRN |
+| `Practitioner · identifier.type.coding.display` | 2 | Lifelong physician number · Provider number |
+| `Practitioner · identifier.value` | 2 | 123456789 · 1-1.58.00000056 |
+| `Practitioner · qualification.code.coding.code` | 1 | 26369006 |
+| `Practitioner · qualification.code.coding.display` | 1 | Public health nurse |
+| `Practitioner · telecom.value` | 1 | 12123455 |
+| `Specimen · collection.collectedDateTime` | 1 | 03.05.2023 |
+| `Specimen · container.specimenQuantity.code` | 1 | ms |
+| `Specimen · container.specimenQuantity.unit` | 1 | ms |
+| `Specimen · container.specimenQuantity.value` | 1 | 20 |
+| `Specimen · identifier.value` | 1 | Test Specimen identifier |
+| `Specimen · receivedTime` | 1 | 15.11.2021 16:55 |
+| `Specimen · status` | 1 | available |
+| `Specimen · type.coding.code` | 1 | 119376003 |
+| `Specimen · type.coding.display` | 1 | Tissue specimen |
+| `Substance · code.coding.code` | 1 | 69519002 |
+| `Substance · code.coding.display` | 1 | Edetic acid |
+| `Substance · code.text` | 1 | test |
+
+### Nicht angezeigt — Fallbeispiel 1 nach MIO Laborbefund — Hansen, 15.11.2021
+
+| Element | Anzahl | Werte (Auswahl) |
+|---|---:|---|
+| `Organization · identifier.type.coding.code` | 1 | BSNR |
+| `Organization · identifier.type.coding.display` | 1 | Primary physician office number |
+| `Organization · identifier.value` | 1 | 561234500 |
+| `Organization · telecom.value` | 3 | 0511-1234567-0 · 0511-1234567-888 · kontakt@Hannover-MVZ-Musterlabor.de |
+| `Patient · telecom.value` | 1 | 0511 5566778 |
+| `Practitioner · gender` | 2 | male · female |
+| `Practitioner · identifier.type.coding.code` | 1 | LANR |
+| `Practitioner · identifier.type.coding.display` | 1 | Lifelong physician number |
+| `Practitioner · identifier.value` | 1 | 987654321 |
+| `Practitioner · qualification.code.coding.code` | 2 | 171001 · 141111 |
+| `Practitioner · qualification.code.coding.display` | 2 | FA Laboratoriumsmedizin · FA Innere Medizin und Endokrinologie und Diabetologie |
+| `PractitionerRole · code.coding.code` | 1 | AG |
+| `PractitionerRole · code.coding.display` | 1 | Ärztliche Geschäftsführung |
+| `Provenance · activity.coding.code` | 1 | VRF |
+| `Provenance · activity.coding.display` | 1 | verifier |
+| `Provenance · occurredDateTime` | 1 | 15.11.2021 16:55 |
+| `Provenance · recorded` | 1 | 15.11.2021 16:55 |
+
 ## FHIR-Validierung (HL7 Validator 7.0.1)
 
 Stand: `berichte/laborbefund.validierung.json`, geschrieben von `python3 -I werkzeuge/mx.py validieren laborbefund`; FHIR 4.0.1, Optionen `-tx n/a -locale en-US -allow-example-urls true -extension https://example.org/` (ohne Terminologieserver).

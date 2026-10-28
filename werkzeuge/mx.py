@@ -6,6 +6,8 @@
   python3 werkzeuge/mx.py pruefen [projekt …]       Konfiguration und Strukturbefunde prüfen (Exit-Code ≠ 0 bei Befund)
   python3 werkzeuge/mx.py validieren [projekt …]    Beispieldateien mit dem HL7 FHIR Validator prüfen (Java nötig),
                                                  Ergebnis nach berichte/<projekt>.validierung.json
+  python3 werkzeuge/mx.py anzeige [projekt …]       Werte der Beispiele, die weder Anwenderansicht noch Dokument zeigen
+                                                 (gebaute Seiten im Browser ohne Fenster), nach berichte/<projekt>.anzeige.json
   python3 werkzeuge/mx.py fsh <projekt>             lokales Paket des Projekts aus FSH neu erzeugen (SUSHI nötig)
   python3 werkzeuge/mx.py vertraulich               versionierte Dateien gegen .vertraulich-muster prüfen
 
@@ -78,6 +80,11 @@ def validieren(args):
     sys.exit(v.alle(args.projekte or alle_projekte()))
 
 
+def anzeige(args):
+    from mx import anzeige as a
+    sys.exit(a.alle(args.projekte or alle_projekte()))
+
+
 def fsh(args):
     from mx import fsh as f
     sys.exit(f.bauen(args.projekt))
@@ -94,7 +101,7 @@ def main():
     h = sub.add_parser('holen')
     h.add_argument('--aktualisieren', action='store_true', help='Sperrdatei neu schreiben, Quellen neu laden')
     h.set_defaults(f=holen)
-    for name, f in (('bauen', bauen_), ('pruefen', pruefen), ('validieren', validieren)):
+    for name, f in (('bauen', bauen_), ('pruefen', pruefen), ('validieren', validieren), ('anzeige', anzeige)):
         s = sub.add_parser(name)
         s.add_argument('projekte', nargs='*')
         s.set_defaults(f=f)

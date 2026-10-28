@@ -1,0 +1,1467 @@
+{
+ "projekt": "laborbefund",
+ "beispiele": {
+  "hoffmann-2026-08-12": [],
+  "hoffmann-2026-03-18": [],
+  "yildiz-2026-07-02": [],
+  "ig-cdfb127b": [
+   {
+    "element": "BodyStructure · extension.extension.extension.valueCodeableConcept.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "260330005"
+    ]
+   },
+   {
+    "element": "BodyStructure · extension.extension.extension.valueCodeableConcept.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "3 o'clock position"
+    ]
+   },
+   {
+    "element": "BodyStructure · extension.extension.extension.valueCodeableConcept.text",
+    "anzahl": 1,
+    "werte": [
+     "test"
+    ]
+   },
+   {
+    "element": "BodyStructure · extension.extension.valueCodeableConcept.coding.code",
+    "anzahl": 3,
+    "werte": [
+     "90432007",
+     "7771000",
+     "46053002"
+    ]
+   },
+   {
+    "element": "BodyStructure · extension.extension.valueCodeableConcept.coding.display",
+    "anzahl": 3,
+    "werte": [
+     "Structure of mucous membrane of nasopharynx",
+     "Left",
+     "Distal"
+    ]
+   },
+   {
+    "element": "BodyStructure · extension.extension.valueCodeableConcept.text",
+    "anzahl": 3,
+    "werte": [
+     "test"
+    ]
+   },
+   {
+    "element": "BodyStructure · morphology.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "75910000"
+    ]
+   },
+   {
+    "element": "BodyStructure · morphology.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Congenital hypersegmentation"
+    ]
+   },
+   {
+    "element": "BodyStructure · morphology.text",
+    "anzahl": 1,
+    "werte": [
+     "test"
+    ]
+   },
+   {
+    "element": "Condition · clinicalStatus.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "active"
+    ]
+   },
+   {
+    "element": "Condition · clinicalStatus.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Active"
+    ]
+   },
+   {
+    "element": "Condition · verificationStatus.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "provisional"
+    ]
+   },
+   {
+    "element": "Condition · verificationStatus.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Provisional"
+    ]
+   },
+   {
+    "element": "Device · deviceName.name",
+    "anzahl": 2,
+    "werte": [
+     "Test-Name",
+     "Test Model"
+    ]
+   },
+   {
+    "element": "Device · deviceName.type",
+    "anzahl": 2,
+    "werte": [
+     "manufacturer-name",
+     "model-name"
+    ]
+   },
+   {
+    "element": "Device · distinctIdentifier",
+    "anzahl": 3,
+    "werte": [
+     "example"
+    ]
+   },
+   {
+    "element": "Device · expirationDate",
+    "anzahl": 3,
+    "werte": [
+     "01.04.2026 16:55",
+     "15.11.2021 16:55"
+    ]
+   },
+   {
+    "element": "Device · identifier.type.coding.code",
+    "anzahl": 3,
+    "werte": [
+     "UDI"
+    ]
+   },
+   {
+    "element": "Device · identifier.type.coding.display",
+    "anzahl": 3,
+    "werte": [
+     "Universal Device Identifier"
+    ]
+   },
+   {
+    "element": "Device · identifier.value",
+    "anzahl": 3,
+    "werte": [
+     "123456",
+     "345675"
+    ]
+   },
+   {
+    "element": "Device · lotNumber",
+    "anzahl": 3,
+    "werte": [
+     "12345"
+    ]
+   },
+   {
+    "element": "Device · manufactureDate",
+    "anzahl": 3,
+    "werte": [
+     "01.04.2024 16:55",
+     "15.11.2021 16:55"
+    ]
+   },
+   {
+    "element": "Device · modelNumber",
+    "anzahl": 3,
+    "werte": [
+     "123456789",
+     "56789"
+    ]
+   },
+   {
+    "element": "Device · note.text",
+    "anzahl": 3,
+    "werte": [
+     "test"
+    ]
+   },
+   {
+    "element": "Device · serialNumber",
+    "anzahl": 3,
+    "werte": [
+     "9654537",
+     "987654",
+     "12345"
+    ]
+   },
+   {
+    "element": "Device · type.coding.code",
+    "anzahl": 3,
+    "werte": [
+     "8407004",
+     "434711009",
+     "30234008"
+    ]
+   },
+   {
+    "element": "Device · type.coding.display",
+    "anzahl": 3,
+    "werte": [
+     "Bile collection bag",
+     "Specimen container",
+     "Medical laboratory analyzer"
+    ]
+   },
+   {
+    "element": "Device · type.text",
+    "anzahl": 3,
+    "werte": [
+     "Medizinisches Laboranalysegerät",
+     "Probenbehälter"
+    ]
+   },
+   {
+    "element": "Device · udiCarrier.deviceIdentifier",
+    "anzahl": 3,
+    "werte": [
+     "example"
+    ]
+   },
+   {
+    "element": "Device · version.value",
+    "anzahl": 2,
+    "werte": [
+     "v1"
+    ]
+   },
+   {
+    "element": "DeviceDefinition · manufacturerString",
+    "anzahl": 3,
+    "werte": [
+     "Herstellende Einrichtung"
+    ]
+   },
+   {
+    "element": "DeviceDefinition · type.coding.code",
+    "anzahl": 3,
+    "werte": [
+     "371882005",
+     "434711009",
+     "30234008"
+    ]
+   },
+   {
+    "element": "DeviceDefinition · type.coding.display",
+    "anzahl": 3,
+    "werte": [
+     "Device used",
+     "Specimen container",
+     "Medical laboratory analyzer"
+    ]
+   },
+   {
+    "element": "DocumentReference · category.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "ADM"
+    ]
+   },
+   {
+    "element": "DocumentReference · category.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Administratives Dokument"
+    ]
+   },
+   {
+    "element": "DocumentReference · category.text",
+    "anzahl": 1,
+    "werte": [
+     "test"
+    ]
+   },
+   {
+    "element": "DocumentReference · content.attachment.contentType",
+    "anzahl": 1,
+    "werte": [
+     "application/pdf"
+    ]
+   },
+   {
+    "element": "DocumentReference · content.attachment.creation",
+    "anzahl": 1,
+    "werte": [
+     "06.05.2022"
+    ]
+   },
+   {
+    "element": "DocumentReference · content.attachment.data",
+    "anzahl": 1,
+    "werte": [
+     "dGVzdA=="
+    ]
+   },
+   {
+    "element": "DocumentReference · content.attachment.title",
+    "anzahl": 1,
+    "werte": [
+     "Anhang"
+    ]
+   },
+   {
+    "element": "DocumentReference · status",
+    "anzahl": 1,
+    "werte": [
+     "current"
+    ]
+   },
+   {
+    "element": "DocumentReference · type.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "PATI"
+    ]
+   },
+   {
+    "element": "DocumentReference · type.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Patienteninformationen"
+    ]
+   },
+   {
+    "element": "DocumentReference · type.text",
+    "anzahl": 1,
+    "werte": [
+     "test"
+    ]
+   },
+   {
+    "element": "Observation · extension.valueBoolean",
+    "anzahl": 3,
+    "werte": [
+     "ja"
+    ]
+   },
+   {
+    "element": "Observation · extension.valueCodeableConcept.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "haemato"
+    ]
+   },
+   {
+    "element": "Observation · extension.valueCodeableConcept.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Hämatologie"
+    ]
+   },
+   {
+    "element": "Observation · extension.valueCodeableConcept.text",
+    "anzahl": 1,
+    "werte": [
+     "Hämatologie"
+    ]
+   },
+   {
+    "element": "Observation · extension.valueDecimal",
+    "anzahl": 1,
+    "werte": [
+     "2"
+    ]
+   },
+   {
+    "element": "Observation · identifier.type.coding.code",
+    "anzahl": 2,
+    "werte": [
+     "OBI",
+     "UDI"
+    ]
+   },
+   {
+    "element": "Observation · identifier.type.coding.display",
+    "anzahl": 2,
+    "werte": [
+     "Observation Instance Identifier",
+     "Universal Device Identifier"
+    ]
+   },
+   {
+    "element": "Observation · identifier.value",
+    "anzahl": 2,
+    "werte": [
+     "123456"
+    ]
+   },
+   {
+    "element": "Organization · contact.address.city",
+    "anzahl": 1,
+    "werte": [
+     "Berlin"
+    ]
+   },
+   {
+    "element": "Organization · contact.address.country",
+    "anzahl": 1,
+    "werte": [
+     "D"
+    ]
+   },
+   {
+    "element": "Organization · contact.address.line",
+    "anzahl": 2,
+    "werte": [
+     "Muster-Allee 42",
+     "Neukölln"
+    ]
+   },
+   {
+    "element": "Organization · contact.address.postalCode",
+    "anzahl": 1,
+    "werte": [
+     "9132"
+    ]
+   },
+   {
+    "element": "Organization · contact.address.type",
+    "anzahl": 1,
+    "werte": [
+     "both"
+    ]
+   },
+   {
+    "element": "Organization · contact.name.family",
+    "anzahl": 1,
+    "werte": [
+     "Ehrlich"
+    ]
+   },
+   {
+    "element": "Organization · contact.name.given",
+    "anzahl": 1,
+    "werte": [
+     "Marianne"
+    ]
+   },
+   {
+    "element": "Organization · contact.name.text",
+    "anzahl": 1,
+    "werte": [
+     "Frau Marianne Ehrlich"
+    ]
+   },
+   {
+    "element": "Organization · contact.name.use",
+    "anzahl": 1,
+    "werte": [
+     "official"
+    ]
+   },
+   {
+    "element": "Organization · contact.purpose.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "PATINF"
+    ]
+   },
+   {
+    "element": "Organization · contact.purpose.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Patient"
+    ]
+   },
+   {
+    "element": "Organization · contact.telecom.value",
+    "anzahl": 1,
+    "werte": [
+     "0173777"
+    ]
+   },
+   {
+    "element": "Organization · identifier.type.coding.code",
+    "anzahl": 4,
+    "werte": [
+     "XX",
+     "BSNR",
+     "KZVA"
+    ]
+   },
+   {
+    "element": "Organization · identifier.value",
+    "anzahl": 4,
+    "werte": [
+     "123456789",
+     "9-2.58.00000040"
+    ]
+   },
+   {
+    "element": "Organization · telecom.value",
+    "anzahl": 1,
+    "werte": [
+     "0173555"
+    ]
+   },
+   {
+    "element": "Organization · type.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "1.2.276.0.76.4.54"
+    ]
+   },
+   {
+    "element": "Organization · type.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Öffentliche Apotheke"
+    ]
+   },
+   {
+    "element": "Patient · name._family.extension.valueString",
+    "anzahl": 1,
+    "werte": [
+     "Blohm"
+    ]
+   },
+   {
+    "element": "Patient · name.family",
+    "anzahl": 1,
+    "werte": [
+     "Blohm"
+    ]
+   },
+   {
+    "element": "Patient · name.use",
+    "anzahl": 1,
+    "werte": [
+     "maiden"
+    ]
+   },
+   {
+    "element": "Practitioner · gender",
+    "anzahl": 1,
+    "werte": [
+     "other"
+    ]
+   },
+   {
+    "element": "Practitioner · identifier.type.coding.code",
+    "anzahl": 2,
+    "werte": [
+     "LANR",
+     "PRN"
+    ]
+   },
+   {
+    "element": "Practitioner · identifier.type.coding.display",
+    "anzahl": 2,
+    "werte": [
+     "Lifelong physician number",
+     "Provider number"
+    ]
+   },
+   {
+    "element": "Practitioner · identifier.value",
+    "anzahl": 2,
+    "werte": [
+     "123456789",
+     "1-1.58.00000056"
+    ]
+   },
+   {
+    "element": "Practitioner · qualification.code.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "26369006"
+    ]
+   },
+   {
+    "element": "Practitioner · qualification.code.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Public health nurse"
+    ]
+   },
+   {
+    "element": "Practitioner · telecom.value",
+    "anzahl": 1,
+    "werte": [
+     "12123455"
+    ]
+   },
+   {
+    "element": "ServiceRequest · identifier.type.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "NI"
+    ]
+   },
+   {
+    "element": "ServiceRequest · identifier.type.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Nachforderungsidentifikation"
+    ]
+   },
+   {
+    "element": "ServiceRequest · identifier.value",
+    "anzahl": 1,
+    "werte": [
+     "20211115-127"
+    ]
+   },
+   {
+    "element": "Specimen · collection.collectedDateTime",
+    "anzahl": 1,
+    "werte": [
+     "03.05.2023"
+    ]
+   },
+   {
+    "element": "Specimen · container.specimenQuantity.code",
+    "anzahl": 1,
+    "werte": [
+     "ms"
+    ]
+   },
+   {
+    "element": "Specimen · container.specimenQuantity.unit",
+    "anzahl": 1,
+    "werte": [
+     "ms"
+    ]
+   },
+   {
+    "element": "Specimen · container.specimenQuantity.value",
+    "anzahl": 1,
+    "werte": [
+     "20"
+    ]
+   },
+   {
+    "element": "Specimen · identifier.value",
+    "anzahl": 1,
+    "werte": [
+     "Test Specimen identifier"
+    ]
+   },
+   {
+    "element": "Specimen · receivedTime",
+    "anzahl": 1,
+    "werte": [
+     "15.11.2021 16:55"
+    ]
+   },
+   {
+    "element": "Specimen · status",
+    "anzahl": 1,
+    "werte": [
+     "available"
+    ]
+   },
+   {
+    "element": "Specimen · type.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "119376003"
+    ]
+   },
+   {
+    "element": "Specimen · type.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Tissue specimen"
+    ]
+   },
+   {
+    "element": "Substance · code.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "69519002"
+    ]
+   },
+   {
+    "element": "Substance · code.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Edetic acid"
+    ]
+   },
+   {
+    "element": "Substance · code.text",
+    "anzahl": 1,
+    "werte": [
+     "test"
+    ]
+   }
+  ],
+  "ig-13c807c0": [
+   {
+    "element": "BodyStructure · extension.extension.extension.valueCodeableConcept.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "260330005"
+    ]
+   },
+   {
+    "element": "BodyStructure · extension.extension.extension.valueCodeableConcept.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "3 o'clock position"
+    ]
+   },
+   {
+    "element": "BodyStructure · extension.extension.extension.valueCodeableConcept.text",
+    "anzahl": 1,
+    "werte": [
+     "test"
+    ]
+   },
+   {
+    "element": "BodyStructure · extension.extension.valueCodeableConcept.coding.code",
+    "anzahl": 3,
+    "werte": [
+     "90432007",
+     "7771000",
+     "46053002"
+    ]
+   },
+   {
+    "element": "BodyStructure · extension.extension.valueCodeableConcept.coding.display",
+    "anzahl": 3,
+    "werte": [
+     "Structure of mucous membrane of nasopharynx",
+     "Left",
+     "Distal"
+    ]
+   },
+   {
+    "element": "BodyStructure · extension.extension.valueCodeableConcept.text",
+    "anzahl": 3,
+    "werte": [
+     "test"
+    ]
+   },
+   {
+    "element": "BodyStructure · morphology.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "75910000"
+    ]
+   },
+   {
+    "element": "BodyStructure · morphology.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Congenital hypersegmentation"
+    ]
+   },
+   {
+    "element": "BodyStructure · morphology.text",
+    "anzahl": 1,
+    "werte": [
+     "test"
+    ]
+   },
+   {
+    "element": "Device · deviceName.name",
+    "anzahl": 2,
+    "werte": [
+     "Test-Name",
+     "Test Model"
+    ]
+   },
+   {
+    "element": "Device · deviceName.type",
+    "anzahl": 2,
+    "werte": [
+     "manufacturer-name",
+     "model-name"
+    ]
+   },
+   {
+    "element": "Device · distinctIdentifier",
+    "anzahl": 3,
+    "werte": [
+     "example"
+    ]
+   },
+   {
+    "element": "Device · expirationDate",
+    "anzahl": 3,
+    "werte": [
+     "15.11.2021 16:55",
+     "01.04.2026 16:55"
+    ]
+   },
+   {
+    "element": "Device · identifier.type.coding.code",
+    "anzahl": 3,
+    "werte": [
+     "UDI"
+    ]
+   },
+   {
+    "element": "Device · identifier.type.coding.display",
+    "anzahl": 3,
+    "werte": [
+     "Universal Device Identifier"
+    ]
+   },
+   {
+    "element": "Device · identifier.value",
+    "anzahl": 3,
+    "werte": [
+     "345675",
+     "123456"
+    ]
+   },
+   {
+    "element": "Device · lotNumber",
+    "anzahl": 3,
+    "werte": [
+     "12345"
+    ]
+   },
+   {
+    "element": "Device · manufactureDate",
+    "anzahl": 3,
+    "werte": [
+     "15.11.2021 16:55",
+     "01.04.2024 16:55"
+    ]
+   },
+   {
+    "element": "Device · modelNumber",
+    "anzahl": 3,
+    "werte": [
+     "123456789",
+     "56789"
+    ]
+   },
+   {
+    "element": "Device · note.text",
+    "anzahl": 3,
+    "werte": [
+     "test"
+    ]
+   },
+   {
+    "element": "Device · serialNumber",
+    "anzahl": 3,
+    "werte": [
+     "12345",
+     "9654537",
+     "987654"
+    ]
+   },
+   {
+    "element": "Device · type.coding.code",
+    "anzahl": 3,
+    "werte": [
+     "30234008",
+     "8407004",
+     "434711009"
+    ]
+   },
+   {
+    "element": "Device · type.coding.display",
+    "anzahl": 3,
+    "werte": [
+     "Medical laboratory analyzer",
+     "Bile collection bag",
+     "Specimen container"
+    ]
+   },
+   {
+    "element": "Device · type.text",
+    "anzahl": 3,
+    "werte": [
+     "Medizinisches Laboranalysegerät",
+     "Probenbehälter"
+    ]
+   },
+   {
+    "element": "Device · udiCarrier.deviceIdentifier",
+    "anzahl": 3,
+    "werte": [
+     "example"
+    ]
+   },
+   {
+    "element": "Device · version.value",
+    "anzahl": 2,
+    "werte": [
+     "v1"
+    ]
+   },
+   {
+    "element": "DeviceDefinition · manufacturerString",
+    "anzahl": 3,
+    "werte": [
+     "Herstellende Einrichtung"
+    ]
+   },
+   {
+    "element": "DeviceDefinition · type.coding.code",
+    "anzahl": 3,
+    "werte": [
+     "30234008",
+     "371882005",
+     "434711009"
+    ]
+   },
+   {
+    "element": "DeviceDefinition · type.coding.display",
+    "anzahl": 3,
+    "werte": [
+     "Medical laboratory analyzer",
+     "Device used",
+     "Specimen container"
+    ]
+   },
+   {
+    "element": "Observation · _effectiveDateTime.extension.valueCode",
+    "anzahl": 1,
+    "werte": [
+     "not-permitted"
+    ]
+   },
+   {
+    "element": "Observation · category.coding.code",
+    "anzahl": 2,
+    "werte": [
+     "laboratory"
+    ]
+   },
+   {
+    "element": "Observation · category.coding.display",
+    "anzahl": 2,
+    "werte": [
+     "Laboratory"
+    ]
+   },
+   {
+    "element": "Observation · code.coding.code",
+    "anzahl": 2,
+    "werte": [
+     "laboruntersuchungsgruppe",
+     "98981-4"
+    ]
+   },
+   {
+    "element": "Observation · code.coding.display",
+    "anzahl": 2,
+    "werte": [
+     "Laboruntersuchungsgruppe",
+     "Urate [Mass/volume] in Blood"
+    ]
+   },
+   {
+    "element": "Observation · effectiveDateTime",
+    "anzahl": 1,
+    "werte": [
+     "15.11.2021 11:30"
+    ]
+   },
+   {
+    "element": "Observation · extension.valueBoolean",
+    "anzahl": 3,
+    "werte": [
+     "ja"
+    ]
+   },
+   {
+    "element": "Observation · extension.valueCodeableConcept.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "haemato"
+    ]
+   },
+   {
+    "element": "Observation · extension.valueCodeableConcept.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Hämatologie"
+    ]
+   },
+   {
+    "element": "Observation · extension.valueCodeableConcept.text",
+    "anzahl": 1,
+    "werte": [
+     "Hämatologie"
+    ]
+   },
+   {
+    "element": "Observation · extension.valueDecimal",
+    "anzahl": 1,
+    "werte": [
+     "2"
+    ]
+   },
+   {
+    "element": "Observation · identifier.type.coding.code",
+    "anzahl": 2,
+    "werte": [
+     "OBI",
+     "UDI"
+    ]
+   },
+   {
+    "element": "Observation · identifier.type.coding.display",
+    "anzahl": 2,
+    "werte": [
+     "Observation Instance Identifier",
+     "Universal Device Identifier"
+    ]
+   },
+   {
+    "element": "Observation · identifier.value",
+    "anzahl": 2,
+    "werte": [
+     "123456"
+    ]
+   },
+   {
+    "element": "Observation · issued",
+    "anzahl": 1,
+    "werte": [
+     "15.11.2021 11:30"
+    ]
+   },
+   {
+    "element": "Observation · status",
+    "anzahl": 2,
+    "werte": [
+     "final"
+    ]
+   },
+   {
+    "element": "Observation · valueQuantity.code",
+    "anzahl": 1,
+    "werte": [
+     "mg/dL"
+    ]
+   },
+   {
+    "element": "Observation · valueQuantity.unit",
+    "anzahl": 1,
+    "werte": [
+     "mg/dL"
+    ]
+   },
+   {
+    "element": "Observation · valueQuantity.value",
+    "anzahl": 1,
+    "werte": [
+     "6,5"
+    ]
+   },
+   {
+    "element": "Organization · contact.address.city",
+    "anzahl": 1,
+    "werte": [
+     "Berlin"
+    ]
+   },
+   {
+    "element": "Organization · contact.address.country",
+    "anzahl": 1,
+    "werte": [
+     "D"
+    ]
+   },
+   {
+    "element": "Organization · contact.address.line",
+    "anzahl": 2,
+    "werte": [
+     "Muster-Allee 42",
+     "Neukölln"
+    ]
+   },
+   {
+    "element": "Organization · contact.address.postalCode",
+    "anzahl": 1,
+    "werte": [
+     "9132"
+    ]
+   },
+   {
+    "element": "Organization · contact.address.type",
+    "anzahl": 1,
+    "werte": [
+     "both"
+    ]
+   },
+   {
+    "element": "Organization · contact.name.family",
+    "anzahl": 1,
+    "werte": [
+     "Ehrlich"
+    ]
+   },
+   {
+    "element": "Organization · contact.name.given",
+    "anzahl": 1,
+    "werte": [
+     "Marianne"
+    ]
+   },
+   {
+    "element": "Organization · contact.name.text",
+    "anzahl": 1,
+    "werte": [
+     "Frau Marianne Ehrlich"
+    ]
+   },
+   {
+    "element": "Organization · contact.name.use",
+    "anzahl": 1,
+    "werte": [
+     "official"
+    ]
+   },
+   {
+    "element": "Organization · contact.purpose.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "PATINF"
+    ]
+   },
+   {
+    "element": "Organization · contact.purpose.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Patient"
+    ]
+   },
+   {
+    "element": "Organization · contact.telecom.value",
+    "anzahl": 1,
+    "werte": [
+     "0173777"
+    ]
+   },
+   {
+    "element": "Organization · identifier.type.coding.code",
+    "anzahl": 4,
+    "werte": [
+     "XX",
+     "BSNR",
+     "KZVA"
+    ]
+   },
+   {
+    "element": "Organization · identifier.value",
+    "anzahl": 4,
+    "werte": [
+     "123456789",
+     "9-2.58.00000040"
+    ]
+   },
+   {
+    "element": "Organization · telecom.value",
+    "anzahl": 1,
+    "werte": [
+     "0173555"
+    ]
+   },
+   {
+    "element": "Organization · type.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "1.2.276.0.76.4.54"
+    ]
+   },
+   {
+    "element": "Organization · type.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Öffentliche Apotheke"
+    ]
+   },
+   {
+    "element": "Patient · name._family.extension.valueString",
+    "anzahl": 1,
+    "werte": [
+     "Blohm"
+    ]
+   },
+   {
+    "element": "Patient · name.family",
+    "anzahl": 1,
+    "werte": [
+     "Blohm"
+    ]
+   },
+   {
+    "element": "Patient · name.use",
+    "anzahl": 1,
+    "werte": [
+     "maiden"
+    ]
+   },
+   {
+    "element": "Practitioner · gender",
+    "anzahl": 1,
+    "werte": [
+     "other"
+    ]
+   },
+   {
+    "element": "Practitioner · identifier.type.coding.code",
+    "anzahl": 2,
+    "werte": [
+     "LANR",
+     "PRN"
+    ]
+   },
+   {
+    "element": "Practitioner · identifier.type.coding.display",
+    "anzahl": 2,
+    "werte": [
+     "Lifelong physician number",
+     "Provider number"
+    ]
+   },
+   {
+    "element": "Practitioner · identifier.value",
+    "anzahl": 2,
+    "werte": [
+     "123456789",
+     "1-1.58.00000056"
+    ]
+   },
+   {
+    "element": "Practitioner · qualification.code.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "26369006"
+    ]
+   },
+   {
+    "element": "Practitioner · qualification.code.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Public health nurse"
+    ]
+   },
+   {
+    "element": "Practitioner · telecom.value",
+    "anzahl": 1,
+    "werte": [
+     "12123455"
+    ]
+   },
+   {
+    "element": "Specimen · collection.collectedDateTime",
+    "anzahl": 1,
+    "werte": [
+     "03.05.2023"
+    ]
+   },
+   {
+    "element": "Specimen · container.specimenQuantity.code",
+    "anzahl": 1,
+    "werte": [
+     "ms"
+    ]
+   },
+   {
+    "element": "Specimen · container.specimenQuantity.unit",
+    "anzahl": 1,
+    "werte": [
+     "ms"
+    ]
+   },
+   {
+    "element": "Specimen · container.specimenQuantity.value",
+    "anzahl": 1,
+    "werte": [
+     "20"
+    ]
+   },
+   {
+    "element": "Specimen · identifier.value",
+    "anzahl": 1,
+    "werte": [
+     "Test Specimen identifier"
+    ]
+   },
+   {
+    "element": "Specimen · receivedTime",
+    "anzahl": 1,
+    "werte": [
+     "15.11.2021 16:55"
+    ]
+   },
+   {
+    "element": "Specimen · status",
+    "anzahl": 1,
+    "werte": [
+     "available"
+    ]
+   },
+   {
+    "element": "Specimen · type.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "119376003"
+    ]
+   },
+   {
+    "element": "Specimen · type.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Tissue specimen"
+    ]
+   },
+   {
+    "element": "Substance · code.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "69519002"
+    ]
+   },
+   {
+    "element": "Substance · code.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Edetic acid"
+    ]
+   },
+   {
+    "element": "Substance · code.text",
+    "anzahl": 1,
+    "werte": [
+     "test"
+    ]
+   }
+  ],
+  "mio-lab-ex1": [
+   {
+    "element": "Organization · identifier.type.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "BSNR"
+    ]
+   },
+   {
+    "element": "Organization · identifier.type.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Primary physician office number"
+    ]
+   },
+   {
+    "element": "Organization · identifier.value",
+    "anzahl": 1,
+    "werte": [
+     "561234500"
+    ]
+   },
+   {
+    "element": "Organization · telecom.value",
+    "anzahl": 3,
+    "werte": [
+     "0511-1234567-0",
+     "0511-1234567-888",
+     "kontakt@Hannover-MVZ-Musterlabor.de"
+    ]
+   },
+   {
+    "element": "Patient · telecom.value",
+    "anzahl": 1,
+    "werte": [
+     "0511 5566778"
+    ]
+   },
+   {
+    "element": "Practitioner · gender",
+    "anzahl": 2,
+    "werte": [
+     "male",
+     "female"
+    ]
+   },
+   {
+    "element": "Practitioner · identifier.type.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "LANR"
+    ]
+   },
+   {
+    "element": "Practitioner · identifier.type.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Lifelong physician number"
+    ]
+   },
+   {
+    "element": "Practitioner · identifier.value",
+    "anzahl": 1,
+    "werte": [
+     "987654321"
+    ]
+   },
+   {
+    "element": "Practitioner · qualification.code.coding.code",
+    "anzahl": 2,
+    "werte": [
+     "171001",
+     "141111"
+    ]
+   },
+   {
+    "element": "Practitioner · qualification.code.coding.display",
+    "anzahl": 2,
+    "werte": [
+     "FA Laboratoriumsmedizin",
+     "FA Innere Medizin und Endokrinologie und Diabetologie"
+    ]
+   },
+   {
+    "element": "PractitionerRole · code.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "AG"
+    ]
+   },
+   {
+    "element": "PractitionerRole · code.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "Ärztliche Geschäftsführung"
+    ]
+   },
+   {
+    "element": "Provenance · activity.coding.code",
+    "anzahl": 1,
+    "werte": [
+     "VRF"
+    ]
+   },
+   {
+    "element": "Provenance · activity.coding.display",
+    "anzahl": 1,
+    "werte": [
+     "verifier"
+    ]
+   },
+   {
+    "element": "Provenance · occurredDateTime",
+    "anzahl": 1,
+    "werte": [
+     "15.11.2021 16:55"
+    ]
+   },
+   {
+    "element": "Provenance · recorded",
+    "anzahl": 1,
+    "werte": [
+     "15.11.2021 16:55"
+    ]
+   }
+  ]
+ }
+}

@@ -21,9 +21,14 @@
    python3 -I werkzeuge/mx.py pruefen <projekt>
    python3 -I werkzeuge/mx.py validieren <projekt>
    python3 -I werkzeuge/mx.py bauen
+   python3 -I werkzeuge/mx.py anzeige <projekt>   # Browser ohne Fenster; danach noch einmal bauen
+   python3 -I werkzeuge/mx.py bauen
    ```
 
-4. Den neuen Prüfbericht `berichte/<projekt>.md` und das Validierungsergebnis `berichte/<projekt>.validierung.json` mit einchecken. Im Browser prüfen: Beispiel wählen, je einen Wert in Anwenderansicht, Dokument und Modell anklicken; unter „Abdeckung & Prüfung“ steht das Ergebnis des Validators.
+   `anzeige` meldet je Beispiel die inhaltlichen Werte, die weder Anwenderansicht noch Dokument zeigen. Wesentliches, das
+   dort auftaucht (etwa klinische Angaben zur Anforderung), gehört in die Ansicht (`web/explorer.html`), nicht ins Auffangnetz.
+
+4. Den neuen Prüfbericht `berichte/<projekt>.md`, das Validierungsergebnis `berichte/<projekt>.validierung.json` und das Ergebnis der Anzeigeprüfung `berichte/<projekt>.anzeige.json` mit einchecken. Im Browser prüfen: Beispiel wählen, je einen Wert in Anwenderansicht, Dokument und Modell anklicken; unter „Abdeckung & Prüfung“ steht das Ergebnis des Validators.
 
 Reihenfolge: erst `validieren`, dann `bauen` — der Bau liest das Validierungsergebnis. Ändert sich eine Beispieldatei nach der Validierung, melden Bericht und Oberfläche das Beispiel als veraltet und ein Test schlägt fehl, bis neu validiert ist.
 
@@ -58,7 +63,7 @@ python3 -I werkzeuge/mx.py bauen
 python3 -I -m unittest discover -s tests
 ```
 
-`sperrdatei.json`, `berichte/<id>.md`, `berichte/<id>.validierung.json` und den Projektordner einchecken. Die Übersichtsseite nimmt das Projekt automatisch auf.
+Danach `mx.py anzeige <id>` und noch einmal `bauen`. `sperrdatei.json`, `berichte/<id>.md`, `berichte/<id>.validierung.json`, `berichte/<id>.anzeige.json` und den Projektordner einchecken. Die Übersichtsseite nimmt das Projekt automatisch auf.
 
 ## FHIR-Validierung: Ergebnis im Projekt
 

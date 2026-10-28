@@ -91,6 +91,16 @@ Links auf die Originalseiten nur nach dem geprüften Muster `https://www.xt-ehr.
 
 `mx.py validieren` ruft den HL7 Validator je Projekt mit festen Optionen auf (`-tx n/a -locale en-US`, JVM mit `-Duser.language=en -Duser.country=US`) und schreibt `berichte/<projekt>.validierung.json` (`werkzeuge/mx/validieren.py`). Jede Meldung wird über ihre Datei dem Beispiel zugeordnet; Fehler werden gegen die begründeten Ausnahmen des Projekts geprüft. `bauen` bettet das Ergebnis ein: Prüfbericht, Dialog „Abdeckung & Prüfung“ (Ort als Sprung zum Wert, sofern er sich einem Knoten des Beispiels zuordnen lässt) und Übersichtsseite. Der Validator selbst läuft nur in `validieren`, nie im Bau — ohne Netz und nur mit dem gesperrten Paketbestand in `.validator/`, den `holen` füllt; so hängt das Ergebnis nicht davon ab, welche Paketfassungen der Paketserver gerade als neueste meldet.
 
+### Anzeige für Anwender:innen: nichts geht verloren
+
+Jeder inhaltliche Wert eines Beispiels steht in der Anwenderansicht, in einer Dokumentfassung (Druckfassung, PDF, Erzähltext) oder im **Auffangnetz** „Weitere Angaben aus der Instanz“ am Ende der Anwenderansicht (`weitereAngaben` in `web/explorer.html`). So bleibt die Ansicht für eine medizinische Sichtung vollständig, auch wenn ein Beispiel Elemente enthält, die keine Darstellung vorsieht.
+
+- **Angezeigt** ist ein Wert, wenn ein Element der Ansicht ihn über `data-n` verknüpft — er selbst, ein Vorfahr oder ein Geschwister im selben Datentyp (die Anzeige von `code.text` deckt `code.coding`, die von `valueQuantity.value` deckt Einheit und System).
+- **Mitgetragen** sind Angaben, die eine Zeile ausdrücklich, aber ohne eigene Anzeige vertritt; sie stehen in `data-implizit` (nur für die Prüfung, nicht für die Auswahl): Normalstatus wie `final`/`completed`, Kategorie, Zeitpunkte gleich Entnahme bzw. Befund, Methode im Namen, reine Markierungen. Weicht ein solcher Wert ab (vorläufig, anderer Zeitpunkt), zeigt die Ansicht ihn an.
+- **Technisch** und nicht gezählt: Kennungen und Metadaten, Systeme, Versionen, URLs, Verweis-IDs, Erzähltext, UUID-Kennungen, Verweise mit Ziel im Beispiel (das Ziel wird selbst gezählt). Ein Verweis ohne Ziel mit `display` ist Inhalt.
+
+`mx.py anzeige` führt die gebauten Seiten im Prüfmodus (`?abdeckung`) in einem Browser ohne Fenster aus und schreibt `berichte/<projekt>.anzeige.json`; der Prüfbericht zeigt das Ergebnis je Beispiel, die CI prüft, dass die Datei zum Stand passt. **Eine neue Darstellung** muss am Ende der Anwenderansicht `weitereAngabenHtml()` anhängen, Werte mit `F(…)` (Elementbezug) ausgeben, Mitgetragenes mit `data-implizit` kennzeichnen und ihre Dokumentfassungen in `DOKUMENT_HTML` eintragen.
+
 ## Grenzen
 
 - Terminologie nur so weit, wie sie in Modell und Instanzen steht; kein Terminologieserver.

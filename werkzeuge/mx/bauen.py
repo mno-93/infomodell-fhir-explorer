@@ -3,7 +3,7 @@ verknüpfen und als eigenständige HTML-Seite ausgeben. Die Ausgabe ist determin
 import html
 import json
 
-from . import anforderungen, beispiele, ehds, infomodell, validieren
+from . import anforderungen, anzeige, beispiele, ehds, infomodell, validieren
 from .grundlagen import AUSGABE, KI_HINWEIS, KI_LOGO, WURZEL
 from .konfig import projekt_laden
 from .pakete import bezeichnung, definitionen, projektpakete
@@ -108,7 +108,8 @@ def projekt_bauen(pid):
     if validierung:
         validierung = {x: y for x, y in validierung.items() if x != 'beispiele'}
     return {'meta': meta, 'statistik': statistik, 'pruefung': pruefung, 'ehds_pruefung': ehds_pruefung, 'im': knoten,
-            'baum_aus': baum_aus, 'profile': profile, 'anforderungen': anf, 'beispiele': liste, 'validierung': validierung}
+            'baum_aus': baum_aus, 'profile': profile, 'anforderungen': anf, 'beispiele': liste, 'validierung': validierung,
+            'anzeige': anzeige.ergebnis_laden(k)}
 
 
 def _wertelisten_statistik(knoten):
@@ -163,7 +164,8 @@ def ki_hinweis():
 def seite_schreiben(daten):
     vorlage = (WURZEL / 'web' / 'explorer.html').read_text(encoding='utf-8')
     vorlage = vorlage.replace('/*KI-HINWEIS*/', KI_CSS).replace('<!--KI-HINWEIS-->', ki_hinweis())
-    eingebettet = json.dumps(daten, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
+    daten = {x: y for x, y in daten.items() if x != 'anzeige'}   # Ergebnis des Prüfmodus gehört in den Bericht, nicht in die Seite
+    eingebettet =json.dumps(daten, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
     seite = vorlage.replace('/*DATEN*/null', eingebettet).replace('<title>Modellexplorer</title>',
                                                                   f'<title>{html.escape(daten["meta"]["titel"])} – Modellexplorer</title>')
     AUSGABE.mkdir(exist_ok=True)

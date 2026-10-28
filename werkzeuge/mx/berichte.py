@@ -115,6 +115,7 @@ def bericht(d):
             z += ['', 'Werte ohne spezifisches Element im Informationsmodell (ohne url, reference, system, version, Erzähltext):', '']
             z += [f'- `{el.split("/")[-1]}` ({n}×)' for el, n in b['abdeckung']['ohne_modell'].items()]
         z.append('')
+    z += anzeige(d)
     z += validierung(d)
     return '\n'.join(z).rstrip() + '\n'
 
@@ -194,6 +195,30 @@ def ehds_pruefung(d):
         z += [f'### Ausdrücklich ohne Gegenstück im EHDS-Modell ({len(ohne)})', '']
         z += [f'- {n["name"]} *({" / ".join(_pfad_im(d, n).split(" / ")[-3:-1])})*' for n, _v in ohne]
         z.append('')
+    return z
+
+
+def anzeige(d):
+    """Abschnitt „Anzeige für Anwender:innen“ aus `berichte/<projekt>.anzeige.json` (geschrieben von `mx.py anzeige`)."""
+    a, pid = d.get('anzeige'), d['meta']['projekt']
+    z = ['## Anzeige für Anwender:innen', '']
+    if not a:
+        return z + [f'Noch nicht geprüft — `python3 -I werkzeuge/mx.py anzeige {pid}` schreibt `berichte/{pid}.anzeige.json`.', '']
+    z += [f'Stand: `berichte/{pid}.anzeige.json`, geschrieben von `python3 -I werkzeuge/mx.py anzeige {pid}`. Gezählt werden '
+          'inhaltliche Werte der Beispiele, die weder die Anwenderansicht noch eine Dokumentfassung zeigt; auf der Seite stehen sie '
+          'unter „Weitere Angaben aus der Instanz“. Technisch und nicht gezählt: Kennungen und Metadaten, Systeme, Versionen, URLs, '
+          'Erzähltext, UUID-Kennungen, Verweise mit Ziel im Beispiel.', '',
+          '| Beispiel | nicht angezeigte Werte | in Elementen |', '|---|---:|---:|']
+    titel = {b['id']: b['titel'] for b in d['beispiele']}
+    for bid, gruppen in a['beispiele'].items():
+        z.append(f'| {titel.get(bid, bid)} | {sum(g["anzahl"] for g in gruppen)} | {len(gruppen)} |')
+    z += [f'| {titel.get(bid, bid)} | noch nicht geprüft | – |' for bid in a['fehlt']]
+    z.append('')
+    for bid, gruppen in a['beispiele'].items():
+        if gruppen:
+            z += [f'### Nicht angezeigt — {titel.get(bid, bid)}', '', '| Element | Anzahl | Werte (Auswahl) |', '|---|---:|---|']
+            z += [f'| `{g["element"]}` | {g["anzahl"]} | {_code(" · ".join(g["werte"]))} |' for g in gruppen]
+            z.append('')
     return z
 
 

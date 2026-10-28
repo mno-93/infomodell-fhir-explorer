@@ -43,6 +43,10 @@ jobs:
         run: python3 -I werkzeuge/mx.py pruefen
       - name: Seiten und Prüfberichte bauen
         run: python3 -I werkzeuge/mx.py bauen
+      # Anzeige für Anwender:innen: die gebauten Seiten im Browser ohne Fenster prüfen (Chrome ist auf ubuntu-latest
+      # vorinstalliert) — welche Werte der Beispiele weder Anwenderansicht noch Dokument zeigen; Ergebnis berichte/*.anzeige.json
+      - name: Anzeige der Beispiele prüfen
+        run: python3 -I werkzeuge/mx.py anzeige
       - name: Prüfberichte entsprechen dem eingecheckten Stand
         run: git diff --exit-code -- berichte/ sperrdatei.json
       - uses: actions/upload-pages-artifact@v5

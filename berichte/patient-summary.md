@@ -31,6 +31,27 @@
 - Datei: `beispiele/yildiz.json`
 - Profilzuordnung ohne `meta.profile`: 1× Basisressource, 6× Standardprofil des Projekts
 
+## Anzeige für Anwender:innen
+
+Stand: `berichte/patient-summary.anzeige.json`, geschrieben von `python3 -I werkzeuge/mx.py anzeige patient-summary`. Gezählt werden inhaltliche Werte der Beispiele, die weder die Anwenderansicht noch eine Dokumentfassung zeigt; auf der Seite stehen sie unter „Weitere Angaben aus der Instanz“. Technisch und nicht gezählt: Kennungen und Metadaten, Systeme, Versionen, URLs, Erzähltext, UUID-Kennungen, Verweise mit Ziel im Beispiel.
+
+| Beispiel | nicht angezeigte Werte | in Elementen |
+|---|---:|---:|
+| Patient Summary — Hoffmann | 5 | 1 |
+| Patient Summary — Yildiz | 2 | 1 |
+
+### Nicht angezeigt — Patient Summary — Hoffmann
+
+| Element | Anzahl | Werte (Auswahl) |
+|---|---:|---|
+| `MedicationRequest · identifier.value` | 5 | emp-h-med-1 · emp-h-med-3 · emp-h-med-4 |
+
+### Nicht angezeigt — Patient Summary — Yildiz
+
+| Element | Anzahl | Werte (Auswahl) |
+|---|---:|---|
+| `MedicationRequest · identifier.value` | 2 | emp-y-1 · emp-k-mvazzci2-52 |
+
 ## FHIR-Validierung (HL7 Validator 7.0.1)
 
 Stand: `berichte/patient-summary.validierung.json`, geschrieben von `python3 -I werkzeuge/mx.py validieren patient-summary`; FHIR 4.0.1, Optionen `-tx n/a -locale en-US -allow-example-urls true -extension https://example.org/` (ohne Terminologieserver).

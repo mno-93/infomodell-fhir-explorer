@@ -170,6 +170,12 @@ table { border-collapse: collapse; width: 100%; }
 .erg td.wert { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
 .erg .loinc { color: var(--leise); font-family: var(--mono); font-size: 11px; }
 .flag { font-weight: 700; } .flag.H, .flag.HH { color: var(--fehler); } .flag.L, .flag.LL { color: #2563eb; } .flag.N { color: var(--gut); font-weight: 500; }
+.kv dd.wichtig { font-weight: 650; color: var(--warn); }
+.weitere { margin-top: 12px; font-size: 12.5px; border-top: 1px dashed var(--linie); padding-top: 6px; }
+.weitere summary { cursor: pointer; color: var(--akzent); font-weight: 600; }
+.weitere table { border-collapse: collapse; width: 100%; margin-top: 4px; }
+.weitere td { padding: 2px 6px; border-bottom: 1px solid var(--linie); vertical-align: top; }
+.weitere td.pfad { font-family: var(--mono); font-size: 11.5px; color: var(--leise); white-space: nowrap; }
 .notiz { background: var(--flaeche2); border-radius: 6px; padding: 6px 8px; margin-top: 8px; font-size: 13px; }
 
 /* Dokument */
@@ -640,13 +646,19 @@ function probeText(s) {   // Material, Entnahme, Dauer, Nüchternstatus, Eingang
   if (c.duration) teile.push('Sammeldauer ' + menge(s, 'collection.duration'));
   if (c.fastingStatusCodeableConcept) teile.push('Nüchternstatus ' + codingText(s, 'collection.fastingStatusCodeableConcept'));
   else if (c.fastingStatusDuration) teile.push('nüchtern ' + menge(s, 'collection.fastingStatusDuration'));
+  if (c.bodySite) teile.push('Entnahmeort ' + codingText(s, 'collection.bodySite'));
+  else { const b = idx(c.extension, e => /bodySite/.test(e.url)), bs = b >= 0 ? verweis(c.extension[b].valueReference) : null;
+    if (bs) teile.push('Entnahmeort ' + (codingText(bs, 'location') || F(bs, 'description'))); }
   if (s.res.receivedTime) teile.push('Eingang ' + F(s, 'receivedTime', datum));
   if (s.res.identifier?.[0]?.value) teile.push('Nr. ' + F(s, 'identifier[0].value'));
+  (s.res.condition || []).forEach((_, i) => teile.push('<b>Zustand ' + codingText(s, `condition[${i}]`) + '</b>'));
+  (s.res.processing || []).forEach((pr, i) => teile.push('Aufbereitung ' + [pr.procedure ? codingText(s, `processing[${i}].procedure`) : F(s, `processing[${i}].description`), pr.timeDateTime ? F(s, `processing[${i}].timeDateTime`, datum) : ''].filter(Boolean).join(' ')));
+  (s.res.note || []).forEach((_, i) => teile.push('Notiz: ' + F(s, `note[${i}].text`)));
   return teile.join(', ');
 }
 function probenListe(sps) {
   if (!sps.length) return '–';
-  return sps.map((s, i) => `<span data-n="${esc(s.key + '|')}">${sps.length > 1 ? `<b>Probe ${i + 1}:</b> ` : ''}${probeText(s)}</span>`).join('<br>');
+  return sps.map((s, i) => `<span data-n="${esc(s.key + '|')}" data-implizit="${esc(s.key + '|status')}">${sps.length > 1 ? `<b>Probe ${i + 1}:</b> ` : ''}${probeText(s)}</span>`).join('<br>');
 }
 // Status und Sicherheit klinischer Einträge auf Deutsch (FHIR-Codes clinical-, verification- und allergy-Status, Kritikalität)
 const KLINISCH_DE = { active: 'aktiv', recurrence: 'wiederaufgetreten', relapse: 'Rückfall', inactive: 'inaktiv', remission: 'in Remission',
@@ -679,6 +691,29 @@ function fragestellung(sr) {   // Anforderungsgrund, Verdachtsdiagnose, Auftrags
   (x.orderDetail || []).forEach((_, i) => z.push(codingText(sr, `orderDetail[${i}]`)));
   return z.filter(Boolean);
 }
+function klinischeAngaben(sr) {   // ergänzende klinische Angaben zur Anforderung (supportingInfo): Zielressource oder Freitext des Verweises
+  return (sr?.res.supportingInfo || []).map((si, i) => {
+    const t = verweis(si);
+    if (!t) return F(sr, `supportingInfo[${i}].display`);
+    const x = t.res;
+    if (x.resourceType === 'Condition') return diagnoseText(t);
+    if (x.resourceType === 'Observation') { const w = messwert(t); return [codingText(t, 'code'), w !== '–' ? `${w} ${einheit(t)}`.trim() : ''].filter(Boolean).join(': '); }
+    return codingText(t, 'code') || codingText(t, 'medicationCodeableConcept') || F(sr, `supportingInfo[${i}].display`) || esc(x.resourceType);
+  }).concat((sr?.res.note || []).map((_, i) => 'Notiz zum Auftrag: ' + F(sr, `note[${i}].text`))).filter(Boolean);
+}
+const GESCHLECHT = { male: 'männlich', female: 'weiblich', other: 'divers', unknown: 'unbekannt' };
+function geschlecht(pat) {   // Geschlecht, dazu Geschlechtsidentität bzw. Geschlecht für klinische Zwecke (wichtig für Referenzbereiche)
+  if (!pat) return '';
+  const t = pat.res.gender ? [F(pat, 'gender', g => GESCHLECHT[g] || g)] : [];
+  (pat.res.extension || []).forEach((e, i) => {
+    if (!/genderIdentity|sexParameterForClinicalUse|recordedSexOrGender/.test(e.url)) return;
+    const art = /genderIdentity/.test(e.url) ? 'Geschlechtsidentität' : /sexParameter/.test(e.url) ? 'Geschlecht für klinische Zwecke' : 'erfasstes Geschlecht';
+    const j = idx(e.extension, u => u.url === 'value' && u.valueCodeableConcept);
+    const w = e.valueCodeableConcept ? codingText(pat, `extension[${i}].valueCodeableConcept`) : (j >= 0 ? codingText(pat, `extension[${i}].extension[${j}].valueCodeableConcept`) : '');
+    if (w) t.push(`${art}: ${w}`);
+  });
+  return t.join(', ');
+}
 function auftragseingang(dr) { const i = idx(dr?.res.extension, e => /order-entry-time|Order_Entry_Time/i.test(e.url)); return i >= 0 ? F(dr, `extension[${i}].valueDateTime`, datum) : ''; }
 function befundZusaetze(dr) {   // Zusatzstatus, Anmerkungen und Anhänge zum Gesamtbefund
   if (!dr) return [];
@@ -705,7 +740,10 @@ function messwert(o) {
   return '–';
 }
 function einheit(o) { const r = o.res; return r.valueQuantity ? F(o, 'valueQuantity.unit') : (r.valueRange ? F(o, 'valueRange.low.unit') : ''); }
-function referenz(o) {
+function referenz(o) {   // Zelle mit Bezug auf den ganzen ersten Referenzbereich
+  const z = referenzWerte(o); return z ? `<span data-n="${esc(o.key + '|referenceRange[0]')}">${z}</span>` : '';
+}
+function referenzWerte(o) {
   const rr = o.res.referenceRange?.[0]; if (!rr) return '';
   if (rr.text && !rr.low && !rr.high) return F(o, 'referenceRange[0].text');
   const lo = rr.low && rr.low.value !== undefined ? F(o, 'referenceRange[0].low.value', zahl) : '';
@@ -718,7 +756,7 @@ function bewertung(o) {
   const i = idx(ip.coding, c => /ObservationInterpretation/.test(c.system || ''));
   if (i < 0) return codingText(o, 'interpretation[0]');
   const c = ip.coding[i].code;
-  return `<span class="flag ${esc(c)}" data-n="${esc(o.key + '|interpretation[0].coding[' + i + '].code')}">${esc(FLAG[c] || c)}</span>`;
+  return `<span class="flag ${esc(c)}" data-n="${esc(o.key + '|interpretation[0].coding[' + i + '].code ' + o.key + '|interpretation[0]')}">${esc(FLAG[c] || c)}</span>`;
 }
 function gruppenTitel(g) {
   const e = idx(g.res.extension, x => /test-profile/.test(x.url));
@@ -735,8 +773,26 @@ function referenzText(o) {   // Text des Referenzbereichs, wenn er mehr sagt als
   const t = norm(rr.text).replace(/^(<|>|≤|≥|<=|>=)/, '');
   return t.startsWith(zahlen) ? '' : F(o, 'referenceRange[0].text');
 }
-function zusatzZeilen(o, istGruppe = false) {   // unter einem Ergebnis bzw. einer Gruppe: alles Fachliche, das nicht in die Spalten passt
+function methodeImNamen(o) {   // Methode steht schon im Namen der Untersuchung (z. B. „Creatinin, Jaffe Methode“)
+  const name = (o.res.code?.text || '').toLowerCase(), mt = (o.res.method?.text || '').toLowerCase();
+  return !!mt && name.includes(mt.replace(/-/g, ' ').replace(/methode$/, '').trim());
+}
+// Angaben, die eine Ergebnis- oder Gruppenzeile mitträgt, ohne sie eigens zu zeigen (für das Auffangnetz, nicht für die Auswahl):
+// Status „final“, Kategorie (bestimmt die Gruppe), Zeitpunkte gleich Entnahme bzw. Befund, Methode im Namen, Gruppencode
+function implizit(o, zeiten, istGruppe) {
+  const x = o.res, n = [];
+  if (x.status === 'final') n.push('status');
+  if (x.category) n.push('category');
+  if (x._effectiveDateTime) n.push('_effectiveDateTime');
+  for (const f of ['effectiveDateTime', 'issued']) if (x[f] && zeiten.has(x[f])) n.push(f);
+  if (methodeImNamen(o)) n.push('method');
+  if (istGruppe) n.push('code');
+  return n.map(p => o.key + '|' + p).join(' ');
+}
+function zusatzZeilen(o, istGruppe = false, zeiten = new Set()) {   // unter einem Ergebnis bzw. einer Gruppe: alles Fachliche, das nicht in die Spalten passt
   const x = o.res, z = [];
+  if (x.status && x.status !== 'final') z.push('Status: ' + F(o, 'status', t => STATUS[t] || t));
+  for (const [f, art] of [['effectiveDateTime', 'Zeitpunkt'], ['issued', 'freigegeben']]) if (x[f] && !zeiten.has(x[f])) z.push(`${art}: ${F(o, f, datum)}`);
   (x.interpretation || []).forEach((ip, i) => {
     const flag = idx(ip.coding, c => /ObservationInterpretation/.test(c.system || ''));
     if (i === 0 && flag < 0 && !istGruppe) return;   // steht schon als Bewertung in der Spalte
@@ -745,6 +801,7 @@ function zusatzZeilen(o, istGruppe = false) {   // unter einem Ergebnis bzw. ein
     z.push('Bewertung: ' + (ip.text ? F(o, `interpretation[${i}].text`) : codingText(o, `interpretation[${i}]`)));
   });
   const rt = referenzText(o); if (rt) z.push('Referenz: ' + rt);
+  (x.referenceRange?.[0]?.appliesTo || []).forEach((_, j) => z.push('Referenzbereich gilt für: ' + codingText(o, `referenceRange[0].appliesTo[${j}]`)));
   (x.referenceRange || []).slice(1).forEach((rr, j) => {
     const i = j + 1, art = rr.type ? codingText(o, `referenceRange[${i}].type`) : (rr.appliesTo ? codingText(o, `referenceRange[${i}].appliesTo[0]`) : '');
     const zahlen = [rr.low ? menge(o, `referenceRange[${i}].low`) : '', rr.high ? menge(o, `referenceRange[${i}].high`) : ''].filter(Boolean).join(' – ');
@@ -758,26 +815,27 @@ function zusatzZeilen(o, istGruppe = false) {   // unter einem Ergebnis bzw. ein
     }
     if (e.valueAttachment) z.push('Anhang: ' + F(o, `extension[${i}].valueAttachment.title`, x => x, 'ohne Titel'));
   });
-  if (x.method) { const m = codingText(o, 'method'), name = (x.code?.text || '').toLowerCase(), mt = (x.method.text || '').toLowerCase();
-    if (m && !(mt && name.includes(mt.replace(/-/g, ' ').replace(/methode$/, '').trim()))) z.push('Methode: ' + m); }
+  if (x.method && !methodeImNamen(o)) { const m = codingText(o, 'method'); if (m) z.push('Methode: ' + m); }
   (x.note || []).forEach((n, i) => z.push(F(o, `note[${i}].text`)));
   return z.filter(Boolean).map(t => `<tr class="zusatz"><td colspan="5" class="hinweis">${t}</td></tr>`);
 }
 function ergebnisZeilen(mitLoinc) {
   const { comp, dr, sps } = befundTeile();
   const zeilen = [];
+  // Zeitpunkte, die der Kopf schon zeigt (Entnahme, Befund); ein Wert mit anderem Zeitpunkt bekommt ihn in einer Zusatzzeile
+  const zeiten = new Set([...sps.map(s => s.res.collection?.collectedDateTime), dr?.res.effectiveDateTime, dr?.res.issued, comp?.res.date].filter(Boolean));
   const probeNr = o => { if (sps.length < 2) return 0; const k = verweis(o.res.specimen)?.key; return k ? sps.findIndex(s => s.key === k) + 1 : 0; };
   const einzel = (o) => {
     const loinc = idx(o.res.code?.coding, c => c.system === 'http://loinc.org'), p = probeNr(o);
     const unter = [mitLoinc && loinc >= 0 ? `LOINC ${F(o, `code.coding[${loinc}].code`)}` : '', p ? `<span data-n="${esc(o.key + '|specimen')}">Probe ${p}</span>` : ''].filter(Boolean);
-    zeilen.push(`<tr data-n="${esc(o.key + '|')}"><td>${codingText(o, 'code') || '–'}${unter.length ? `<div class="loinc">${unter.join(' · ')}</div>` : ''}</td>`
+    zeilen.push(`<tr data-n="${esc(o.key + '|')}" data-implizit="${esc(implizit(o, zeiten, false))}"><td>${codingText(o, 'code') || '–'}${unter.length ? `<div class="loinc">${unter.join(' · ')}</div>` : ''}</td>`
       + `<td class="wert">${messwert(o)}</td><td>${einheit(o)}</td><td>${referenz(o)}</td><td>${bewertung(o)}</td></tr>`);
-    zeilen.push(...zusatzZeilen(o));
+    zeilen.push(...zusatzZeilen(o, false, zeiten));
   };
   const gruppe = (g) => {
     if (!g) return;
     if (g.res.hasMember?.length) {
-      zeilen.push(`<tr class="gruppe" data-n="${esc(g.key + '|')}"><td colspan="5">${gruppenTitel(g)}</td></tr>`, ...zusatzZeilen(g, true));
+      zeilen.push(`<tr class="gruppe" data-n="${esc(g.key + '|')}" data-implizit="${esc(implizit(g, zeiten, true))}"><td colspan="5">${gruppenTitel(g)}</td></tr>`, ...zusatzZeilen(g, true, zeiten));
       g.res.hasMember.forEach(m => { const o = verweis(m); if (o) einzel(o); });
     } else einzel(g);
   };
@@ -792,19 +850,73 @@ function ergebnisZeilen(mitLoinc) {
 const STATUS = { final: 'Endbefund', partial: 'Teilbefund', preliminary: 'vorläufig', amended: 'geändert', corrected: 'korrigiert', registered: 'registriert' };
 function kennung(r, code) { const i = idx(r?.res.identifier, x => x.type?.coding?.some(c => c.code === code)); return i >= 0 ? F(r, `identifier[${i}].value`) : ''; }
 function kvnr(p) { const i = idx(p?.res.identifier, x => /kvid-10/.test(x.system || '')); return i >= 0 ? F(p, `identifier[${i}].value`) : ''; }
+// ------------------------------------------------------------------ Auffangnetz: Werte, die die Ansicht nicht einordnet
+// Jeder inhaltliche Wert der Instanz steht entweder in der Ansicht (Elementbezug data-n) oder hier — damit für die Sichtung
+// nichts verloren geht. Technisch sind nur: Kennungen und Metadaten, Systeme, Versionen, URLs, Erzähltext und Verweise,
+// deren Ziel im Beispiel liegt (das Ziel wird selbst angezeigt). Ein Verweis ohne Ziel (nur display) ist Inhalt.
+const TECHNISCHER_PFAD = /(^|\.)(id|meta|resourceType|userSelected)(\.|\[|$)|(^|\.)(system|version|url|reference)$|(^|\.)text\.(div|status)$/;
+const elternPfad = jp => jp.replace(/(\.[^.[\]]+|\[\d+\])$/, '');
+function weitereAngaben() {   // [{muster, nids, werte}] — Werte, die weder Anwenderansicht noch Dokument zeigen
+  if (!B?.ressourcen?.length) return [];
+  const verknuepft = new Set(), eltern = new Set();
+  const vorlage = document.createElement('template');
+  vorlage.innerHTML = $('#ui-koerper').innerHTML + D.meta.dokumente.map(d => DOKUMENT_HTML[d]?.() || '').join('');
+  vorlage.content.querySelectorAll('.weitere').forEach(e => e.remove());   // das Auffangnetz selbst zählt nicht als Anzeige
+  [...vorlage.content.querySelectorAll('[data-n], [data-implizit]')].flatMap(e => [...(e.dataset.n || '').split(' '), ...(e.dataset.implizit || '').split(' ')])
+    .filter(Boolean).forEach(n => {
+    const i = n.indexOf('|'), jp = n.slice(i + 1); if (!jp) return;   // Zeilenanker ohne Element zählen nicht
+    verknuepft.add(n); const p = elternPfad(jp); if (p && p !== jp) eltern.add(n.slice(0, i + 1) + p);
+  });
+  const gedeckt = (key, jp) => {   // Wert selbst, ein Vorfahr oder ein Geschwister im selben Datentyp ist verknüpft
+    if (verknuepft.has(key + '|' + jp)) return true;
+    for (let p = elternPfad(jp), q = jp; p && p !== q; q = p, p = elternPfad(p)) if (verknuepft.has(key + '|' + p) || eltern.has(key + '|' + p)) return true;
+    return false;
+  };
+  const gruppen = new Map();
+  const lauf = (r, w, jp) => {
+    if (w === null || w === undefined || w === '') return;
+    if (Array.isArray(w)) return w.forEach((x, i) => lauf(r, x, `${jp}[${i}]`));
+    if (typeof w === 'object') {
+      if (typeof w.reference === 'string' && (w.reference.startsWith('#') || verweis(w))) return;   // Verweis mit Ziel im Beispiel
+      if (typeof w.value === 'string' && /^urn:(uuid|oid):/.test(w.value) && ('type' in w || 'system' in w)) return;   // Kennung aus einer UUID
+      if (/(^|\/)_datatype$/.test(w.url || '')) return;   // Typangabe der Querversions-Extension
+      return Object.entries(w).forEach(([k, v]) => lauf(r, v, jp ? `${jp}.${k}` : k));
+    }
+    if (TECHNISCHER_PFAD.test(jp) || (typeof w === 'string' && /^urn:(uuid|oid):/.test(w)) || gedeckt(r.key, jp)) return;
+    const muster = `${r.res.resourceType} · ${jp.replace(/\[\d+\]/g, '')}`;
+    if (!gruppen.has(muster)) gruppen.set(muster, { nids: [], werte: [] });
+    const g = gruppen.get(muster); g.nids.push(r.key + '|' + jp);
+    const t = typeof w === 'boolean' ? (w ? 'ja' : 'nein') : typeof w === 'number' ? zahl(w) : datum(String(w)).slice(0, 160);
+    if (!g.werte.includes(t)) g.werte.push(t);
+  };
+  B.ressourcen.forEach(r => lauf(r, r.res, ''));
+  return [...gruppen.entries()].sort().map(([muster, g]) => ({ muster, ...g }));
+}
+function weitereAngabenHtml() {
+  if (!B?.ressourcen?.length) return '';
+  const gruppen = weitereAngaben();
+  if (!gruppen.length) return '<div class="weitere hinweis">Alle inhaltlichen Werte des Beispiels stehen in Anwenderansicht oder Dokument.</div>';
+  const zeilen = gruppen.map(({ muster: m, ...g }) => `<tr data-n="${esc(g.nids.join(' '))}"><td class="pfad">${esc(m)}${g.nids.length > 1 ? ` (${g.nids.length}×)` : ''}</td>`
+    + `<td>${g.werte.slice(0, 4).map(esc).join(' · ')}${g.werte.length > 4 ? ` · … (${g.werte.length - 4} weitere)` : ''}</td></tr>`).join('');
+  const anzahl = gruppen.reduce((s, g) => s + g.nids.length, 0);
+  return `<details class="weitere"><summary>Weitere Angaben aus der Instanz, die weder Anwenderansicht noch Dokument zeigen (${anzahl} Werte in ${gruppen.length} Elementen)</summary>
+    <p class="hinweis">Für die Sichtung: Diese Werte stehen im Beispiel, haben in Anwenderansicht und Dokument aber keinen Platz. Klick auf eine Zeile markiert sie in Modell, Profil und Instanz.</p>
+    <table>${zeilen}</table></details>`;
+}
 function uiZeichnen() {
   const { comp, dr, pat, empf, sr, sps, labor } = befundTeile();
-  const st = dr?.res.status, fragen = fragestellung(sr), eingang = auftragseingang(dr), zusaetze = befundZusaetze(dr);
+  const st = dr?.res.status, fragen = fragestellung(sr), klin = klinischeAngaben(sr), eingang = auftragseingang(dr), zusaetze = befundZusaetze(dr);
   const ext = dr ? idx(dr.res.extension, e => /critical-result/.test(e.url)) : -1;
   $('#ui-koerper').innerHTML = `<div class="pvs">
-    <div class="titel"><h3>Laborbefund</h3>${st ? `<span class="etikett" data-n="${esc(dr.key + '|status')}">${esc(STATUS[st] || st)}</span>` : ''}
+    <div class="titel"><h3 data-implizit="${esc([comp && comp.key + '|type', dr && dr.key + '|code'].filter(Boolean).join(' '))}">Laborbefund</h3>${st ? `<span class="etikett" data-n="${esc(dr.key + '|status')}">${esc(STATUS[st] || st)}</span>` : ''}
       ${ext >= 0 && dr.res.extension[ext].valueBoolean ? `<span class="etikett rot" data-n="${esc(dr.key + '|extension[' + ext + ']')}">kritischer Befund</span>` : ''}</div>
     <dl class="kv">
-      <dt>Patient:in</dt><dd>${personName(pat) || '–'}${pat?.res.birthDate ? ', geb. ' + F(pat, 'birthDate', datum) : ''}</dd>
+      <dt>Patient:in</dt><dd>${personName(pat) || '–'}${pat?.res.birthDate ? ', geb. ' + F(pat, 'birthDate', datum) : ''}${geschlecht(pat) ? ', ' + geschlecht(pat) : ''}</dd>
       <dt>KVNR</dt><dd>${kvnr(pat) || F(comp, 'subject.identifier.value') || '–'}</dd>
       <dt>Labor</dt><dd>${personName(labor) || '–'}</dd>
-      <dt>Auftrag</dt><dd>${kennung(dr, 'AL') || '–'}${sr ? ' · Einsender-Nr. ' + (kennung(sr, 'AE') || F(sr, 'identifier[0].value') || '–') : ''}${eingang ? ' · Eingang ' + eingang : ''}${sr?.res.priority ? ' · ' + F(sr, 'priority', p => PRIORITAET[p] || p) : ''}</dd>
+      <dt>Auftrag</dt><dd data-implizit="${esc(sr ? ['code', 'intent', 'status'].map(f => sr.key + '|' + f).join(' ') : '')}">${kennung(dr, 'AL') || '–'}${sr ? ' · Einsender-Nr. ' + (kennung(sr, 'AE') || F(sr, 'identifier[0].value') || '–') : ''}${sr?.res.authoredOn ? ' vom ' + F(sr, 'authoredOn', datum) : ''}${eingang ? ' · Eingang ' + eingang : ''}${sr?.res.priority ? ' · ' + F(sr, 'priority', p => PRIORITAET[p] || p) : ''}</dd>
       ${fragen.length ? `<dt>Fragestellung</dt><dd>${fragen.join('; ')}</dd>` : ''}
+      ${klin.length ? `<dt>Klinische Angaben</dt><dd class="wichtig">${klin.join('; ')}</dd>` : ''}
       <dt>${sps.length > 1 ? 'Proben' : 'Probe'}</dt><dd>${probenListe(sps)}</dd>
       <dt>Befunddatum</dt><dd>${F(dr, 'issued', datum) || F(comp, 'date', datum) || '–'}</dd>
     </dl>
@@ -812,13 +924,17 @@ function uiZeichnen() {
     ${dr?.res.conclusion ? `<div class="notiz"><b>Beurteilung:</b> ${F(dr, 'conclusion')}</div>` : ''}
     ${zusaetze.map(z => `<div class="notiz">${z}</div>`).join('')}
   </div>`;
+  $('#ui-koerper').insertAdjacentHTML('beforeend', weitereAngabenHtml());
 }
 // ------------------------------------------------------------------ Anwenderansicht für Dokumente (Composition mit Abschnitten)
 // Impfung: Dosis ohne Nummer, verabreichtes Produkt (enthaltene Medication über administeredProduct) mit Charge, Nachtrag
 function impfungTeile(r) {
   const x = r.res, teile = [], pa = x.protocolApplied?.[0];
   if (pa?.doseNumberString) teile.push('Dosis ' + F(r, 'protocolApplied[0].doseNumberString'));
-  else if (pa?._doseNumberString) teile.push(`<span data-n="${esc(r.key + '|protocolApplied[0]._doseNumberString')}">Dosis unbekannt</span>`);
+  else if (pa?._doseNumberString || pa?._doseNumberPositiveInt) {
+    const f = pa._doseNumberString ? '_doseNumberString' : '_doseNumberPositiveInt';
+    teile.push(`<span data-n="${esc(r.key + '|protocolApplied[0].' + f)}">Dosis unbekannt</span>`);
+  }
   const ap = idx(x.extension, e => /Immunization\.administeredProduct$/.test(e.url || ''));
   const ref = ap >= 0 ? (x.extension[ap].extension || []).find(e => e.url === 'reference')?.valueReference?.reference : null;
   const ci = ref ? idx(x.contained, c => '#' + c.id === ref) : -1;
@@ -839,6 +955,44 @@ function impfungTeile(r) {
   return teile;
 }
 const DATUMSFELDER = ['onsetDateTime', 'recordedDate', 'occurrenceDateTime', 'performedDateTime', 'effectiveDateTime', 'timingDateTime', 'authoredOn', 'dateAsserted', 'issued'];
+// Status, die ein Eintrag still mitträgt (der Normalfall); andere Status zeigt die Ansicht an
+const NORMALSTATUS = ['final', 'completed', 'active', 'current', 'available'];
+const PROV_AKTIVITAET = { CREATE: 'angelegt', UPDATE: 'geändert', DELETE: 'gelöscht' };
+function herkunft(r) {   // Herkunft und Erfassung: Quelldokument, festgestellt/erfasst, Provenance — und still mitgetragene Angaben
+  const x = r.res, z = [], impl = [];
+  let festgestellt = '';
+  (x.extension || []).forEach((e, i) => {
+    if (/source-document/.test(e.url) && e.valueReference) z.push('Quelle: ' + (F(r, `extension[${i}].valueReference.display`) || F(r, `extension[${i}].valueReference.reference`)));
+    else if (/assertedDate/.test(e.url) && e.valueDateTime) festgestellt = ' am ' + F(r, `extension[${i}].valueDateTime`, datum);
+    else if (/context-extension/.test(e.url) && e.valueCode) z.push('Kontext: ' + F(r, `extension[${i}].valueCode`));
+    else if (/ps-relevant|activity-extension|origin-medication/.test(e.url)) impl.push(`extension[${i}]`);   // Markierungen, Verknüpfungen
+  });
+  const person = (f) => x[f] ? (personName(verweis(x[f])) || F(r, `${f}.display`)) : '';
+  const datumsfeld = ['recordedDate', 'recorded', 'recordedOn'].find(f => x[f]);
+  const wer = [festgestellt || person('asserter') ? 'festgestellt' + festgestellt + (person('asserter') ? ' von ' + person('asserter') : '') : '',
+    person('recorder') ? 'erfasst von ' + person('recorder') : '',
+    datumsfeld ? 'dokumentiert am ' + F(r, datumsfeld, datum) : ''].filter(Boolean);
+  if (wer.length) z.push(wer.join(', '));
+  B.ressourcen.filter(q => q.res.resourceType === 'Provenance' && (q.res.target || []).some(t => (t.reference || '').replace(/\/_history\/.*$/, '') === r.key))
+    .forEach(q => {
+      const a = q.res.agent?.[0], wer = a ? (personName(verweis(a.who)) || F(q, 'agent[0].who.display')) : '';
+      const mit = ['agent[0].type', 'recorded', 'extension'].map(f => q.key + '|' + f).join(' ');
+      z.push(`<span data-n="${esc(q.key + '|')}" data-implizit="${esc(mit)}">Herkunft: ${F(q, 'activity.coding[0].code', c => PROV_AKTIVITAET[c] || c) || 'Eintrag'}${wer ? ' durch ' + wer : ''}`
+        + `${q.res.occurredDateTime ? ' am ' + F(q, 'occurredDateTime', datum) : ''}</span>`);
+    });
+  if (NORMALSTATUS.includes(x.status)) impl.push('status');
+  if (['plan', 'order'].includes(x.intent)) impl.push('intent');
+  if (x.category) impl.push('category');
+  if (x.primarySource === true) impl.push('primarySource');
+  if (x.issued) impl.push('issued');
+  (x.performer || []).forEach((pf, i) => { if (pf.function) impl.push(`performer[${i}].function`); });
+  if (x.resourceType === 'Condition' && x.verificationStatus && (x.code?.coding || []).some(c => (c.extension || []).some(e => e.valueCoding))) impl.push('verificationStatus');
+  const m = x.medicationReference ? verweis(x.medicationReference) : null;
+  const nids = impl.map(f => r.key + '|' + f);
+  if (m && NORMALSTATUS.includes(m.res.status)) nids.push(m.key + '|status');
+  (x.contained || []).forEach((c, i) => { if (c.extension) nids.push(`${r.key}|contained[${i}].extension`); });
+  return { z, implizit: nids.join(' ') };
+}
 const ALLERGIE_ART = { allergy: 'Allergie', intolerance: 'Unverträglichkeit' };
 const ALLERGIE_KATEGORIE = { medication: 'Arzneimittel', food: 'Nahrungsmittel', environment: 'Umwelt', biologic: 'Biologika' };
 const SCHWERE = { mild: 'leicht', moderate: 'mittel', severe: 'schwer' };
@@ -873,10 +1027,12 @@ function eintragZeile(r) {
   if (df) teile.push(F(r, df, datum));
   else if (x.effectivePeriod?.start) teile.push('seit ' + F(r, 'effectivePeriod.start', datum));
   else if (x.timingPeriod?.start) teile.push('seit ' + F(r, 'timingPeriod.start', datum));
-  if (!df && x.status && !x.clinicalStatus) teile.push(F(r, 'status'));
+  if (x.status && !NORMALSTATUS.includes(x.status) && !x.clinicalStatus) teile.push('Status ' + F(r, 'status', t => STATUS[t] || t));
+  if (x.resourceType === 'Observation') (x.performer || []).forEach((pf, i) => { const n = personName(verweis(pf)) || F(r, `performer[${i}].display`); if (n) teile.push('durch ' + n); });
   (x.reasonCode || []).forEach((_, i) => unter.push('Grund: ' + codingText(r, `reasonCode[${i}]`)));
   (x.note || []).forEach((_, i) => unter.push('Notiz: ' + F(r, `note[${i}].text`)));
-  return `<div class="eintrag" data-n="${esc(r.key + '|')}"><span class="art">${esc(x.resourceType)}</span> ${titel || '–'}${teile.filter(Boolean).length ? ' · ' + teile.filter(Boolean).join(' · ') : ''}`
+  const hk = herkunft(r); unter.push(...hk.z);
+  return `<div class="eintrag" data-n="${esc(r.key + '|')}" data-implizit="${esc(hk.implizit)}"><span class="art">${esc(x.resourceType)}</span> ${titel || '–'}${teile.filter(Boolean).length ? ' · ' + teile.filter(Boolean).join(' · ') : ''}`
     + unter.filter(Boolean).map(u => `<div class="hinweis">${u}</div>`).join('') + '</div>';
 }
 function dokumentAnsichtZeichnen() {
@@ -884,8 +1040,8 @@ function dokumentAnsichtZeichnen() {
   const comp = B.ressourcen.find(r => r.res.resourceType === 'Composition');
   if (!comp) { $('#ui-koerper').innerHTML = '<p class="hinweis">Keine Composition im Beispiel.</p>'; return; }
   const pat = verweis(comp.res.subject), autor = verweis(comp.res.author?.[0]);
-  const kopf = `<div class="titel"><h3>${F(comp, 'title') || 'Dokument'}</h3><span class="etikett" data-n="${esc(comp.key + '|status')}">${esc(comp.res.status || '')}</span></div>
-    <dl class="kv"><dt>Patient:in</dt><dd>${personName(pat) || '–'}${pat?.res.birthDate ? ', geb. ' + F(pat, 'birthDate', datum) : ''}</dd>
+  const kopf = `<div class="titel"><h3 data-implizit="${esc(comp.key + '|type')}">${F(comp, 'title') || 'Dokument'}</h3><span class="etikett" data-n="${esc(comp.key + '|status')}">${esc(comp.res.status || '')}</span></div>
+    <dl class="kv"><dt>Patient:in</dt><dd>${personName(pat) || '–'}${pat?.res.birthDate ? ', geb. ' + F(pat, 'birthDate', datum) : ''}${geschlecht(pat) ? ', ' + geschlecht(pat) : ''}</dd>
     <dt>KVNR</dt><dd>${kvnr(pat) || F(pat, 'identifier[0].value') || '–'}</dd>
     <dt>Erstellt</dt><dd>${F(comp, 'date', datum) || '–'}</dd><dt>Autor</dt><dd>${autor ? (personName(autor) || codingText(autor, 'type') || F(autor, 'deviceName[0].name') || esc(autor.res.resourceType)) : F(comp, 'author[0].display') || '–'}</dd></dl>`;
   const abschnitte = (comp.res.section || []).map((s, i) => {
@@ -895,22 +1051,23 @@ function dokumentAnsichtZeichnen() {
     return kopfzeile + inhalt;
   }).join('');
   $('#ui-koerper').innerHTML = `<div class="pvs">${kopf}${abschnitte}</div>`;
+  $('#ui-koerper').insertAdjacentHTML('beforeend', weitereAngabenHtml());
 }
-function druckZeichnen() {
+function druckHtml() {
   const { comp, dr, pat, empf, sr, sps, labor, ext } = befundTeile();
-  const fragen = fragestellung(sr), eingang = auftragseingang(dr), zusaetze = befundZusaetze(dr);
+  const fragen = fragestellung(sr), klin = klinischeAngaben(sr), eingang = auftragseingang(dr), zusaetze = befundZusaetze(dr);
   const v = comp ? ext(comp, 'Composition.version') : -1;
   const att = comp?.res.attester?.findIndex(a => a.mode === 'legal') ?? -1;
   const org = labor?.res.resourceType === 'PractitionerRole' ? verweis(labor.res.organization) : labor;
   const empfOrg = empf?.res.resourceType === 'PractitionerRole' ? verweis(empf.res.organization) : empf;
   const adresse = o => o?.res.address?.[0] ? [F(o, 'address[0].line[0]'), [F(o, 'address[0].postalCode'), F(o, 'address[0].city')].filter(Boolean).join(' ')].filter(Boolean).join('<br>') : '';
-  $('#doc-koerper').innerHTML = `<article class="papier">
+  return `<article class="papier">
     <div class="brief"><div><h4>${org ? F(org, 'name') : (personName(labor) || 'Labor')}</h4><div class="klein">${adresse(org)}</div></div>
       <div class="klein" style="text-align:right">${F(comp, 'title') || 'Laborbefund'}<br>${F(comp, 'date', datum)}</div></div>
     <div class="brief"><div class="anschrift"><div class="klein">An</div>${empf ? personName(empf) : '–'}<br>${adresse(empfOrg)}</div>
-      <div class="anschrift" style="text-align:right">Patient:in: ${personName(pat) || '–'}<br>${pat?.res.birthDate ? 'geb. ' + F(pat, 'birthDate', datum) + '<br>' : ''}KVNR ${kvnr(pat) || F(comp, 'subject.identifier.value') || '–'}</div></div>
+      <div class="anschrift" style="text-align:right">Patient:in: ${personName(pat) || '–'}<br>${pat?.res.birthDate ? 'geb. ' + F(pat, 'birthDate', datum) + '<br>' : ''}${geschlecht(pat) ? geschlecht(pat) + '<br>' : ''}KVNR ${kvnr(pat) || F(comp, 'subject.identifier.value') || '–'}</div></div>
     <p class="klein">Auftragsnummer Labor ${kennung(dr, 'AL') || '–'}${sr ? ' · Auftragsnummer Einsender ' + (kennung(sr, 'AE') || F(sr, 'identifier[0].value') || '–') : ''}${eingang ? ' · Auftragseingang ' + eingang : ''}${sr?.res.priority ? ' · ' + F(sr, 'priority', p => PRIORITAET[p] || p) : ''}<br>
-      ${fragen.length ? 'Fragestellung: ' + fragen.join('; ') + '<br>' : ''}${sps.length > 1 ? 'Proben' : 'Probe'}: ${probenListe(sps)}</p>
+      ${fragen.length ? 'Fragestellung: ' + fragen.join('; ') + '<br>' : ''}${klin.length ? '<b>Klinische Angaben: ' + klin.join('; ') + '</b><br>' : ''}${sps.length > 1 ? 'Proben' : 'Probe'}: ${probenListe(sps)}</p>
     <table><thead><tr><th>Untersuchung</th><th>Ergebnis</th><th>Einheit</th><th>Referenzbereich</th><th></th></tr></thead><tbody>${ergebnisZeilen(false)}</tbody></table>
     ${dr?.res.conclusion ? `<p><b>Beurteilung:</b> ${F(dr, 'conclusion')}</p>` : ''}
     ${zusaetze.map(z => `<p class="klein">${z}</p>`).join('')}
@@ -918,20 +1075,28 @@ function druckZeichnen() {
       Dokument-ID ${F(comp, 'identifier.value') || '–'} · Version ${v >= 0 ? F(comp, `extension[${v}].valueString`) : '–'} · Status ${F(comp, 'status') || '–'}</div>
   </article>`;
 }
+function druckZeichnen() { $('#doc-koerper').innerHTML = druckHtml(); }
 const DOKUMENTE = { druck: 'Druckfassung', pdf: 'Eingebettetes PDF', erzaehltext: 'Erzähltext' };
 let docReiter = D.meta.dokumente[0];
+function pdfHtml() {
+  const p = B.pdf;
+  if (!p) return '<p class="hinweis">Dieses Beispiel enthält kein auswertbares PDF in <code>presentedForm</code>.</p>';
+  return `<p class="hinweis">Textebene des PDF aus <code>DiagnosticReport.presentedForm</code> („${esc(p.titel)}“). Das PDF trägt keine Elementbezüge; die Markierung beruht auf Textabgleich mit den Instanzwerten. <a href="#" id="pdf-oeffnen">PDF öffnen</a></p>
+    <article class="papier">${p.zeilen.map((z, i) => `<div class="pdfzeile ${p.bezuege[i].length ? '' : 'ohne'}" ${p.bezuege[i].length ? `data-n="${esc(p.bezuege[i].join(' '))}"` : ''}>${esc(z)}</div>`).join('')}</article>`;
+}
 function pdfZeichnen() {
   const p = B.pdf;
-  if (!p) { $('#doc-koerper').innerHTML = '<p class="hinweis">Dieses Beispiel enthält kein auswertbares PDF in <code>presentedForm</code>.</p>'; return; }
-  $('#doc-koerper').innerHTML = `<p class="hinweis">Textebene des PDF aus <code>DiagnosticReport.presentedForm</code> („${esc(p.titel)}“). Das PDF trägt keine Elementbezüge; die Markierung beruht auf Textabgleich mit den Instanzwerten. <a href="#" id="pdf-oeffnen">PDF öffnen</a></p>
-    <article class="papier">${p.zeilen.map((z, i) => `<div class="pdfzeile ${p.bezuege[i].length ? '' : 'ohne'}" ${p.bezuege[i].length ? `data-n="${esc(p.bezuege[i].join(' '))}"` : ''}>${esc(z)}</div>`).join('')}</article>`;
+  $('#doc-koerper').innerHTML = pdfHtml();
+  if (!p) return;
   $('#pdf-oeffnen').onclick = e => { e.preventDefault(); const b = Uint8Array.from(atob(p.base64), c => c.charCodeAt(0)); window.open(URL.createObjectURL(new Blob([b], { type: 'application/pdf' })), '_blank'); };
 }
-function erzaehltextZeichnen() {
-  if (!B.texte.length) { $('#doc-koerper').innerHTML = '<p class="hinweis">Dieses Beispiel enthält keinen Erzähltext.</p>'; return; }
-  $('#doc-koerper').innerHTML = `<p class="hinweis">Erzähltext der Abschnitte (<code>Composition.section.text</code>) — die menschenlesbare Fassung des Dokuments. Er trägt keine Elementbezüge; die Markierung beruht auf Textabgleich mit den Instanzwerten.</p>
+function erzaehltextHtml() {
+  if (!B.texte.length) return '<p class="hinweis">Dieses Beispiel enthält keinen Erzähltext.</p>';
+  return `<p class="hinweis">Erzähltext der Abschnitte (<code>Composition.section.text</code>) — die menschenlesbare Fassung des Dokuments. Er trägt keine Elementbezüge; die Markierung beruht auf Textabgleich mit den Instanzwerten.</p>
     <article class="papier">${B.texte.map(t => `<h4 class="abschnitt" data-n="${esc(t.quelle)}">${esc(t.titel)}</h4>` + t.zeilen.map((z, i) => `<div class="pdfzeile ${t.bezuege[i].length ? '' : 'ohne'}" ${t.bezuege[i].length ? `data-n="${esc(t.bezuege[i].join(' '))}"` : ''}>${esc(z)}</div>`).join('')).join('')}</article>`;
 }
+function erzaehltextZeichnen() { $('#doc-koerper').innerHTML = erzaehltextHtml(); }
+const DOKUMENT_HTML = { druck: druckHtml, pdf: pdfHtml, erzaehltext: erzaehltextHtml };
 function docZeichnen() {
   $$('[data-doc]').forEach(b => b.setAttribute('aria-selected', b.dataset.doc === docReiter));
   const f = ({ druck: druckZeichnen, pdf: pdfZeichnen, erzaehltext: erzaehltextZeichnen })[docReiter];
@@ -1411,6 +1576,16 @@ $('#link-kopieren').onclick = async () => {
 $('#details').addEventListener('toggle', () => { if (auswahl) urlSchreiben(); });
 window.addEventListener('hashchange', urlAnwenden);
 urlAnwenden(); obenMessen();
+// Prüfmodus (?abdeckung) für `mx.py anzeige`: je Beispiel die Werte, die weder Anwenderansicht noch Dokument zeigen, als JSON in die Seite
+if (new URLSearchParams(location.search).has('abdeckung')) {
+  const ergebnis = {};
+  for (const b of D.beispiele) {
+    beispielLaden(b.id);
+    (D.meta.darstellung === 'laborbefund' ? uiZeichnen : dokumentAnsichtZeichnen)();
+    ergebnis[b.id] = weitereAngaben().map(g => ({ element: g.muster, anzahl: g.nids.length, werte: g.werte.slice(0, 3) }));
+  }
+  document.body.insertAdjacentHTML('beforeend', `<pre id="anzeige-ergebnis">${esc(JSON.stringify(ergebnis))}</pre>`);
+}
 </script>
 </body>
 </html>
