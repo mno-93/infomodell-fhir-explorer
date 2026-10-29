@@ -10,7 +10,8 @@ from mx.konfig import alle_projekte, projekt_laden
 
 class AuslesenTest(unittest.TestCase):
     def test_letztes_ergebnis_zaehlt(self):
-        daten = {'b1': [{'element': 'Patient · telecom.value', 'anzahl': 1, 'werte': ['0511 <1>']}]}
+        daten = {'beispiele': {'b1': [{'element': 'Patient · telecom.value', 'anzahl': 1, 'werte': ['0511 <1>']}]},
+                 'verknuepfung': {'b1': []}}
         dom = ('<script>…`<pre id="anzeige-ergebnis">${esc(JSON.stringify(ergebnis))}</pre>`…</script>'
                f'<pre id="anzeige-ergebnis">{html.escape(json.dumps(daten))}</pre>')
         self.assertEqual(anzeige.auslesen(dom), daten)
@@ -32,6 +33,19 @@ class ErgebnisdateienTest(unittest.TestCase):
                 self.assertIsNotNone(e, f'berichte/{pid}.anzeige.json fehlt')
                 self.assertEqual(e['fehlt'], [])
                 self.assertEqual(sorted(e['beispiele']), sorted(b['id'] for b in k['beispiele']))
+
+    def test_alle_verknuepfungen_tragen(self):
+        """Instanz ↔ Profil ↔ Informationsmodell in allen Richtungen, mit Rückwegen und Klicks (Prüfmodus der Seite)."""
+        for pid in alle_projekte():
+            k = projekt_laden(pid)
+            if not k['beispiele']:
+                continue
+            e = anzeige.ergebnis_laden(k)
+            self.assertIsNotNone(e, f'berichte/{pid}.anzeige.json fehlt')
+            for bid in e['beispiele']:
+                with self.subTest(projekt=pid, beispiel=bid):
+                    self.assertIn(bid, e['verknuepfung'], 'Ergebnis ohne Verknüpfungsprüfung — `mx.py anzeige` laufen lassen')
+                    self.assertEqual(e['verknuepfung'][bid], [])
 
     def test_abschnitt_im_pruefbericht(self):
         d = bauen.projekt_bauen('impfung')

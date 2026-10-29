@@ -18,7 +18,17 @@ Jede Verknüpfung läuft über **Profil-URL + kanonische Elementkennung**, z. B.
 | Instanz → Anwenderansicht, Druckfassung | die Darstellung trägt an jedem Wert den Instanzpfad, aus dem er stammt | konstruktiv |
 | Instanz → PDF, Erzähltext | Textabgleich der Zeilen mit den Instanzwerten (Zahlen und Datumsangaben auch in deutscher Schreibweise) | heuristisch |
 | Element → Anforderungen | Anforderungen im Modell direkt; Verarbeitungsregeln über die im Text genannten Pfade und das Profil des Abschnitts | teils heuristisch |
-| Code → Modell | Code der Instanz gleich Code der Terminologiezuordnung im Modell | spezifiziert |
+| Code ↔ Modell | Code der Instanz gleich Code der Terminologiezuordnung im Modell — in beiden Richtungen | spezifiziert |
+| über Profilgrenzen | Gehört ein Wert oder Element zu einem Profil, das im Modell nicht vorkommt (Basisressource, fremdes Profil wie KBV ohne Snapshot), trifft er die Mappings desselben Ressourcentyps über den Elementpfad ohne Slice-Namen; im Modell „schwach“, in der Leiste „über den Elementpfad“, vom Profil aus hell markiert | abgeleitet |
+
+Jede Verbindung gilt in **beiden Richtungen** und von jeder Seite aus (Modell, Profil, Instanz, Anwenderansicht, Dokument). Das prüft die Seite selbst (`verknuepfungPruefen` in `web/explorer.html`) im Prüfmodus von `mx.py anzeige`, für jedes Beispiel jedes Projekts:
+
+- **Instanz → Profil:** Jeder Wert hat ein anzeigbares Profilelement; ein Wert ohne eigenes (z. B. Teil-Extension eines Profils ohne Snapshot) nimmt das des nächsten Vorfahren.
+- **Instanz → Modell, Modell → Instanz, Profil → Modell, Profil → Instanz:** Wo ein Mapping bzw. Element einen Wert abdeckt, muss die Auswahl ihn treffen. Die Erwartung ist bewusst als eigene Regel formuliert, unabhängig von der Auflösung; eine Änderung an der Auflösung, die davon abweicht, fällt deshalb auf.
+- **Rückwege:** Führt ein Wert zu einem Modellelement bzw. Profilelement, markiert dessen Wahl den Wert wieder; jedes Mapping findet sein Profilelement, und dessen Wahl führt zum Modellelement zurück.
+- **Anwenderansicht:** Jeder Verweis der Anwenderansicht (auch im Auffangnetz) markiert beim Klick etwas.
+
+Fehlt eine Verknüpfung, endet `mx.py anzeige` mit Exit-Code 1, der Prüfbericht nennt sie, und der Test `test_alle_verknuepfungen_tragen` schlägt fehl — in der CI wie lokal.
 
 ## Profilzuordnung der Ressourcen
 

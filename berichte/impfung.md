@@ -233,6 +233,8 @@ Stand: `berichte/impfung.anzeige.json`, geschrieben von `python3 -I werkzeuge/mx
 | Erstdokumentation — zwei Impfungen, Mustermann | 0 | 0 |
 | Nachtrag aus einem Papier-Impfpass — Mustermann | 0 | 0 |
 
+**Verknüpfungen** zwischen Instanz, Profil und Informationsmodell (in allen Richtungen, über Profilgrenzen, mit Rückwegen und jedem Klick in der Anwenderansicht): alle tragen.
+
 ## FHIR-Validierung (HL7 Validator 7.0.1)
 
 Stand: `berichte/impfung.validierung.json`, geschrieben von `python3 -I werkzeuge/mx.py validieren impfung`; FHIR 4.0.1, Optionen `-tx n/a -locale en-US` (ohne Terminologieserver).

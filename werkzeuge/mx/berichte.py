@@ -214,6 +214,14 @@ def anzeige(d):
         z.append(f'| {titel.get(bid, bid)} | {sum(g["anzahl"] for g in gruppen)} | {len(gruppen)} |')
     z += [f'| {titel.get(bid, bid)} | noch nicht geprüft | – |' for bid in a['fehlt']]
     z.append('')
+    fehlend = {bid: v for bid, v in a.get('verknuepfung', {}).items() if v}
+    z += ['**Verknüpfungen** zwischen Instanz, Profil und Informationsmodell (in allen Richtungen, über Profilgrenzen, mit '
+          'Rückwegen und jedem Klick in der Anwenderansicht): '
+          + ('alle tragen.' if not fehlend else f'**{sum(f["anzahl"] for v in fehlend.values() for f in v)} fehlen**.'), '']
+    for bid, v in fehlend.items():
+        z += [f'- {titel.get(bid, bid)}: ' + '; '.join(f'{f["richtung"]} ({f["anzahl"]}×)' for f in v)]
+    if fehlend:
+        z.append('')
     for bid, gruppen in a['beispiele'].items():
         if gruppen:
             z += [f'### Nicht angezeigt — {titel.get(bid, bid)}', '', '| Element | Anzahl | Werte (Auswahl) |', '|---|---:|---|']

@@ -40,6 +40,8 @@ Stand: `berichte/patient-summary.anzeige.json`, geschrieben von `python3 -I werk
 | Patient Summary — Hoffmann | 5 | 1 |
 | Patient Summary — Yildiz | 2 | 1 |
 
+**Verknüpfungen** zwischen Instanz, Profil und Informationsmodell (in allen Richtungen, über Profilgrenzen, mit Rückwegen und jedem Klick in der Anwenderansicht): alle tragen.
+
 ### Nicht angezeigt — Patient Summary — Hoffmann
 
 | Element | Anzahl | Werte (Auswahl) |

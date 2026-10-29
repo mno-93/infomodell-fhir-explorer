@@ -631,6 +631,8 @@ Stand: `berichte/laborbefund.anzeige.json`, geschrieben von `python3 -I werkzeug
 | IG-Beispiel, zweite Composition | 150 | 87 |
 | Fallbeispiel 1 nach MIO Laborbefund — Hansen, 15.11.2021 | 22 | 17 |
 
+**Verknüpfungen** zwischen Instanz, Profil und Informationsmodell (in allen Richtungen, über Profilgrenzen, mit Rückwegen und jedem Klick in der Anwenderansicht): alle tragen.
+
 ### Nicht angezeigt — IG-Beispiel mit Probe, Gerät und Anhang
 
 | Element | Anzahl | Werte (Auswahl) |

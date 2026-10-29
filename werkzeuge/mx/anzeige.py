@@ -5,6 +5,10 @@ Wert eines Beispiels steht entweder in der Anwenderansicht bzw. einer Dokumentfa
 mitgetragene Angabe `data-implizit`) oder im Auffangnetz. Technisch sind nur Kennungen und Metadaten, Systeme, Versionen,
 URLs, Erzähltext, UUID-Kennungen und Verweise, deren Ziel im Beispiel liegt.
 
+Dazu die Verknüpfungsprüfung der Seite (`verknuepfungPruefen`): Jede Richtung Instanz ↔ Profil ↔ Informationsmodell muss
+tragen — erwartet, wo ein Mapping bzw. Element den Wert abdeckt (auch über Profilgrenzen), dazu die Rückwege und jeder Klick
+in der Anwenderansicht. Fehlt eine Verknüpfung, endet `anzeige` mit Exit-Code 1 (die CI schlägt fehl).
+
 `mx.py anzeige` führt die gebaute Seite `ausgabe/<projekt>.html?abdeckung` in einem Browser ohne Fenster aus (Chrome,
 Chromium oder Edge; über BROWSER_BIN wählbar) und schreibt `berichte/<projekt>.anzeige.json` — eingecheckt und
 deterministisch, damit ein neues Beispiel oder eine geänderte Ansicht, die etwas verschluckt, im Diff auffällt. `bauen`
@@ -44,7 +48,8 @@ def datei(pid):
 
 
 def auslesen(dom):
-    """Ergebnis des Prüfmodus aus dem ausgegebenen DOM: {beispiel: [{element, anzahl, werte}]}. Das eingefügte Element steht
+    """Ergebnis des Prüfmodus aus dem ausgegebenen DOM: {beispiele: {id: [{element, anzahl, werte}]},
+    verknuepfung: {id: [{richtung, anzahl, beispiele}]}}. Das eingefügte Element steht
     am Ende der Seite; dieselbe Zeichenkette kommt vorher als Vorlage im Skript vor."""
     treffer = [html.unescape(t) for t in ERGEBNIS.findall(dom)]
     treffer = [t for t in treffer if t.lstrip().startswith('{')]
@@ -67,23 +72,28 @@ def projekt(pid):
                             seite.resolve().as_uri() + '?abdeckung'],
                            capture_output=True, text=True, encoding='utf-8', errors='replace', timeout=600)
     try:
-        beispiele = auslesen(r.stdout)
-    except ValueError as e:
+        e = auslesen(r.stdout)
+    except ValueError as x:
         print(r.stderr[-2000:])
-        raise SystemExit(f'{pid}: {e}')
-    json_schreiben(datei(pid), {'projekt': pid, 'beispiele': beispiele})
-    for bid, gruppen in beispiele.items():
+        raise SystemExit(f'{pid}: {x}')
+    json_schreiben(datei(pid), {'projekt': pid, 'beispiele': e['beispiele'], 'verknuepfung': e['verknuepfung']})
+    fehler = 0
+    for bid, gruppen in e['beispiele'].items():
         n = sum(g['anzahl'] for g in gruppen)
         print(f'  {bid}: ' + (f'{n} Werte in {len(gruppen)} Elementen weder in Anwenderansicht noch Dokument' if n
                               else 'alle inhaltlichen Werte angezeigt'))
-    return 0
+        for f in e['verknuepfung'].get(bid, []):
+            fehler += f['anzahl']
+            print(f'    Verknüpfung fehlt: {f["richtung"]} ({f["anzahl"]}×), z. B. {", ".join(f["beispiele"][:3])}')
+    return 1 if fehler else 0
 
 
 def alle(pids):
+    ergebnis = 0
     for pid in pids:
         print(f'{pid}:')
-        projekt(pid)
-    return 0
+        ergebnis |= projekt(pid)
+    return ergebnis
 
 
 def ergebnis_laden(k):
@@ -94,4 +104,5 @@ def ergebnis_laden(k):
     d = json_laden(p)
     ids = [b['id'] for b in k['beispiele']]
     return {'beispiele': {i: d['beispiele'][i] for i in ids if i in d['beispiele']},
+            'verknuepfung': {i: d.get('verknuepfung', {}).get(i, []) for i in ids if i in d['beispiele']},
             'fehlt': [i for i in ids if i not in d['beispiele']]}

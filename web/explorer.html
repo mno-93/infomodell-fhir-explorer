@@ -371,12 +371,19 @@ function wert(key, jp) {
 }
 
 // ------------------------------------------------------------------ Auflösung einer Auswahl
+// Über Profilgrenzen: Ein Wert oder Element, dessen Profil im Informationsmodell nicht vorkommt (Basisressource, fremdes Profil
+// wie KBV ohne Snapshot), trifft die Mappings desselben Ressourcentyps über den Elementpfad ohne Slice-Namen — als „schwach“.
+const PROFILE_MIT_MAPPING = new Set(IMMAPS.map(m => m.sd));
+const ohneSlices = k => k.replace(/:[^.]+/g, '');
+function deckenQuer(a, b) { return a.split('.')[0] === b.split('.')[0] && deckt(ohneSlices(a), ohneSlices(b)); }
+// Mapping bzw. Element (msd, mk) deckt den Wert bzw. das Element (sd, k): im selben Profil oder, bei fremdem Profil, über den Pfad
+function deckenProfil(msd, mk, sd, k) { return msd === sd ? deckt(mk, k) : (!PROFILE_MIT_MAPPING.has(sd) && deckenQuer(mk, k)); }
 function imFuerElement(sd, k) {
   const exakt = IMMAPS.filter(m => m.sd === sd && m.k === k);
   if (exakt.length) return { ids: new Set(exakt.map(m => m.im)), schwach: false };
   let beste = [], bt = 0;
-  for (const m of IMMAPS) if (m.sd === sd && deckt(m.k, k)) { const t = guete(m.k); if (t > bt) { bt = t; beste = [m]; } else if (t === bt) beste.push(m); }
-  return { ids: new Set(beste.map(m => m.im)), schwach: true };
+  for (const m of IMMAPS) if (deckenProfil(m.sd, m.k, sd, k)) { const t = guete(m.k); if (t > bt) { bt = t; beste = [m]; } else if (t === bt) beste.push(m); }
+  return { ids: new Set(beste.map(m => m.im)), schwach: true, quer: beste.some(m => m.sd !== sd) };
 }
 function profilElementFuer(sd, k) {
   const p = D.profile[sd]; if (!p) return null;
@@ -390,24 +397,36 @@ function imMapsMitNachfahren(id) {
   return maps;
 }
 
+// Profilelement eines Werts; ohne eigenes (z. B. Teil-Extension eines Profils ohne Snapshot) das des nächsten Vorfahren
+function elementZu(nid) {
+  const i = nid.indexOf('|'), key = nid.slice(0, i);
+  for (let jp = nid.slice(i + 1), q = null; jp !== q; q = jp, jp = elternPfad(jp)) if (B.elemente[key + '|' + jp]) return B.elemente[key + '|' + jp];
+  return B.elemente[key + '|'] || null;
+}
 function aufloesen(sel) {
-  const r = { im: new Set(), imSchwach: false, el: [], n1: new Set(), n2: new Set(), sd: null, titel: '' };
+  const r = { im: new Set(), imSchwach: false, imQuer: false, el: [], n1: new Set(), n2: new Set(), sd: null, titel: '' };
   if (!sel) return r;
   if (sel.t === 'im') {
     r.im.add(sel.id);
     const maps = imMapsMitNachfahren(sel.id);
     r.el = maps.map(m => ({ sd: m.sd, k: m.k }));
     r.sd = maps[0]?.sd || null;
-    for (const kn of KNOTEN) if (maps.some(m => m.sd === kn.sd && deckt(m.k, kn.k))) r.n1.add(kn.nid);
+    for (const kn of KNOTEN) if (maps.some(m => deckenProfil(m.sd, m.k, kn.sd, kn.k))) r.n1.add(kn.nid);
+    // Code-Verknüpfung (Rückweg zu unten): Werte der Instanz, die als Code dieses Modellelements stehen
+    const codes = new Set((IMBYID[sel.id].codes || []).map(c => c.code));
+    if (codes.size) for (const kn of KNOTEN) { const w = wert(...kn.nid.split('|')); if (typeof w === 'string' && codes.has(w)) r.n1.add(kn.nid); }
   } else if (sel.t === 'el') {
     r.el = [{ sd: sel.sd, k: sel.k }]; r.sd = sel.sd;
-    const f = imFuerElement(sel.sd, sel.k); r.im = f.ids; r.imSchwach = f.schwach;
-    for (const kn of KNOTEN) if (kn.sd === sel.sd && deckt(sel.k, kn.k)) r.n1.add(kn.nid);
+    const f = imFuerElement(sel.sd, sel.k); r.im = f.ids; r.imSchwach = f.schwach; r.imQuer = !!f.quer;
+    for (const kn of KNOTEN) {
+      if (kn.sd === sel.sd && deckt(sel.k, kn.k)) r.n1.add(kn.nid);
+      else if (kn.sd !== sel.sd && !PROFILE_MIT_MAPPING.has(kn.sd) && deckenQuer(sel.k, kn.k)) r.n2.add(kn.nid);   // Wert aus fremdem Profil: hell
+    }
   } else if (sel.t === 'node') {
-    const el = B.elemente[sel.nids[0]]; if (!el) return r;
+    const el = elementZu(sel.nids[0]); if (!el) return r;
     const [sd, k] = trenne(el); r.sd = sd;
     const pe = profilElementFuer(sd, k); r.el = pe ? [{ sd, k: pe.k }] : [];
-    const f = imFuerElement(sd, k); r.im = f.ids; r.imSchwach = f.schwach;
+    const f = imFuerElement(sd, k); r.im = f.ids; r.imSchwach = f.schwach; r.imQuer = !!f.quer;
     for (const nid of sel.nids) r.n1.add(nid);
     const unter = (nid, p) => p.endsWith('|') ? nid.startsWith(p) : (nid.startsWith(p + '.') || nid.startsWith(p + '['));
     for (const kn of KNOTEN) {
@@ -1193,7 +1212,7 @@ function ketteZeichnen(imZahl, fhirZahl, uiZahl, docZahl) {
     $('#detail-raster').innerHTML = ''; return;
   }
   const ims = [...R.im].map(id => IMBYID[id]);
-  glied('#g-im', ims.length ? ims.slice(0, 3).map(n => `<b>${esc(n.name)}</b> <span class="mono">${esc(cardKurz(n.card))}</span>`).join('<br>') + (ims.length > 3 ? `<br>… ${ims.length - 3} weitere` : '') + (R.imSchwach && auswahl.t !== 'im' ? '<br><span class="hinweis">nächstes übergeordnetes Element</span>' : '') : (D.meta.im_art !== 'aus-profilen' ? 'kein Element im Informationsmodell' : 'kein Element in der abgeleiteten Struktur'), !ims.length, !ims.length);
+  glied('#g-im', ims.length ? ims.slice(0, 3).map(n => `<b>${esc(n.name)}</b> <span class="mono">${esc(cardKurz(n.card))}</span>`).join('<br>') + (ims.length > 3 ? `<br>… ${ims.length - 3} weitere` : '') + (R.imSchwach && auswahl.t !== 'im' ? `<br><span class="hinweis">${R.imQuer ? 'über den Elementpfad — das Profil des Beispiels kommt im Modell nicht vor' : 'nächstes übergeordnetes Element'}</span>` : '') : (D.meta.im_art !== 'aus-profilen' ? 'kein Element im Informationsmodell' : 'kein Element in der abgeleiteten Struktur'), !ims.length, !ims.length);
   const els = R.el.slice(0, 3).map(({ sd, k }) => { const p = D.profile[sd]; const e = p?.elemente.find(x => x.k === k); return `<b>${esc(p ? p.name : kurzUrl(sd))}</b><br><code>${esc(e ? e.id : k)}</code>${e ? ` <span class="mono">${esc(e.card)}</span>${e.ms ? ' <span class="ms">S</span>' : ''}` : ''}`; });
   glied('#g-fhir', els.length ? els.join('<br>') + (R.el.length > 3 ? `<br>… ${R.el.length - 3} weitere` : '') : (MIT_FHIR ? 'kein FHIR-Mapping' : 'das Modell enthält keine FHIR-Mappings'), !els.length, !els.length && MIT_FHIR);
   const blaetter = [...R.n1].filter(n => { const w = wert(...n.split('|')); return w !== undefined && (w === null || typeof w !== 'object'); });
@@ -1544,7 +1563,7 @@ function urlAnwenden() {
     if (prof && e) sel = { t: 'el', sd: prof.url, k: e.k, u: z.k && t.k[z.k] ? z.k : undefined };
     else fehlt = `Profilelement ${z.el}`;
   } else if (z.n.length) {
-    const da = z.n.filter(n => B.elemente[n]);
+    const da = z.n.filter(n => elementZu(n));
     if (da.length) sel = { t: 'node', nids: da }; else fehlt = `Wert ${z.n[0]} im Beispiel ${B.id}`;
   }
   auswahl = sel; fundZeiger = null;
@@ -1640,13 +1659,53 @@ $('#link-kopieren').onclick = async () => {
 $('#details').addEventListener('toggle', () => { if (auswahl) urlSchreiben(); });
 window.addEventListener('hashchange', urlAnwenden);
 urlAnwenden(); obenMessen();
+// Verknüpfungsprüfung (Prüfmodus): Jede Richtung Instanz ↔ Profil ↔ Informationsmodell muss tragen. Erwartet wird eine
+// Verknüpfung, wenn ein Mapping bzw. Element den Wert abdeckt (gleich oder Vorfahr; im eigenen Profil oder über Profilgrenzen).
+function verknuepfungPruefen() {
+  // Erwartung als eigene Spezifikation, bewusst unabhängig von der Auflösung (deckenProfil) formuliert: Ein Mapping bzw. Element
+  // (msd, mk) gehört zum Wert bzw. Element (sd, k), wenn mk k abdeckt — im selben Profil, oder wenn das Profil von (sd, k) im
+  // Modell keine Mappings hat (Basisressource, fremdes Profil), über Ressourcentyp und Pfad ohne Slice-Namen.
+  const ohneSl = x => x.replace(/:[^.]+/g, '');
+  const mitMapping = new Set(IM.flatMap(n => n.maps.filter(m => m.sd).map(m => m.sd)));
+  const erwartet = (msd, mk, sd, k) => msd === sd ? deckt(mk, k)
+    : (!mitMapping.has(sd) && mk.split('.')[0] === k.split('.')[0] && deckt(ohneSl(mk), ohneSl(k)));
+  const fehler = {};
+  const melde = (art, wo) => (fehler[art] ||= []).push(wo);
+  const ui = new Set($$('#ui-koerper [data-n]').flatMap(e => e.dataset.n.split(' ')).filter(n => n.split('|')[1]));
+  for (const nid of ui) if (!elementZu(nid)) melde('Anwenderansicht → Instanz', nid);   // ein Klick muss etwas markieren
+  const imAuf = {}, auf = id => (imAuf[id] ||= aufloesen({ t: 'im', id }));
+  for (const kn of KNOTEN) {
+    const r = aufloesen({ t: 'node', nids: [kn.nid] });
+    if (!r.el.length || !D.profile[r.el[0].sd]) melde('Instanz → Profil', kn.nid);
+    else if (!aufloesen({ t: 'el', sd: r.el[0].sd, k: r.el[0].k }).n1.has(kn.nid)) melde('Rückweg Profil → Instanz', kn.nid);
+    if (IMMAPS.some(m => erwartet(m.sd, m.k, kn.sd, kn.k)) && !r.im.size) melde('Instanz → Modell', kn.nid);
+    for (const i of r.im) if (!auf(i).n1.has(kn.nid)) melde('Rückweg Modell → Instanz', `${IMBYID[i].name} ↛ ${kn.nid}`);
+  }
+  for (const n of IM) {
+    const maps = imMapsMitNachfahren(n.id); if (!maps.length) continue;
+    const ok = n.maps.filter(m => m.sd && !/fehler|verboten|unbekannt/.test(m.status || ''));
+    if (ok.some(m => !D.profile[m.sd] || !profilElementFuer(m.sd, m.k))) melde('Modell → Profil', n.id + ' ' + n.name);
+    if (ok.some(m => D.profile[m.sd] && !aufloesen({ t: 'el', sd: m.sd, k: m.k }).im.has(n.id))) melde('Rückweg Profil → Modell', n.id + ' ' + n.name);
+    if (KNOTEN.some(kn => maps.some(m => erwartet(m.sd, m.k, kn.sd, kn.k))) && !auf(n.id).n1.size) melde('Modell → Instanz', n.id + ' ' + n.name);
+  }
+  for (const [sd, p] of Object.entries(D.profile)) for (const e of p.elemente) {
+    const imErw = IMMAPS.some(m => erwartet(m.sd, m.k, sd, e.k));
+    const knErw = KNOTEN.some(kn => erwartet(sd, e.k, kn.sd, kn.k));
+    if (!imErw && !knErw) continue;
+    const r = aufloesen({ t: 'el', sd, k: e.k });
+    if (imErw && !r.im.size) melde('Profil → Modell', sd + '#' + e.k);
+    if (knErw && !r.n1.size && !r.n2.size) melde('Profil → Instanz', sd + '#' + e.k);
+  }
+  return Object.entries(fehler).sort().map(([richtung, wo]) => ({ richtung, anzahl: wo.length, beispiele: wo.slice(0, 5) }));
+}
 // Prüfmodus (?abdeckung) für `mx.py anzeige`: je Beispiel die Werte, die weder Anwenderansicht noch Dokument zeigen, als JSON in die Seite
 if (new URLSearchParams(location.search).has('abdeckung')) {
-  const ergebnis = {};
+  const ergebnis = { beispiele: {}, verknuepfung: {} };
   for (const b of D.beispiele) {
     beispielLaden(b.id);
     (D.meta.darstellung === 'laborbefund' ? uiZeichnen : dokumentAnsichtZeichnen)();
-    ergebnis[b.id] = weitereAngaben().map(g => ({ element: g.muster, anzahl: g.nids.length, werte: g.werte.slice(0, 3) }));
+    ergebnis.beispiele[b.id] = weitereAngaben().map(g => ({ element: g.muster, anzahl: g.nids.length, werte: g.werte.slice(0, 3) }));
+    ergebnis.verknuepfung[b.id] = verknuepfungPruefen();
   }
   document.body.insertAdjacentHTML('beforeend', `<pre id="anzeige-ergebnis">${esc(JSON.stringify(ergebnis))}</pre>`);
 }
