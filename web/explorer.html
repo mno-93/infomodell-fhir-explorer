@@ -1127,14 +1127,14 @@ function markieren(scrollen = true) {
     });
   }
   // Instanz, Anwenderansicht, Dokument
-  const zaehle = (wurzel) => {
-    let n = 0, erstes = null;
+  const zaehle = (wurzel) => {   // angesprungen wird der erste kräftige Treffer, nur ohne ihn der erste helle
+    let n = 0, erstes = null, erstesHell = null;
     $$('[data-n]', wurzel).forEach(z => {
       const nids = z.dataset.n.split(' ');
       if (nids.some(nid => vorfahren(nid).some(v => R.n1.has(v)))) { z.classList.add('hl'); n++; erstes ||= z; }
-      else if (nids.some(nid => R.n2.has(nid))) { z.classList.add('hl2'); erstes ||= z; }
+      else if (nids.some(nid => R.n2.has(nid))) { z.classList.add('hl2'); erstesHell ||= z; }
     });
-    return [n, erstes];
+    return [n, erstes || erstesHell];
   };
   let [instZahl, erstesInst] = reiter === 'instanz' ? zaehle($('#fhir-koerper')) : [0, null];
   if (reiter === 'instanz') { fhirZahl = instZahl; erstesFhir = erstesInst; }
