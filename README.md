@@ -48,6 +48,8 @@ Weitere Befehle:
 ## Bedienung
 
 - **Vier Ansichten:** 1 Informationsmodell (oder abgeleitete Struktur) · 2 FHIR — Profil oder Instanz · 3 Anwenderansicht · 4 Dokument.
+- **Ansichten ein- und ausblenden:** Menü „Ansichten“ im Kopf (je Bereich ein Haken) oder „–“ im Kopf eines Bereichs; die übrigen Bereiche teilen sich den Platz. Zusammenstellungen: **Instanz + Anwenderansicht** (fachliche Sichtung, FHIR auf „Instanz“), **Informationsmodell + FHIR-Profil** (Modellierung, FHIR auf „Profil“), alle Bereiche. Die Wahl bleibt im Browser gespeichert und steht in kopierten Links (`a=fhir.ui`).
+- **Weitere Angaben aus der Instanz:** am Ende der Anwenderansicht alle inhaltlichen Werte des Beispiels, die weder Anwenderansicht noch Dokument zeigen — für eine vollständige Sichtung.
 - **Verknüpfungsleiste** oben: Kette der Auswahl über alle Ansichten; fehlt ein Glied, wird es als Lücke markiert. Darunter Beschreibung, Codes, Herkunft und Anforderungen.
 - **Zwei Markierungsstufen:** kräftig = genau dieser Wert, hell = dasselbe Element an anderer Stelle.
 - **Informationsmodell referenziert oder ausmodelliert:** wie im IG oder mit jeder Referenz an ihrer Verwendungsstelle; Zyklen werden erkannt, Fundstellen mit ‹ › durchlaufen.
@@ -68,6 +70,7 @@ Jede Ansicht hat eine eigene Adresse: Auswahl, Beispiel, Baumdarstellung und Rei
 | `el` | Profilelement: Profil-id `/` Element-id | `el=observation-laboratory-study-dglp/Observation.value%5Bx%5D:valueQuantity.value` |
 | `n` | Wert im Beispiel: Ressource `\|` JSON-Pfad (mehrfach möglich) | `n=Observation/obs-f81d4fae-0-0\|valueQuantity.value` |
 | `v`, `f`, `d`, `info` | ausmodellierte Sicht, FHIR-Reiter Instanz, Dokumentansicht, Details aufgeklappt | `v=ausmodelliert&f=instanz&d=pdf&info=1` |
+| `a` | sichtbare Bereiche (`im`, `fhir`, `ui`, `doc`, mit Punkt getrennt); fehlt `a`, gilt die im Browser gespeicherte Wahl | `a=fhir.ui&f=instanz` |
 
 Beispiel: `laborbefund.html#b=hoffmann-2026-08-12&im=1627&info=1` öffnet den Befund, markiert „Wert“ in allen Ansichten und klappt die Details auf. Kennungen im Modell stammen aus dem IG; Fundstellen und die Elemente der aus Profilen abgeleiteten Struktur tragen Kennungen, die aus ihrem Pfad berechnet sind und bei einem Neubau gleich bleiben. Ein Verweis, der nicht mehr passt, wird im Kopf gemeldet. Die Kurzform `#<Beispiel>` gilt weiter.
 

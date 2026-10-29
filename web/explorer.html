@@ -111,6 +111,19 @@ li.zu > ul { display: none; }
 .im-zeile .art.fhir { border: 1px solid var(--linie); border-radius: 3px; padding: 0 3px; color: var(--leise); }
 .im-zeile.syn .name { font-style: italic; color: var(--leise); }
 .knopf.mini { padding: 0 6px; font-size: 12px; line-height: 18px; }
+/* Bereiche ein- und ausblenden: Menü im Kopf, Knopf je Bereich, Raster nach Zahl der sichtbaren Bereiche */
+.ansichten { position: relative; }
+.ansichten summary { list-style: none; display: inline-block; }
+.ansichten summary::-webkit-details-marker { display: none; }
+.ansichten-menue { position: absolute; right: 0; top: calc(100% + 6px); z-index: 60; display: grid; gap: 4px; min-width: 270px; padding: 8px 10px;
+  background: var(--flaeche); border: 1px solid var(--linie); border-radius: 8px; box-shadow: 0 6px 20px rgba(0,0,0,.18); font-size: 13px; }
+.ansichten-menue label { display: flex; gap: 6px; align-items: center; cursor: pointer; }
+.ansichten-menue .knopf { text-align: left; }
+.ansichten-menue .hinweis { margin-top: 4px; }
+.pane > header .ausblenden { margin-left: 2px; }
+.raster[data-spalten="1"] { grid-template-columns: minmax(0,1fr); }
+.raster[data-spalten="2"] { grid-template-columns: repeat(2, minmax(0,1fr)); }
+.raster[data-spalten="3"] { grid-template-columns: repeat(3, minmax(0,1fr)); }
 .fehlerliste td:first-child { white-space: nowrap; }
 .fehler-t { color: var(--fehler); font-weight: 600; }
 .detail-raster section.voll { grid-column: 1 / -1; }
@@ -202,11 +215,13 @@ dialog table td, dialog table th { border-bottom: 1px solid var(--linie); paddin
 dialog::backdrop { background: rgba(0,0,0,.35); }
 
 @media (max-width: 1500px) {
-  .raster { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .raster, .raster[data-spalten="3"] { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .raster[data-spalten="1"] { grid-template-columns: minmax(0,1fr); }
   .pane { height: 70vh; }
+  .raster[data-spalten="1"] .pane, .raster[data-spalten="2"] .pane { height: calc(100vh - var(--oben, 190px) - 26px); }
 }
 @media (max-width: 860px) {
-  .raster { grid-template-columns: minmax(0,1fr); padding: 10px 16px; }
+  .raster, .raster[data-spalten] { grid-template-columns: minmax(0,1fr); padding: 10px 16px; }
   .kette-glieder { grid-template-columns: repeat(2, minmax(0,1fr)); }
   .detail-raster { grid-template-columns: minmax(0,1fr); }
   .pane { height: 75vh; }
@@ -223,6 +238,19 @@ dialog::backdrop { background: rgba(0,0,0,.35); }
     <label class="hinweis" for="beispielwahl">Beispiel</label>
     <select id="beispielwahl"></select>
     <button class="knopf" id="pruefung-auf">Abdeckung &amp; Prüfung</button>
+    <details class="ansichten" id="ansichten"><summary class="knopf" title="Bereiche ein- und ausblenden">Ansichten</summary>
+      <div class="ansichten-menue" role="group" aria-label="Bereiche ein- und ausblenden">
+        <div class="hinweis">Bereiche</div>
+        <label><input type="checkbox" data-bereich="im"> 1 Informationsmodell</label>
+        <label><input type="checkbox" data-bereich="fhir"> 2 FHIR (Profil, Instanz)</label>
+        <label><input type="checkbox" data-bereich="ui"> 3 Anwenderansicht</label>
+        <label><input type="checkbox" data-bereich="doc"> 4 Dokument</label>
+        <div class="hinweis">Zusammenstellungen</div>
+        <button class="knopf" data-vorgabe="sichtung" title="FHIR-Bereich auf „Instanz“; für die fachliche Sichtung">Instanz + Anwenderansicht</button>
+        <button class="knopf" data-vorgabe="modell" title="FHIR-Bereich auf „Profil“; für die Modellierung">Informationsmodell + FHIR-Profil</button>
+        <button class="knopf" data-vorgabe="alle">Alle Bereiche</button>
+      </div>
+    </details>
     <button class="knopf" id="legende-auf" title="Was die Zeichen und Farben bedeuten">Legende</button>
     <button class="knopf" id="link-kopieren" title="Link auf genau diese Ansicht und Auswahl kopieren">Link kopieren</button>
     <button class="knopf" id="leeren" title="Auswahl aufheben (Esc; Esc schließt zuerst offene Fenster)">Auswahl aufheben</button>
@@ -244,7 +272,7 @@ dialog::backdrop { background: rgba(0,0,0,.35); }
 
 <main class="raster">
   <section class="pane" id="p-im">
-    <header><h2><span class="nr">1</span><span id="im-titel">Informationsmodell</span></h2><span class="treffer" id="t-im"></span></header>
+    <header><h2><span class="nr">1</span><span id="im-titel">Informationsmodell</span></h2><span class="treffer" id="t-im"></span><button class="knopf mini ausblenden" data-ausblenden="im" title="Bereich ausblenden (über „Ansichten“ wieder einblenden)" aria-label="Bereich ausblenden">–</button></header>
     <div class="leerhinweis an" id="im-hinweis" hidden></div>
     <div class="unterkopf"><div class="reiter" id="varianten" role="tablist" aria-label="Darstellung des Informationsmodells"><button role="tab" data-variante="referenziert" aria-selected="true" title="wie im IG: Profile stehen einmal und werden referenziert">referenziert</button><button role="tab" data-variante="ausmodelliert" aria-selected="false" title="jede Referenz an der Stelle ausmodelliert, an der sie vorkommt">ausmodelliert</button></div><input type="search" id="im-suche" placeholder="Element suchen …" aria-label="Informationsmodell durchsuchen"><button class="knopf" id="im-auf" title="Alle aufklappen">+</button><button class="knopf" id="im-zu" title="Alle zuklappen">–</button></div>
     <div class="koerper"><ul class="im-baum" id="im-baum"></ul></div>
@@ -254,7 +282,7 @@ dialog::backdrop { background: rgba(0,0,0,.35); }
   <section class="pane" id="p-fhir">
     <header><h2><span class="nr">2</span>FHIR</h2>
       <div class="reiter" role="tablist"><button role="tab" data-reiter="profil" aria-selected="true">Profil</button><button role="tab" data-reiter="instanz" aria-selected="false">Instanz</button></div>
-      <span class="treffer" id="t-fhir"></span></header>
+      <span class="treffer" id="t-fhir"></span><button class="knopf mini ausblenden" data-ausblenden="fhir" title="Bereich ausblenden (über „Ansichten“ wieder einblenden)" aria-label="Bereich ausblenden">–</button></header>
     <div class="unterkopf" id="profilwahl-zeile"><select id="profilwahl" aria-label="Profil wählen"></select><a id="profil-link" class="hinweis" target="_blank" rel="noopener">im IG</a></div>
     <div class="leerhinweis" id="lh-fhir"></div>
     <div class="koerper" id="fhir-koerper"></div>
@@ -262,7 +290,7 @@ dialog::backdrop { background: rgba(0,0,0,.35); }
   </section>
 
   <section class="pane" id="p-ui">
-    <header><h2><span class="nr">3</span>Anwenderansicht</h2><span class="hinweis" id="ui-untertitel"></span><span class="treffer" id="t-ui"></span></header>
+    <header><h2><span class="nr">3</span>Anwenderansicht</h2><span class="hinweis" id="ui-untertitel"></span><span class="treffer" id="t-ui"></span><button class="knopf mini ausblenden" data-ausblenden="ui" title="Bereich ausblenden (über „Ansichten“ wieder einblenden)" aria-label="Bereich ausblenden">–</button></header>
     <div class="leerhinweis" id="lh-ui"></div>
     <div class="koerper" id="ui-koerper"></div>
   </section>
@@ -270,7 +298,7 @@ dialog::backdrop { background: rgba(0,0,0,.35); }
   <section class="pane" id="p-doc">
     <header><h2><span class="nr">4</span>Dokument</h2>
       <div class="reiter" role="tablist" id="doc-reiter"></div>
-      <span class="treffer" id="t-doc"></span></header>
+      <span class="treffer" id="t-doc"></span><button class="knopf mini ausblenden" data-ausblenden="doc" title="Bereich ausblenden (über „Ansichten“ wieder einblenden)" aria-label="Bereich ausblenden">–</button></header>
     <div class="leerhinweis" id="lh-doc"></div>
     <div class="koerper" id="doc-koerper"></div>
   </section>
@@ -1357,11 +1385,36 @@ function pruefungZeigen() {
   $('#pruefung').showModal();
 }
 
+// ------------------------------------------------------------------ Bereiche ein- und ausblenden
+// Wer nur sichtet, braucht Instanz und Anwenderansicht; wer modelliert, Informationsmodell und FHIR-Profil. Die Wahl bleibt im
+// Browser gespeichert und steht in kopierten Links (a=…); ausgeblendete Bereiche werden weiter gezeichnet und markiert.
+const BEREICHE = ['im', 'fhir', 'ui', 'doc'];
+const VORGABEN = { sichtung: { bereiche: ['fhir', 'ui'], reiter: 'instanz' }, modell: { bereiche: ['im', 'fhir'], reiter: 'profil' }, alle: { bereiche: BEREICHE } };
+let bereiche = (() => {
+  try { const g = JSON.parse(localStorage.getItem('modellexplorer.bereiche')); if (Array.isArray(g)) return BEREICHE.filter(b => g.includes(b)); } catch (e) { /* ohne Speicher */ }
+  return [...BEREICHE];
+})();
+function bereicheAnwenden() {
+  if (!bereiche.length) bereiche = [...BEREICHE];
+  BEREICHE.forEach(b => { $('#p-' + b).hidden = !bereiche.includes(b); const c = $(`[data-bereich="${b}"]`); if (c) c.checked = bereiche.includes(b); });
+  const r = $('main.raster');
+  if (bereiche.length === BEREICHE.length) r.removeAttribute('data-spalten'); else r.dataset.spalten = bereiche.length;
+  $('#ansichten summary').textContent = bereiche.length === BEREICHE.length ? 'Ansichten' : `Ansichten (${bereiche.length} von ${BEREICHE.length})`;
+  try { localStorage.setItem('modellexplorer.bereiche', JSON.stringify(bereiche)); } catch (e) { /* ohne Speicher */ }
+}
+function bereicheSetzen(neu, neuerReiter) {
+  if (!neu.length) return;   // mindestens ein Bereich bleibt sichtbar
+  bereiche = BEREICHE.filter(b => neu.includes(b));
+  if (neuerReiter && neuerReiter !== reiter) { reiter = neuerReiter; fhirZeichnen(); }
+  bereicheAnwenden(); markieren(false); urlSchreiben(); obenMessen();
+}
+
 // ------------------------------------------------------------------ Ereignisse
 function waehlen(sel) { auswahl = sel; fundZeiger = null; markieren(); urlSchreiben(); }
 document.addEventListener('click', e => {
   const ki = $('.ki-hinweis');
   if (ki?.open && !e.target.closest('.ki-hinweis')) ki.open = false;
+  if ($('#ansichten').open && !e.target.closest('#ansichten')) $('#ansichten').open = false;
   const sprung = e.target.closest('[data-sprung]');
   if (sprung) { e.preventDefault(); sprung.closest('dialog')?.close(); return waehlen({ t: 'node', nids: [sprung.dataset.sprung] }); }
   const imSprung = e.target.closest('[data-imsprung]');
@@ -1386,10 +1439,18 @@ document.addEventListener('keydown', e => {
   const dialog = $$('dialog').find(d => d.open);
   if (dialog) { e.preventDefault(); dialog.close(); return; }
   if ($('.ki-hinweis')?.open) { $('.ki-hinweis').open = false; return; }
+  if ($('#ansichten').open) { $('#ansichten').open = false; return; }
   if ($('#details').open) { $('#details').open = false; obenMessen(); return; }
   waehlen(null);
 });
 $('#leeren').onclick = () => waehlen(null);
+$$('[data-bereich]').forEach(c => c.onchange = () => {
+  const neu = BEREICHE.filter(b => b === c.dataset.bereich ? c.checked : bereiche.includes(b));
+  if (!neu.length) { c.checked = true; return; }
+  bereicheSetzen(neu);
+});
+$$('[data-vorgabe]').forEach(k => k.onclick = () => { const v = VORGABEN[k.dataset.vorgabe]; bereicheSetzen(v.bereiche, v.reiter); $('#ansichten').open = false; });
+$$('[data-ausblenden]').forEach(k => k.onclick = () => bereicheSetzen(bereiche.filter(b => b !== k.dataset.ausblenden)));
 $('#pruefung-auf').onclick = pruefungZeigen;
 $('#profilwahl').onchange = e => { profilAktiv = e.target.value; profilZeichnen(); markieren(false); };
 $$('[data-reiter]').forEach(b => b.onclick = () => { reiter = b.dataset.reiter; fhirZeichnen(); markieren(); urlSchreiben(); });
@@ -1438,7 +1499,7 @@ function urlLesen() {
   if (!h) return { n: [] };
   if (!h.includes('=')) return { b: decodeURIComponent(h), n: [], alt: true };
   const p = new URLSearchParams(h), z = { n: p.getAll('n') };
-  for (const k of ['b', 'v', 'f', 'd', 'im', 'k', 'el', 'info']) if (p.has(k)) z[k] = p.get(k);
+  for (const k of ['b', 'v', 'f', 'd', 'a', 'im', 'k', 'el', 'info']) if (p.has(k)) z[k] = p.get(k);
   return z;
 }
 function urlSchreiben() {
@@ -1447,6 +1508,7 @@ function urlSchreiben() {
   if (variante !== 'referenziert') p.set('v', variante);
   if (reiter !== 'profil') p.set('f', reiter);
   if (docReiter !== D.meta.dokumente[0]) p.set('d', docReiter);
+  if (bereiche.length < BEREICHE.length) p.set('a', bereiche.join('.'));
   if (auswahl?.t === 'im') {
     p.set('im', auswahl.id);
     if (auswahl.u && variante === 'ausmodelliert') p.set('k', auswahl.u);
@@ -1466,6 +1528,8 @@ function urlAnwenden() {
   if (!z.alt && z.b) variante = (z.v === 'ausmodelliert' && D.baum_aus) ? 'ausmodelliert' : 'referenziert';
   if (z.f === 'instanz' || z.f === 'profil') reiter = z.f;
   if (z.d && D.meta.dokumente.includes(z.d)) docReiter = z.d;
+  if (z.a) bereiche = BEREICHE.filter(b => z.a.split('.').includes(b));   // Bereiche aus dem Link vor der gespeicherten Wahl
+  bereicheAnwenden();
   filter = null; $('#im-suche').value = '';
   alles();
   let sel = null, fehlt = '';
